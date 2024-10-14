@@ -25,4 +25,9 @@ public class HomeController {
 		
 	}
 	
+	@GetMapping("review")
+	public void review() {
+		
+	}
+	
 }
