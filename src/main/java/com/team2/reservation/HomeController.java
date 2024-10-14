@@ -19,4 +19,17 @@ public class HomeController {
 		return "index";
 	}
 	
+<<<<<<< Updated upstream
+=======
+	@GetMapping("intro")
+	public void intro() {
+		
+	}
+	
+	@GetMapping("review")
+	public void review() {
+		
+	}
+	
+>>>>>>> Stashed changes
 }
