@@ -44,11 +44,11 @@
                 <div class="form-group">
                     <label for="rating">평점</label>
                     <select class="form-control" id="rating">
-                        <option>5 - 훌륭함</option>
-                        <option>4 - 매우 좋음</option>
-                        <option>3 - 좋음</option>
-                        <option>2 - 보통</option>
-                        <option>1 - 별로</option>
+                        <option>5 - 매우 만족</option>
+                        <option>4 - 만족</option>
+                        <option>3 - 보통</option>
+                        <option>2 - 불만</option>
+                        <option>1 - 매우 불만</option>
                     </select>
                 </div>
                 <div class="form-group">
