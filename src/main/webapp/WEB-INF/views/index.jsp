@@ -23,7 +23,7 @@
         <div class="jumbotron">
             <h1>맛있는 식사를 예약하세요</h1>
             <p>다양한 레스토랑을 쉽고 빠르게 예약할 수 있습니다.</p>
-            <p><a class="btn btn-primary btn-lg" href="#" role="button">지금 예약하기</a></p>
+            <p><a class="btn btn-primary btn-lg" href="#" role="button">지금 예약하기</a></p> 
         </div>
 
         <div class="row">
