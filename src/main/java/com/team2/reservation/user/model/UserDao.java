@@ -6,6 +6,5 @@ import org.apache.ibatis.annotations.Update;
 @Mapper
 public interface UserDao {
 
-	@Update(value = "INSERT INTO users (userName, userEmail, userPw, userPhone) VALUES (#{userName}, #{userEmail}, #{userPw}, #{userPhone})")
-	int addInfo(UserVo bean);
+	@Update(value = "insert into users (userName,userEmail,userPw,userPhone) values (#{userName},#{userEmail},#{userPw},#{userPhone})")
 }
