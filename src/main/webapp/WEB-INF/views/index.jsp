@@ -18,24 +18,7 @@
     </style>
 </head>
 <body>
-<<<<<<< Updated upstream
 	<%@ include file = "template/menu.jspf" %>
-=======
-    <nav class="navbar navbar-default">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <a class="navbar-brand" href="#">레스토랑 예약</a>
-            </div>
-            <ul class="nav navbar-nav">
-                <li class="active"><a href="#">홈</a></li>
-                <li><a href="#">레스토랑 찾기</a></li>
-                <li><a href="#">리뷰</a></li>
-                <li><a href="#">로그인</a></li>
-            </ul>
-        </div>
-    </nav>
-
->>>>>>> Stashed changes
     <div class="container">
         <div class="jumbotron">
             <h1>맛있는 식사를 예약하세요</h1>
