@@ -91,7 +91,7 @@ $(document).ready(function() {
         }
 
         $submitBtn.prop('disabled', !isValid);
-        return isValid; // 유효성 검사 결과 반환
+        return isValid;
     }
 
     $userPassword.on('input', validatePassword);
@@ -99,7 +99,17 @@ $(document).ready(function() {
 
     $('#signupForm').on('submit', function(e) {
         e.preventDefault(); // 기본 제출 방지
-        if (validatePassword()) { // 비밀번호 일치 여부 확인
+        
+        // 폼 데이터를 콘솔에 출력
+        console.log('Form Data:');
+        console.log('Name:', $('#name').val());
+        console.log('Email:', $('#email').val());
+        console.log('Password:', $('#userPassword').val());
+        console.log('Confirm Password:', $('#confirmPassword').val());
+        console.log('Phone:', $('#phone').val());
+        console.log('Agreement:', $('#agreement').prop('checked'));
+
+        if (validatePassword()) {
             // 폼 데이터를 서버로 제출
             alert('회원가입이 완료되었습니다!');
             this.submit(); // 여기서 this는 form 요소를 가리킴
