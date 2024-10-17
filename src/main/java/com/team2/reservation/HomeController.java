@@ -6,15 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-<<<<<<< Updated upstream
-/**
- * Handles requests for the application home page.
- */
-@Controller
-public class HomeController {
-=======
 import com.team2.reservation.rest.service.RestService;
->>>>>>> Stashed changes
 
 import lombok.RequiredArgsConstructor;
 
