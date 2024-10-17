@@ -10,10 +10,10 @@
             <div class="modal-body">
                 <form action="./" method="post">
                     <div class="row">
-                        <div class="col-md-15">
+                        <div class="col-md-12">
                             <div class="form-group">
                                 <label for="name">이름</label>
-                                <input type="text" class="form-control" id="name" name="name" required>
+                                <input type="text" class="form-control" id="name" name="userName" required>
                             </div>
                         </div>
                     </div>
@@ -34,7 +34,7 @@
                     </div>
                     
                     <div class="form-group">
-                        <label for="confirmPassword">비밀번호 확인</label>
+                        <label for="confirmPassword">연락처</label>
                         <input type="tel" class="form-control" id="phone" name="userPhone" required>
                     </div>
 
