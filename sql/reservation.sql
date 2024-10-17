@@ -1,4 +1,4 @@
-usersCREATE TABLE `reservation` (
+CREATE TABLE `reservation` (
 	`reserveNo` INT NOT NULL AUTO_INCREMENT,
 	`userNo` INT NULL DEFAULT NULL,
 	`restNo` INT NULL DEFAULT NULL,
