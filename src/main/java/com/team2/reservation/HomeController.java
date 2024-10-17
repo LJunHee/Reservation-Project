@@ -16,6 +16,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
  */
 @Controller
 public class HomeController {
+<<<<<<< HEAD
+=======
+
+	@GetMapping("/")
+	public String index(Model model) {
+		return "index";
+	}
+>>>>>>> parent of 16e100b (bean, restDao, restVo, controller)
 	
 	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 	
