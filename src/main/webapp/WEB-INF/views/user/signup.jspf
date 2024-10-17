@@ -8,7 +8,7 @@
                 <h4 class="modal-title" id="signupModalLabel">회원가입</h4>
             </div>
             <div class="modal-body">
-                <form action="./" method="post">
+                <form id = "signupForm" action="./" method="post">
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group">
@@ -62,71 +62,53 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 <script>
 $(document).ready(function() {
-    var $form = $('form');
-    var $password = $('#userPassword');
+    var $userPassword = $('#userPassword');
     var $confirmPassword = $('#confirmPassword');
+    var $submitBtn = $('#submitBtn');
     var $passwordHelp = $('#passwordHelp');
     var $confirmPasswordHelp = $('#confirmPasswordHelp');
 
-    // 폼 제출 시 유효성 검사
-    $form.on('submit', function(e) {
-        if (!validatePassword() || !validateConfirmPassword()) {
-            e.preventDefault();
-            e.stopPropagation();
+    function validatePassword() {
+        var password = $userPassword.val();
+        var confirmPassword = $confirmPassword.val();
+        var isValid = true;
+
+        if (password.length === 0) {
+            $passwordHelp.text('비밀번호를 입력해주세요.').css('color', 'red');
+            isValid = false;
+        } else {
+            $passwordHelp.text('');
+        }
+
+        if (confirmPassword.length === 0) {
+            $confirmPasswordHelp.text('비밀번호 확인을 입력해주세요.').css('color', 'red');
+            isValid = false;
+        } else if (password !== confirmPassword) {
+            $confirmPasswordHelp.text('비밀번호가 일치하지 않습니다 :(').css('color', 'red');
+            isValid = false;
+        } else {
+            $confirmPasswordHelp.text('비밀번호가 일치합니다 :)').css('color', 'green');
+        }
+
+        $submitBtn.prop('disabled', !isValid);
+        return isValid; // 유효성 검사 결과 반환
+    }
+
+    $userPassword.on('input', validatePassword);
+    $confirmPassword.on('input', validatePassword);
+
+    $('#signupForm').on('submit', function(e) {
+        e.preventDefault(); // 기본 제출 방지
+        if (validatePassword()) { // 비밀번호 일치 여부 확인
+            // 폼 데이터를 서버로 제출
+            alert('회원가입이 완료되었습니다!');
+            this.submit(); // 여기서 this는 form 요소를 가리킴
+        } else {
+            alert('비밀번호가 일치하지 않습니다. 정보를 다시 확인해주세요.');
         }
     });
 
-    // 비밀번호 입력 필드 유효성 검사
-    $password.on('input', validatePassword);
-
-    // 비밀번호 확인 필드 유효성 검사
-    $confirmPassword.on('input', validateConfirmPassword);
-
-    function validatePassword() {
-        var value = $password.val();
-        var valid = true;
-        var message = '';
-
-        if (value.length < 8) {
-            message = '비밀번호는 8자 이상이어야 합니다.';
-            valid = false;
-        } else if (!/[A-Z]/.test(value)) {
-            message = '비밀번호에 대문자가 포함되어야 합니다.';
-            valid = false;
-        } else if (!/[a-z]/.test(value)) {
-            message = '비밀번호에 소문자가 포함되어야 합니다.';
-            valid = false;
-        } else if (!/[0-9]/.test(value)) {
-            message = '비밀번호에 숫자가 포함되어야 합니다.';
-            valid = false;
-        }
-
-        setValidationState($password, valid, message);
-        return valid;
-    }
-
-    function validateConfirmPassword() {
-        var passwordValue = $password.val();
-        var confirmValue = $confirmPassword.val();
-        var valid = passwordValue === confirmValue;
-        var message = valid ? '' : '비밀번호가 일치하지 않습니다.';
-
-        setValidationState($confirmPassword, valid, message);
-        return valid;
-    }
-
-    function setValidationState($element, valid, message) {
-        var $formGroup = $element.closest('.form-group');
-        var $helpBlock = $formGroup.find('.help-block');
-
-        $formGroup.removeClass('has-success has-error');
-        if (valid) {
-            $formGroup.addClass('has-success');
-        } else {
-            $formGroup.addClass('has-error');
-        }
-
-        $helpBlock.text(message);
-    }
+    // 초기 상태 설정
+    validatePassword();
 });
 </script>
