@@ -11,25 +11,25 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class RestService {
-	final RestDao restDao;
+//	final RestDao restDao;
 	
 	public void list(Model model) {
-		model.addAttribute("list", restDao.pullList());
+//		model.addAttribute("list", restDao.pullList());
 	}
 	
-	public RestVo detail(int restNo) {
-		return restDao.getList(restNo);
-	}
+	//public RestVo detail(int restNo) {
+		//return restDao.getList(restNo);
+	//}
 	
-	public void add(RestVo bean) {
-		System.out.println(restDao.addList(bean));
-	}
-	
-	public void edit(RestVo bean) {
-		System.out.println(restDao.setList(bean));
-	}
-	
-	public void delete(int restNo) {
-		System.out.println(restDao.rmList(restNo));
-	}
+//	public void add(RestVo bean) {
+//		System.out.println(restDao.addList(bean));
+//	}
+//	
+//	public void edit(RestVo bean) {
+//		System.out.println(restDao.setList(bean));
+//	}
+//	
+//	public void delete(int restNo) {
+//		System.out.println(restDao.rmList(restNo));
+	//}
 }
