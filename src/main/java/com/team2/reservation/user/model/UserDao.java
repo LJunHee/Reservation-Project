@@ -1,9 +1,9 @@
 package com.team2.reservation.user.model;
 
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.Insert;
 
 public interface UserDao {
 
-	@Update(value = "insert into users (userName,userEmail,userPw,userPhone) values (#{userName},#{userEmail},#{userPw},#{userPhone})")
+	@Insert("INSERT INTO users (userName, userEmail, userPw, userPhone) VALUES (#{userName}, #{userEmail}, #{userPw}, #{userPhone})")
 	int addInfo(UserVo bean);
 }
