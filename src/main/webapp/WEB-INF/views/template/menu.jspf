@@ -10,9 +10,8 @@
             <ul class="nav navbar-nav">
                 <li class="active"><a href="${root }/">HOME</a></li>
                 <li><a href="${root }/intro">예약하기</a></li>
-                <li><a href="${root }/review/">마이페이지</a></li>
+                <li><a href="${root }/review/">REVIEW</a></li>
                 <li><a href="${root	}/login/">로그인</a></li>
-                <li><a href="${root	}/signup/">회원가입</a></li>
             </ul>
         </div>
     </nav>

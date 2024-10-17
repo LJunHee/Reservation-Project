@@ -19,7 +19,6 @@
 </head>
 <body>
 	<%@ include file = "template/menu.jspf" %>
-
     <div class="container">
         <div class="jumbotron">
             <h1>맛있는 식사를 예약하세요</h1>
