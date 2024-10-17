@@ -8,7 +8,7 @@
                 <h4 class="modal-title" id="signupModalLabel">회원가입</h4>
             </div>
             <div class="modal-body">
-                <form action="./" method="post">
+                <form id = "signupForm" action="./" method="post">
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group">
@@ -24,13 +24,15 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="password">비밀번호</label>
-                        <input type="password" class="form-control" id="password" name="userPw" required>
+                        <label for="userPassword">비밀번호</label>
+                        <input type="password" class="form-control" id="userPassword" name="userPw" required>
+                        <span id = "passwordHelp" class = "help-block"></span>
                     </div>
 
                     <div class="form-group">
                         <label for="confirmPassword">비밀번호 확인</label>
                         <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required>
+                        <span id = "confirmPasswordHelp" class = "help-block"></span>
                     </div>
                     
                     <div class="form-group">
@@ -57,18 +59,57 @@
     </div>
 </div>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 <script>
 $(document).ready(function() {
-    // 비밀번호 확인 검증
-    $('form').on('submit', function(e) {
-        var password = $('#password').val();
-        var confirmPassword = $('#confirmPassword').val();
-        
-        if (password !== confirmPassword) {
-            alert('비밀번호가 일치하지 않습니다.');
-            e.preventDefault();
-            return false;
+    var $userPassword = $('#userPassword');
+    var $confirmPassword = $('#confirmPassword');
+    var $submitBtn = $('#submitBtn');
+    var $passwordHelp = $('#passwordHelp');
+    var $confirmPasswordHelp = $('#confirmPasswordHelp');
+
+    function validatePassword() {
+        var password = $userPassword.val();
+        var confirmPassword = $confirmPassword.val();
+        var isValid = true;
+
+        if (password.length === 0) {
+            $passwordHelp.text('비밀번호를 입력해주세요.').css('color', 'red');
+            isValid = false;
+        } else {
+            $passwordHelp.text('');
+        }
+
+        if (confirmPassword.length === 0) {
+            $confirmPasswordHelp.text('비밀번호 확인을 입력해주세요.').css('color', 'red');
+            isValid = false;
+        } else if (password !== confirmPassword) {
+            $confirmPasswordHelp.text('비밀번호가 일치하지 않습니다 :(').css('color', 'red');
+            isValid = false;
+        } else {
+            $confirmPasswordHelp.text('비밀번호가 일치합니다 :)').css('color', 'green');
+        }
+
+        $submitBtn.prop('disabled', !isValid);
+        return isValid; // 유효성 검사 결과 반환
+    }
+
+    $userPassword.on('input', validatePassword);
+    $confirmPassword.on('input', validatePassword);
+
+    $('#signupForm').on('submit', function(e) {
+        e.preventDefault(); // 기본 제출 방지
+        if (validatePassword()) { // 비밀번호 일치 여부 확인
+            // 폼 데이터를 서버로 제출
+            alert('회원가입이 완료되었습니다!');
+            this.submit(); // 여기서 this는 form 요소를 가리킴
+        } else {
+            alert('비밀번호가 일치하지 않습니다. 정보를 다시 확인해주세요.');
         }
     });
+
+    // 초기 상태 설정
+    validatePassword();
 });
 </script>

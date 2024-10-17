@@ -1,4 +1,4 @@
-package com.team2.reservation.rest.model;
+package com.team2.reservation.resrve.model;
 
 import java.sql.Timestamp;
 
@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class RestVo {
+public class ReserveVo {
 	private String restName,restReview;
 	private Timestamp restTime;
 }
