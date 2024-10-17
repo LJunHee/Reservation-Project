@@ -40,7 +40,7 @@
 </nav>
 
 <!-- 로그인 모달  -->
-<%@ include file="login.jspf"%>
+<%@ include file="../user/login.jspf"%>
 
 <!-- 회원가입 모달 -->
-<%@ include file="signup.jspf"%>
+<%@ include file="../user/signup.jspf"%>

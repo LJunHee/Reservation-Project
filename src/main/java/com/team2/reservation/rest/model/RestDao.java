@@ -1,4 +1,4 @@
-package com.team2.reservation.rest.model;
+		package com.team2.reservation.rest.model;
 
 import java.util.List;
 

@@ -1,41 +1,36 @@
 package com.team2.reservation;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-
 import com.team2.reservation.rest.service.RestService;
-
-import lombok.RequiredArgsConstructor;
+import com.team2.reservation.user.model.UserVo;
+import com.team2.reservation.user.service.UserService;
 
 @Controller
-@RequiredArgsConstructor
 public class HomeController {
-//	final RestService restService;
+    private final RestService restService;
+    private final UserService userService;
 
-	@RequestMapping(value = "/", method = RequestMethod.GET)
-	public String index(Model model) {
-//		restService.list(model);
-		return "index";
-	}
-	
-	@GetMapping("intro")
-	public void intro() {
-		
-	}
-	@GetMapping("mypage")
-	public void mypage() {
-		
-	}
+    @Autowired
+    public HomeController(RestService restService, UserService userService) {
+        this.restService = restService;
+        this.userService = userService;
+    }
 
-	@GetMapping("/review")
-	   public String review(@RequestParam("reservationId") String reservationId, Model model) {
-	        // 예약 ID를 모델에 추가하여 JSP로 전달
-	       model.addAttribute("reservationId", reservationId);
-	       return "review";  // review.jsp 파일을 렌더링
-	   }
-	
+    @RequestMapping(value = "/", method = RequestMethod.GET)
+    public String index(Model model) {
+        restService.list(model);
+        return "index";
+    }
+    
+    @PostMapping("/")
+    public String add(@ModelAttribute UserVo bean) {
+        userService.add(bean);
+        return "redirect:/";
+    }
 }
