@@ -65,7 +65,7 @@
                     <c:forEach var="item" items="${list}">
                         <div class="col-md-3">
                             <div class="thumbnail">
-                                <img src="${pageContext.request.contextPath}/images/${item.restNo}.jpg" alt="사진 ${item.restNo}">
+                                <!-- <img src="${pageContext.request.contextPath}/images/${item.restNo}.jpg" alt="사진 ${item.restNo}"> -->
                                 <div class="caption">
                                     <h4>${item.restName}</h4>
                                     <p>${item.restInfo}</p>
