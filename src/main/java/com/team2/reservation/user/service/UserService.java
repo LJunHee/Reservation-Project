@@ -27,5 +27,11 @@ public class UserService {
     public void add(UserVo bean) {
         System.out.println(userDao.addInfo(bean));
     }
+    
+    // 중복 이메일 확인
+    public boolean isEmailAvailable(String userEmail) {
+        int count = userDao.countByEmail(userEmail);
+        return count == 0; // 이메일이 존재하지 않으면 true 반환
+    }
 
 }
