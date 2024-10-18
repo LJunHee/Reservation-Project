@@ -3,7 +3,7 @@ package com.team2.reservation.restaurant.model;
 import java.sql.Time;
 import java.sql.Timestamp;
 
-import com.team2.reservation.resrve.model.ReserveVo;
+import com.team2.reservation.reserve.model.ReserveVo;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

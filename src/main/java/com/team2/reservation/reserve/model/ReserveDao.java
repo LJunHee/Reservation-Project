@@ -1,4 +1,4 @@
-		package com.team2.reservation.resrve.model;
+		package com.team2.reservation.reserve.model;
 
 import java.util.List;
 
