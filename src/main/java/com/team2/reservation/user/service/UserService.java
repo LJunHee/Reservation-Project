@@ -18,21 +18,24 @@ public class UserService {
     }
     
     public UserVo login(String userEmail, String userPw) {
-        UserVo user = userDao.chklogin(userEmail);
-        if (user != null && passwordEncoder.matches(userPw, user.getUserPw())) {
-            return user; // ·Î±×ÀÎ ¼º°ø ½Ã »ç¿ëÀÚ Á¤º¸¸¦ ¹İÈ¯
+        UserVo user = userDao.findByEmail(userEmail);
+        if (user != null) {
+            String storedPassword = userDao.getPasswordByEmail(userEmail);
+            if (passwordEncoder.matches(userPw, storedPassword)) {
+                return user; // ë¡œê·¸ì¸ ì„±ê³µ
+            }
         }
-        return null; // ·Î±×ÀÎ ½ÇÆĞ ½Ã null ¹İÈ¯
+        return null; // ë¡œê·¸ì¸ ì‹¤íŒ¨
     }
     
     public void add(UserVo bean) {
-        bean.setUserPw(passwordEncoder.encode(bean.getUserPw())); // ºñ¹Ğ¹øÈ£ ¾ÏÈ£È­
-        System.out.println(userDao.addInfo(bean));
+        bean.setUserPw(passwordEncoder.encode(bean.getUserPw())); // ë¹„ë°€ë²ˆí˜¸ ì•”í˜¸í™”
+        userDao.addInfo(bean);
     }
     
-    // Áßº¹ ÀÌ¸ŞÀÏ È®ÀÎ
+    // ì¤‘ë³µ ì´ë©”ì¼ í™•ì¸
     public boolean isEmailAvailable(String userEmail) {
         int count = userDao.countByEmail(userEmail);
-        return count == 0; // ÀÌ¸ŞÀÏÀÌ Á¸ÀçÇÏÁö ¾ÊÀ¸¸é true ¹İÈ¯
+        return count == 0; // ì´ë©”ì¼ì´ ì¡´ì¬í•˜ì§€ ì•Šìœ¼ë©´ true ë°˜í™˜
     }
 }
