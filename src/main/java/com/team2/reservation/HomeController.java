@@ -34,41 +34,45 @@ public class HomeController {
     @GetMapping("/")
     public String index(Model model, HttpSession session) {
         UserVo user = (UserVo) session.getAttribute("loggedInUser"); 
-        model.addAttribute("user", user); // 모델에 사용자 정보 추가
+        model.addAttribute("user", user); 
         restService.list(model);
         return "index";
     }
 
     
-    //회원가입
+   
     @PostMapping("/")
     public String add(@ModelAttribute UserVo bean) {
         userService.add(bean);
         return "redirect:/";
     }
     
-    //로그인
+    
     @PostMapping("/login")
     public String login(@RequestParam String userEmail, @RequestParam String userPw, HttpSession session, Model model) {
         UserVo user = userService.login(userEmail, userPw);
         if (user != null) {
-            System.out.println("로그인 성공: " + user);
+            System.out.println("Login successful" + user);
             session.setAttribute("loggedInUser", user);
-            return "redirect:/"; // 로그인 성공 시 index로 리다이렉트
+            return "redirect:/"; 
         } else {
-            model.addAttribute("errorMessage", "잘못된 이메일 혹은 비밀번호입니다.");
-            return "index"; // 로그인 실패 시 로그인 페이지로 이동
+            model.addAttribute("errorMessage", "Invalid email or password.");
+            return "index"; 
         }
     }
 
-    //로그아웃
+    
     @GetMapping("/logout")
     public String logout(HttpSession session) {
         session.invalidate(); 
         return "redirect:/";
     }
+    @GetMapping("/mypage")
+    public String myPage(Model model) {
+        return "mypage"; 
+    }
     
-    //intro
+    
     @GetMapping("/restaurant/{restNo}")
 	@ResponseBody
 	public RestaurantVo detail(@PathVariable int restNo) {
