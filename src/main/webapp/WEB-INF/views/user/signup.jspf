@@ -8,35 +8,33 @@
                 <h4 class="modal-title" id="signupModalLabel">회원가입</h4>
             </div>
             <div class="modal-body">
-                <form id = "signupForm" action="./" method="post">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <label for="name">이름</label>
-                                <input type="text" class="form-control" id="name" name="userName" required>
-                            </div>
-                        </div>
+                <form id="signupForm" action="./" method="post">
+                    <div class="form-group">
+                        <label for="name">이름</label>
+                        <input type="text" class="form-control" id="name" name="userName" required>
                     </div>
-
+                    
                     <div class="form-group">
                         <label for="email">이메일</label>
-                        <input type="email" class="form-control" id="email" name="userEmail" placeholder="you@example.com" required>
+                        <input type="email" class="form-control" id="userEmail" name="userEmail" placeholder="you@example.com" required>
+                        <button type="button" id="checkEmailBtn" class="btn btn-info">중복 확인</button>
+                        <span id="emailCheckMessage"></span>
                     </div>
-
+                    
                     <div class="form-group">
                         <label for="userPassword">비밀번호</label>
                         <input type="password" class="form-control" id="userPassword" name="userPw" required>
-                        <span id = "passwordHelp" class = "help-block"></span>
+                        <span id="passwordHelp" class="help-block"></span>
                     </div>
 
                     <div class="form-group">
                         <label for="confirmPassword">비밀번호 확인</label>
                         <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required>
-                        <span id = "confirmPasswordHelp" class = "help-block"></span>
+                        <span id="confirmPasswordHelp" class="help-block"></span>
                     </div>
                     
                     <div class="form-group">
-                        <label for="confirmPassword">연락처</label>
+                        <label for="phone">연락처</label>
                         <input type="tel" class="form-control" id="phone" name="userPhone" required>
                     </div>
 
@@ -59,13 +57,11 @@
     </div>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 <script>
 $(document).ready(function() {
     var $userPassword = $('#userPassword');
     var $confirmPassword = $('#confirmPassword');
-    var $submitBtn = $('#submitBtn');
+    var $submitBtn = $('#signupForm button[type="submit"]');
     var $passwordHelp = $('#passwordHelp');
     var $confirmPasswordHelp = $('#confirmPasswordHelp');
 
@@ -92,24 +88,63 @@ $(document).ready(function() {
         }
 
         $submitBtn.prop('disabled', !isValid);
-        return isValid; // 유효성 검사 결과 반환
+        return isValid;
     }
 
     $userPassword.on('input', validatePassword);
     $confirmPassword.on('input', validatePassword);
 
     $('#signupForm').on('submit', function(e) {
-        e.preventDefault(); // 기본 제출 방지
-        if (validatePassword()) { // 비밀번호 일치 여부 확인
-            // 폼 데이터를 서버로 제출
-            alert('회원가입이 완료되었습니다!');
-            this.submit(); // 여기서 this는 form 요소를 가리킴
+        e.preventDefault(); 
+        if (validatePassword()) {
+            alert('회원가입이 완료되었습니다!'); 
+            this.submit(); 
         } else {
             alert('비밀번호가 일치하지 않습니다. 정보를 다시 확인해주세요.');
         }
     });
+    
+    // 이메일 입력 필드에 입력할 때마다 메시지 초기화
+    $('#userEmail').on('input', function() {
+        $('#emailCheckMessage').text('');
+    });
 
-    // 초기 상태 설정
-    validatePassword();
+    
+    // 이메일 중복 확인
+    $('#checkEmailBtn').on('click', function(e) {
+        e.preventDefault();
+        var emailValue = $('#userEmail').val().trim(); // jQuery로 변경
+        console.log("입력된 이메일:", emailValue);
+        
+        if (emailValue === '') {
+            $('#emailCheckMessage').text('이메일을 입력해주세요.').css('color', 'red');
+            return;
+        }
+        
+        $.ajax({
+            url: '/reservation/check-email',
+            type: 'POST',
+            contentType: 'application/x-www-form-urlencoded',
+            data: { userEmail: emailValue }, // 객체 형태로 전송
+            success: function(response) {
+                console.log("서버 응답:", response);
+                if (response === "exists") {
+                    $('#emailCheckMessage')
+                        .text('이미 사용 중인 이메일입니다.')
+                        .css('color', 'red');
+                } else {
+                    $('#emailCheckMessage')
+                        .text('사용 가능한 이메일입니다.')
+                        .css('color', 'green');
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error("Ajax 오류:", error);
+                $('#emailCheckMessage')
+                    .text('서버 오류가 발생했습니다. 다시 시도해주세요.')
+                    .css('color', 'red');
+            }
+        });
+    });
 });
 </script>
