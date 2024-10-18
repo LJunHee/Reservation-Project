@@ -1,14 +1,13 @@
 package com.team2.reservation.user.model;
-
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.Insert;
 
 @Mapper
 public interface UserDao {
-	
-	@Select(value = "select * from users where userEmail = #{userEmail}")
-	UserVo chklogin(String userEmail);
-	
-	@Update(value = "insert into users (userName,userEmail,userPw,userPhone) values (#{userName},#{userEmail},#{userPw},#{userPhone})")
+    @Select(value = "SELECT * FROM users WHERE userEmail = #{userEmail}")
+    UserVo findByEmail(String userEmail);
+    
+    @Insert(value = "INSERT INTO users (userName, userEmail, userPw, userPhone) VALUES (#{userName}, #{userEmail}, #{userPw}, #{userPhone})")
+    int addUser(UserVo user);
 }

@@ -34,34 +34,38 @@ public class HomeController {
     @GetMapping("/")
     public String index(Model model, HttpSession session) {
         UserVo user = (UserVo) session.getAttribute("loggedInUser"); 
-        model.addAttribute("user", user); // ëª¨ë¸ì— ì‚¬ìš©ì ì •ë³´ ì¶”ê°€
+        model.addAttribute("user", user); // ¸ğµ¨¿¡ »ç¿ëÀÚ Á¤º¸ Ãß°¡
         restService.list(model);
         return "index";
     }
 
-    
-    //íšŒì›ê°€ì…
+    //È¸¿ø°¡ÀÔ
     @PostMapping("/")
     public String add(@ModelAttribute UserVo bean) {
-        userService.add(bean);
-        return "redirect:/";
+        try {
+            userService.register(bean);
+            return "redirect:/";
+        } catch (IllegalArgumentException | IllegalStateException e) {
+            // ¿¡·¯ Ã³¸® ·ÎÁ÷ (¿¹: ¿¡·¯ ¸Ş½ÃÁö¸¦ ¸ğµ¨¿¡ Ãß°¡ÇÏ°í È¸¿ø°¡ÀÔ ÆäÀÌÁö·Î ¸®´ÙÀÌ·ºÆ®)
+            return "signup"; // ¶Ç´Â ¿¡·¯¸¦ Ç¥½ÃÇÒ ÀûÀıÇÑ ºä ÀÌ¸§
+        }
     }
     
-    //ë¡œê·¸ì¸
+    //·Î±×ÀÎ
     @PostMapping("/login")
     public String login(@RequestParam String userEmail, @RequestParam String userPw, HttpSession session, Model model) {
         UserVo user = userService.login(userEmail, userPw);
         if (user != null) {
-            System.out.println("ë¡œê·¸ì¸ ì„±ê³µ: " + user);
+            System.out.println("·Î±×ÀÎ ¼º°ø: " + user);
             session.setAttribute("loggedInUser", user);
-            return "redirect:/"; // ë¡œê·¸ì¸ ì„±ê³µ ì‹œ indexë¡œ ë¦¬ë‹¤ì´ë ‰íŠ¸
+            return "redirect:/"; // ·Î±×ÀÎ ¼º°ø ½Ã index·Î ¸®´ÙÀÌ·ºÆ®
         } else {
-            model.addAttribute("errorMessage", "ì˜ëª»ëœ ì´ë©”ì¼ í˜¹ì€ ë¹„ë°€ë²ˆí˜¸ì…ë‹ˆë‹¤.");
-            return "index"; // ë¡œê·¸ì¸ ì‹¤íŒ¨ ì‹œ ë¡œê·¸ì¸ í˜ì´ì§€ë¡œ ì´ë™
+            model.addAttribute("errorMessage", "Àß¸øµÈ ÀÌ¸ŞÀÏ È¤Àº ºñ¹Ğ¹øÈ£ÀÔ´Ï´Ù.");
+            return "index"; // ·Î±×ÀÎ ½ÇÆĞ ½Ã ·Î±×ÀÎ ÆäÀÌÁö·Î ÀÌµ¿
         }
     }
 
-    //ë¡œê·¸ì•„ì›ƒ
+    //·Î±×¾Æ¿ô
     @GetMapping("/logout")
     public String logout(HttpSession session) {
         session.invalidate(); 
