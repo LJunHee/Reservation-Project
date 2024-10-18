@@ -1,21 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>레스토랑 예약 플랫폼</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/css/bootstrap-theme.min.css" integrity="sha384-6pzBo3FDv/PJ8r2KRkGHifhEocL+1X2rVCTTkUfGk7/0pbek5mMa1upzvWbrUbOZ" crossorigin="anonymous">
-	<style>
-        .jumbotron {
-            background-image: url('https://via.placeholder.com/1200x400');
-            background-size: cover;
-            color: white;
-            text-shadow: 2px 2px 4px #000000;
-        }
-    </style>
+    <%@ include file = "template/head.jspf" %>
+   	<title>레스토랑 예약 플랫폼</title>
 </head>
 <body>
 	<%@ include file="template/menu.jspf" %>
@@ -68,13 +56,6 @@
         </div>
     </div>
 
-    <footer class="footer">
-        <div class="container">
-            <p class="text-muted">&copy; 2024 레스토랑 예약 플랫폼. All rights reserved.</p>
-        </div>
-    </footer>
-
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js"></script>
+	<%@ include file = "template/footer.jspf" %>
 </body>
 </html>

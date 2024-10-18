@@ -74,14 +74,14 @@ $(document).ready(function() {
         var isValid = true;
 
         if (password.length === 0) {
-            $passwordHelp.text('비밀번호를 입력해주세요.').css('color', 'red');
+            $passwordHelp.text('비밀번호를 입력해주세요.').css('color', 'black');
             isValid = false;
         } else {
             $passwordHelp.text('');
         }
 
         if (confirmPassword.length === 0) {
-            $confirmPasswordHelp.text('비밀번호 확인을 입력해주세요.').css('color', 'red');
+            $confirmPasswordHelp.text('비밀번호 확인을 입력해주세요.').css('color', 'black');
             isValid = false;
         } else if (password !== confirmPassword) {
             $confirmPasswordHelp.text('비밀번호가 일치하지 않습니다 :(').css('color', 'red');
