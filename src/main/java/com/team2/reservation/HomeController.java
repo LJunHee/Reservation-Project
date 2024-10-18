@@ -36,43 +36,44 @@ public class HomeController {
     @GetMapping("/")
     public String index(Model model, HttpSession session) {
         UserVo user = (UserVo) session.getAttribute("loggedInUser"); 
-        model.addAttribute("user", user); // ¸ğµ¨¿¡ »ç¿ëÀÚ Á¤º¸ Ãß°¡
+        model.addAttribute("user", user); // ï¿½ğµ¨¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½
         restService.list(model);
         return "index";
     }
 
     
-    //È¸¿ø°¡ÀÔ
+    //register
     @PostMapping("/")
     public String add(@ModelAttribute UserVo bean) {
         userService.add(bean);
         return "redirect:/";
     }
     
+    //check-email
     @PostMapping("/check-email")
     public ResponseEntity<String> checkEmail(@RequestParam String userEmail) {
-        System.out.println("¹ŞÀº ÀÌ¸ŞÀÏ: " + userEmail); // Ãß°¡µÈ ·Î±×
+        System.out.println("recieve msg : " + userEmail);  
         boolean isAvailable = userService.isEmailAvailable(userEmail);
         return isAvailable ? ResponseEntity.ok("available") : ResponseEntity.ok("exists");
     }
 
 
     
-    //·Î±×ÀÎ
+    //login
     @PostMapping("/login")
     public String login(@RequestParam String userEmail, @RequestParam String userPw, HttpSession session, Model model) {
         UserVo user = userService.login(userEmail, userPw);
         if (user != null) {
-            System.out.println("·Î±×ÀÎ ¼º°ø: " + user);
+            System.out.println("Login Success : " + user);
             session.setAttribute("loggedInUser", user);
-            return "redirect:/"; // ·Î±×ÀÎ ¼º°ø ½Ã index·Î ¸®´ÙÀÌ·ºÆ®
+            return "redirect:/"; // ë¡œê·¸ì¸ ì„±ê³µì‹œ indexë¡œ ë¦¬ë‹¤ì´ë ‰íŠ¸
         } else {
-            model.addAttribute("errorMessage", "Àß¸øµÈ ÀÌ¸ŞÀÏ È¤Àº ºñ¹Ğ¹øÈ£ÀÔ´Ï´Ù.");
-            return "index"; // ·Î±×ÀÎ ½ÇÆĞ ½Ã ·Î±×ÀÎ ÆäÀÌÁö·Î ÀÌµ¿
+            model.addAttribute("errorMessage", "Wrong email or Password");
+            return "index"; // ë¡œê·¸ì¸ ì‹¤íŒ¨ ì‹œ ë¡œê·¸ì¸ í˜ì´ì§€ë¡œ ì´ë™
         }
     }
 
-    //·Î±×¾Æ¿ô
+    //logout
     @GetMapping("/logout")
     public String logout(HttpSession session) {
         session.invalidate(); 
