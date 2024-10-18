@@ -3,20 +3,8 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <%@ include file = "template/head.jspf" %>
     <title>레스토랑 예약</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/css/bootstrap.min.css">
-    <style>
-        .jumbotron {
-            background-image: url('https://via.placeholder.com/1200x400');
-            background-size: cover;
-            color: white;
-            text-shadow: 2px 2px 4px #000000;
-        }
-    </style>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js"></script>
 
     <script>
         var currentRestaurant = null;
@@ -136,10 +124,6 @@
         </div>
     </div>
 
-    <footer class="footer">
-        <div class="container">
-            <p class="text-muted">&copy; 2024 레스토랑 예약 플랫폼. All rights reserved.</p>
-        </div>
-    </footer>
+	<%@ include file = "template/footer.jspf" %>
 </body>
 </html>
