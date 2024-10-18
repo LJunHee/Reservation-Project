@@ -18,9 +18,9 @@ public class UserService {
     public UserVo login(String userEmail, String userPw) {
         UserVo user = userDao.chklogin(userEmail);
         if (user != null && user.getUserPw().equals(userPw)) {
-            return user; // ë¡œê·¸ì¸ ì„±ê³µ ì‹œ ì‚¬ìš©ì ì •ë³´ë¥¼ ë°˜í™˜
+            return user; // ·Î±×ÀÎ ¼º°ø ½Ã »ç¿ëÀÚ Á¤º¸¸¦ ¹İÈ¯
         }
-        return null; // ë¡œê·¸ì¸ ì‹¤íŒ¨ ì‹œ null ë°˜í™˜
+        return null; // ·Î±×ÀÎ ½ÇÆĞ ½Ã null ¹İÈ¯
     }
 
     
@@ -28,10 +28,10 @@ public class UserService {
         System.out.println(userDao.addInfo(bean));
     }
     
-    // ì¤‘ë³µ ì´ë©”ì¼ í™•ì¸
+    // Áßº¹ ÀÌ¸ŞÀÏ È®ÀÎ
     public boolean isEmailAvailable(String userEmail) {
         int count = userDao.countByEmail(userEmail);
-        return count == 0; // ì´ë©”ì¼ì´ ì¡´ì¬í•˜ì§€ ì•Šìœ¼ë©´ true ë°˜í™˜
+        return count == 0; // ÀÌ¸ŞÀÏÀÌ Á¸ÀçÇÏÁö ¾ÊÀ¸¸é true ¹İÈ¯
     }
 
 }

@@ -36,47 +36,43 @@ public class HomeController {
     @GetMapping("/")
     public String index(Model model, HttpSession session) {
         UserVo user = (UserVo) session.getAttribute("loggedInUser"); 
-        model.addAttribute("user", user); // ï¿½ğµ¨¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½
+        model.addAttribute("user", user); // ¸ğµ¨¿¡ »ç¿ëÀÚ Á¤º¸ Ãß°¡
         restService.list(model);
         return "index";
     }
 
-    //È¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+    
+    //È¸¿ø°¡ÀÔ
     @PostMapping("/")
     public String add(@ModelAttribute UserVo bean) {
-        try {
-            userService.register(bean);
-            return "redirect:/";
-        } catch (IllegalArgumentException | IllegalStateException e) {
-            // ï¿½ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ (ï¿½ï¿½: ï¿½ï¿½ï¿½ï¿½ ï¿½Ş½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ğµ¨¿ï¿½ ï¿½ß°ï¿½ï¿½Ï°ï¿½ È¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ì·ï¿½Æ®)
-            return "signup"; // ï¿½Ç´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ç¥ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ì¸ï¿½
-        }
+        userService.add(bean);
+        return "redirect:/";
     }
     
     @PostMapping("/check-email")
     public ResponseEntity<String> checkEmail(@RequestParam String userEmail) {
-        System.out.println("ë°›ì€ ì´ë©”ì¼: " + userEmail); // ì¶”ê°€ëœ ë¡œê·¸
+        System.out.println("¹ŞÀº ÀÌ¸ŞÀÏ: " + userEmail); // Ãß°¡µÈ ·Î±×
         boolean isAvailable = userService.isEmailAvailable(userEmail);
         return isAvailable ? ResponseEntity.ok("available") : ResponseEntity.ok("exists");
     }
 
 
     
-    //ë¡œê·¸ì¸
+    //·Î±×ÀÎ
     @PostMapping("/login")
     public String login(@RequestParam String userEmail, @RequestParam String userPw, HttpSession session, Model model) {
         UserVo user = userService.login(userEmail, userPw);
         if (user != null) {
-            System.out.println("ï¿½Î±ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½: " + user);
+            System.out.println("·Î±×ÀÎ ¼º°ø: " + user);
             session.setAttribute("loggedInUser", user);
-            return "redirect:/"; // ï¿½Î±ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ indexï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ì·ï¿½Æ®
+            return "redirect:/"; // ·Î±×ÀÎ ¼º°ø ½Ã index·Î ¸®´ÙÀÌ·ºÆ®
         } else {
-            model.addAttribute("errorMessage", "ï¿½ß¸ï¿½ï¿½ï¿½ ï¿½Ì¸ï¿½ï¿½ï¿½ È¤ï¿½ï¿½ ï¿½ï¿½Ğ¹ï¿½È£ï¿½Ô´Ï´ï¿½.");
-            return "index"; // ï¿½Î±ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Î±ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ìµï¿½
+            model.addAttribute("errorMessage", "Àß¸øµÈ ÀÌ¸ŞÀÏ È¤Àº ºñ¹Ğ¹øÈ£ÀÔ´Ï´Ù.");
+            return "index"; // ·Î±×ÀÎ ½ÇÆĞ ½Ã ·Î±×ÀÎ ÆäÀÌÁö·Î ÀÌµ¿
         }
     }
 
-    //ï¿½Î±×¾Æ¿ï¿½
+    //·Î±×¾Æ¿ô
     @GetMapping("/logout")
     public String logout(HttpSession session) {
         session.invalidate(); 
