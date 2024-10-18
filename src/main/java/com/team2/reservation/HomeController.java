@@ -3,7 +3,6 @@ package com.team2.reservation;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.team2.reservation.restaurant.model.RestaurantVo;
 import com.team2.reservation.restaurant.service.RestaurantService;
+import com.team2.reservation.user.model.UserDao;
 import com.team2.reservation.user.model.UserVo;
 import com.team2.reservation.user.service.UserService;
 
@@ -23,49 +23,60 @@ import com.team2.reservation.user.service.UserService;
 public class HomeController {
     private final UserService userService;
     private final RestaurantService restService;
+	private final UserDao userDao;
 
     @Autowired
-    public HomeController(RestaurantService restService, UserService userService) {
+    public HomeController(RestaurantService restService, UserService userService, UserDao userDao) {
         this.restService = restService;
         this.userService = userService;
+        this.userDao = userDao;
     }
     
     //index page
     @GetMapping("/")
     public String index(Model model, HttpSession session) {
         UserVo user = (UserVo) session.getAttribute("loggedInUser"); 
-        model.addAttribute("user", user); // ¸ğµ¨¿¡ »ç¿ëÀÚ Á¤º¸ Ãß°¡
+        model.addAttribute("user", user); // ï¿½ğµ¨¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½
         restService.list(model);
         return "index";
     }
 
-    //È¸¿ø°¡ÀÔ
+    //È¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     @PostMapping("/")
     public String add(@ModelAttribute UserVo bean) {
         try {
             userService.register(bean);
             return "redirect:/";
         } catch (IllegalArgumentException | IllegalStateException e) {
-            // ¿¡·¯ Ã³¸® ·ÎÁ÷ (¿¹: ¿¡·¯ ¸Ş½ÃÁö¸¦ ¸ğµ¨¿¡ Ãß°¡ÇÏ°í È¸¿ø°¡ÀÔ ÆäÀÌÁö·Î ¸®´ÙÀÌ·ºÆ®)
-            return "signup"; // ¶Ç´Â ¿¡·¯¸¦ Ç¥½ÃÇÒ ÀûÀıÇÑ ºä ÀÌ¸§
+            // ï¿½ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ (ï¿½ï¿½: ï¿½ï¿½ï¿½ï¿½ ï¿½Ş½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ğµ¨¿ï¿½ ï¿½ß°ï¿½ï¿½Ï°ï¿½ È¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ì·ï¿½Æ®)
+            return "signup"; // ï¿½Ç´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ç¥ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ì¸ï¿½
         }
     }
     
-    //·Î±×ÀÎ
+    @PostMapping("/check-email")
+    public ResponseEntity<String> checkEmail(@RequestParam String userEmail) {
+        System.out.println("ë°›ì€ ì´ë©”ì¼: " + userEmail); // ì¶”ê°€ëœ ë¡œê·¸
+        boolean isAvailable = userService.isEmailAvailable(userEmail);
+        return isAvailable ? ResponseEntity.ok("available") : ResponseEntity.ok("exists");
+    }
+
+
+    
+    //ë¡œê·¸ì¸
     @PostMapping("/login")
     public String login(@RequestParam String userEmail, @RequestParam String userPw, HttpSession session, Model model) {
         UserVo user = userService.login(userEmail, userPw);
         if (user != null) {
-            System.out.println("·Î±×ÀÎ ¼º°ø: " + user);
+            System.out.println("ï¿½Î±ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½: " + user);
             session.setAttribute("loggedInUser", user);
-            return "redirect:/"; // ·Î±×ÀÎ ¼º°ø ½Ã index·Î ¸®´ÙÀÌ·ºÆ®
+            return "redirect:/"; // ï¿½Î±ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ indexï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ì·ï¿½Æ®
         } else {
-            model.addAttribute("errorMessage", "Àß¸øµÈ ÀÌ¸ŞÀÏ È¤Àº ºñ¹Ğ¹øÈ£ÀÔ´Ï´Ù.");
-            return "index"; // ·Î±×ÀÎ ½ÇÆĞ ½Ã ·Î±×ÀÎ ÆäÀÌÁö·Î ÀÌµ¿
+            model.addAttribute("errorMessage", "ï¿½ß¸ï¿½ï¿½ï¿½ ï¿½Ì¸ï¿½ï¿½ï¿½ È¤ï¿½ï¿½ ï¿½ï¿½Ğ¹ï¿½È£ï¿½Ô´Ï´ï¿½.");
+            return "index"; // ï¿½Î±ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Î±ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ìµï¿½
         }
     }
 
-    //·Î±×¾Æ¿ô
+    //ï¿½Î±×¾Æ¿ï¿½
     @GetMapping("/logout")
     public String logout(HttpSession session) {
         session.invalidate(); 

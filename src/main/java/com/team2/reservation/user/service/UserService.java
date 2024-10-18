@@ -1,9 +1,7 @@
 package com.team2.reservation.user.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.team2.reservation.user.model.UserDao;
 import com.team2.reservation.user.model.UserVo;
@@ -11,49 +9,29 @@ import com.team2.reservation.user.model.UserVo;
 @Service
 public class UserService {
     private final UserDao userDao;
-    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserService(UserDao userDao, PasswordEncoder passwordEncoder) {
+    public UserService(UserDao userDao) {
         this.userDao = userDao;
-        this.passwordEncoder = passwordEncoder;
     }
     
     public UserVo login(String userEmail, String userPw) {
-        UserVo user = userDao.findByEmail(userEmail);
-        if (user != null && passwordEncoder.matches(userPw, user.getUserPw())) {
-            return user; // ·Î±×ÀÎ ¼º°ø ½Ã »ç¿ëÀÚ Á¤º¸¸¦ ¹İÈ¯
+        UserVo user = userDao.chklogin(userEmail);
+        if (user != null && user.getUserPw().equals(userPw)) {
+            return user; // ë¡œê·¸ì¸ ì„±ê³µ ì‹œ ì‚¬ìš©ì ì •ë³´ë¥¼ ë°˜í™˜
         }
-        return null; // ·Î±×ÀÎ ½ÇÆĞ ½Ã null ¹İÈ¯
+        return null; // ë¡œê·¸ì¸ ì‹¤íŒ¨ ì‹œ null ë°˜í™˜
+    }
+
+    
+    public void add(UserVo bean) {
+        System.out.println(userDao.addInfo(bean));
     }
     
-    public boolean isEmailAlreadyRegistered(String email) {
-        return userDao.findByEmail(email) != null;
+    // ì¤‘ë³µ ì´ë©”ì¼ í™•ì¸
+    public boolean isEmailAvailable(String userEmail) {
+        int count = userDao.countByEmail(userEmail);
+        return count == 0; // ì´ë©”ì¼ì´ ì¡´ì¬í•˜ì§€ ì•Šìœ¼ë©´ true ë°˜í™˜
     }
-    
-    @Transactional
-    public void register(UserVo user) {
-        if (user.getUserName() == null || user.getUserName().isEmpty()) {
-            throw new IllegalArgumentException("»ç¿ëÀÚ ÀÌ¸§Àº ÇÊ¼öÀÔ´Ï´Ù.");
-        }
-        if (user.getUserEmail() == null || user.getUserEmail().isEmpty()) {
-            throw new IllegalArgumentException("ÀÌ¸ŞÀÏÀº ÇÊ¼öÀÔ´Ï´Ù.");
-        }
-        if (user.getUserPw() == null || user.getUserPw().isEmpty()) {
-            throw new IllegalArgumentException("ºñ¹Ğ¹øÈ£´Â ÇÊ¼öÀÔ´Ï´Ù.");
-        }
 
-//        // ÀÌ¸ŞÀÏ Áßº¹ Ã¼Å©
-//        if (userDao.findByEmail(user.getUserEmail()) != null) {
-//            throw new IllegalStateException("ÀÌ¹Ì µî·ÏµÈ ÀÌ¸ŞÀÏÀÔ´Ï´Ù.");
-//        }
-
-        // ºñ¹Ğ¹øÈ£ ¾ÏÈ£È­
-        user.setUserPw(passwordEncoder.encode(user.getUserPw()));
-
-        int result = userDao.addUser(user);
-        if (result != 1) {
-            throw new RuntimeException("»ç¿ëÀÚ µî·Ï¿¡ ½ÇÆĞÇß½À´Ï´Ù.");
-        }
-    }
 }

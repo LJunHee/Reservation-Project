@@ -1,13 +1,22 @@
 package com.team2.reservation.user.model;
+
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Insert;
 
 @Mapper
 public interface UserDao {
-    @Select(value = "SELECT * FROM users WHERE userEmail = #{userEmail}")
-    UserVo findByEmail(String userEmail);
-    
-    @Insert(value = "INSERT INTO users (userName, userEmail, userPw, userPhone) VALUES (#{userName}, #{userEmail}, #{userPw}, #{userPhone})")
-    int addUser(UserVo user);
+	
+	//로그인 확인
+	@Select(value = "select * from users where userEmail = #{userEmail}")
+	UserVo chklogin(String userEmail);
+	
+	//중복 이메일 확인
+	@Select(value = "select count(*) from users where userEmail = #{userEmail}")
+	int countByEmail(String userEmail);
+	
+	//회원가입
+	@Insert(value = "insert into users (userName,userEmail,userPw,userPhone) values (#{userName},#{userEmail},#{userPw},#{userPhone})")
+	int addInfo(UserVo bean);
 }
