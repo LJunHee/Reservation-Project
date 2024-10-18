@@ -49,7 +49,7 @@
 
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">취소</button>
-                        <button type="submit" class="btn btn-primary">가입하기</button>
+                        <button type="submit" class="btn btn-primary" id="signupSubmitBtn" disabled>가입하기</button> <!-- 초기 비활성화 -->
                     </div>
                 </form>
             </div>
@@ -61,9 +61,10 @@
 $(document).ready(function() {
     var $userPassword = $('#userPassword');
     var $confirmPassword = $('#confirmPassword');
-    var $submitBtn = $('#signupForm button[type="submit"]');
+    var $submitBtn = $('#signupSubmitBtn');
     var $passwordHelp = $('#passwordHelp');
     var $confirmPasswordHelp = $('#confirmPasswordHelp');
+    var emailValid = false; // 이메일 유효성 추적
 
     function validatePassword() {
         var password = $userPassword.val();
@@ -87,7 +88,7 @@ $(document).ready(function() {
             $confirmPasswordHelp.text('비밀번호가 일치합니다 :)').css('color', 'green');
         }
 
-        $submitBtn.prop('disabled', !isValid);
+        $submitBtn.prop('disabled', !isValid || !emailValid); // 비밀번호와 이메일 유효성 체크
         return isValid;
     }
 
@@ -100,20 +101,21 @@ $(document).ready(function() {
             alert('회원가입이 완료되었습니다!'); 
             this.submit(); 
         } else {
-            alert('비밀번호가 일치하지 않습니다. 정보를 다시 확인해주세요.');
+            alert('비밀번호가 일치하지 않거나 이메일이 유효하지 않습니다. 정보를 다시 확인해주세요.');
         }
     });
     
     // 이메일 입력 필드에 입력할 때마다 메시지 초기화
     $('#userEmail').on('input', function() {
         $('#emailCheckMessage').text('');
+        emailValid = false; // 이메일 입력 시 유효성 초기화
+        $submitBtn.prop('disabled', true); // 버튼 비활성화
     });
 
-    
     // 이메일 중복 확인
     $('#checkEmailBtn').on('click', function(e) {
         e.preventDefault();
-        var emailValue = $('#userEmail').val().trim(); // jQuery로 변경
+        var emailValue = $('#userEmail').val().trim();
         console.log("입력된 이메일:", emailValue);
         
         if (emailValue === '') {
@@ -125,24 +127,24 @@ $(document).ready(function() {
             url: '/reservation/check-email',
             type: 'POST',
             contentType: 'application/x-www-form-urlencoded',
-            data: { userEmail: emailValue }, // 객체 형태로 전송
+            data: { userEmail: emailValue },
             success: function(response) {
                 console.log("서버 응답:", response);
                 if (response === "exists") {
-                    $('#emailCheckMessage')
-                        .text('이미 사용 중인 이메일입니다.')
-                        .css('color', 'red');
+                    $('#emailCheckMessage').text('이미 사용 중인 이메일입니다.').css('color', 'red');
+                    emailValid = false; // 이메일이 유효하지 않음
                 } else {
-                    $('#emailCheckMessage')
-                        .text('사용 가능한 이메일입니다.')
-                        .css('color', 'green');
+                    $('#emailCheckMessage').text('사용 가능한 이메일입니다.').css('color', 'green');
+                    emailValid = true; // 이메일이 유효함
                 }
+                // 비밀번호 유효성에 따라 버튼 상태 업데이트
+                validatePassword();
             },
             error: function(xhr, status, error) {
                 console.error("Ajax 오류:", error);
-                $('#emailCheckMessage')
-                    .text('서버 오류가 발생했습니다. 다시 시도해주세요.')
-                    .css('color', 'red');
+                $('#emailCheckMessage').text('서버 오류가 발생했습니다. 다시 시도해주세요.').css('color', 'red');
+                emailValid = false; // 오류 시 유효성 비활성화
+                validatePassword();
             }
         });
     });
