@@ -1,4 +1,4 @@
-		package com.team2.reservation.rest.model;
+		package com.team2.reservation.resrve.model;
 
 import java.util.List;
 
@@ -8,19 +8,19 @@ import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
 @Mapper
-public interface RestDao {
+public interface ReserveDao {
 	
 	@Select(value = "select * from restaurant order by restNo")
-	List<RestVo> pullList();
+	List<ReserveVo> pullList();
 	
 	@Select(value = "select * from restaurant where deptno = #{restNo}")
-	RestVo getList(int restNo);
+	ReserveVo getList(int restNo);
 	
 	@Update(value = "insert into restaurant (restName,restReview,restTime) values (#{restName},#{restReview},now())")
-	int addList(RestVo bean);
+	int addList(ReserveVo bean);
 	
 	@Update("update restaurant set restName=#{restName}, restReview=#{restReview} restTime=now() where restNo=#{restNo}")
-	int setList(RestVo bean);
+	int setList(ReserveVo bean);
 	
 	@Delete("remove from restaurant where restNo=#{val}")
 	int rmList(int restNo);
