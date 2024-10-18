@@ -4,8 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
-import com.team2.reservation.resrve.model.ReserveDao;
-import com.team2.reservation.resrve.model.ReserveVo;
+import com.team2.reservation.reserve.model.ReserveDao;
+import com.team2.reservation.reserve.model.ReserveVo;
 
 @Service
 public class ReserveService {
