@@ -3,20 +3,19 @@ package com.team2.reservation.user.model;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
 
 @Mapper
 public interface UserDao {
-	
-	//ë¡œê·¸ì¸ í™•ì¸
-	@Select(value = "select * from users where userEmail = #{userEmail}")
-	UserVo chklogin(String userEmail);
-	
-	//ì¤‘ë³µ ì´ë©”ì¼ í™•ì¸
-	@Select(value = "select count(*) from users where userEmail = #{userEmail}")
-	int countByEmail(String userEmail);
-	
-	//íšŒì›ê°€ì…
-	@Insert(value = "insert into users (userName,userEmail,userPw,userPhone) values (#{userName},#{userEmail},#{userPw},#{userPhone})")
-	int addInfo(UserVo bean);
+    
+    //·Î±×ÀÎ È®ÀÎ
+    @Select(value = "select * from users where userEmail = #{userEmail}")
+    UserVo chklogin(String userEmail);
+    
+    //Áßº¹ ÀÌ¸ŞÀÏ È®ÀÎ
+    @Select(value = "select count(*) from users where userEmail = #{userEmail}")
+    int countByEmail(String userEmail);
+    
+    //È¸¿ø°¡ÀÔ (ºñ¹Ğ¹øÈ£´Â ÀÌ¹Ì ¾ÏÈ£È­µÇ¾î Àü´ŞµÊ)
+    @Insert(value = "insert into users (userName,userEmail,userPw,userPhone) values (#{userName},#{userEmail},#{userPw},#{userPhone})")
+    int addInfo(UserVo bean);
 }

@@ -64,19 +64,21 @@ $(document).ready(function() {
     var $submitBtn = $('#signupSubmitBtn');
     var $passwordHelp = $('#passwordHelp');
     var $confirmPasswordHelp = $('#confirmPasswordHelp');
-    var emailValid = false; // 이메일 유효성 추적
+    var emailValid = false;
 
     function validatePassword() {
         var password = $userPassword.val();
         var confirmPassword = $confirmPassword.val();
         var isValid = true;
 
-        if (password.length === 0) {
-            $passwordHelp.text('비밀번호를 입력해주세요.').css('color', 'black');
-            isValid = false;
-        } else {
-            $passwordHelp.text('');
-        }
+        // 비밀번호 복잡성 검사
+//        var passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
+//        if (!passwordRegex.test(password)) {
+//            $passwordHelp.text('비밀번호는 8자 이상이며, 문자, 숫자, 특수문자를 포함해야 합니다.').css('color', 'red');
+//            isValid = false;
+//        } else {
+//            $passwordHelp.text('유효한 비밀번호입니다.').css('color', 'green');
+//        }
 
         if (confirmPassword.length === 0) {
             $confirmPasswordHelp.text('비밀번호 확인을 입력해주세요.').css('color', 'black');
@@ -88,7 +90,7 @@ $(document).ready(function() {
             $confirmPasswordHelp.text('비밀번호가 일치합니다 :)').css('color', 'green');
         }
 
-        $submitBtn.prop('disabled', !isValid || !emailValid); // 비밀번호와 이메일 유효성 체크
+        $submitBtn.prop('disabled', !isValid || !emailValid);
         return isValid;
     }
 
@@ -97,21 +99,30 @@ $(document).ready(function() {
 
     $('#signupForm').on('submit', function(e) {
         e.preventDefault(); 
-        if (validatePassword()) {
+        if (validatePassword() && emailValid) {
+            // 폼 제출 전 추가 유효성 검사
+            var name = $('#name').val().trim();
+            var email = $('#userEmail').val().trim();
+            var phone = $('#phone').val().trim();
+
+            if (name === '' || email === '' || phone === '') {
+                alert('모든 필드를 입력해주세요.');
+                return;
+            }
+
+            if (!$('#agreement').is(':checked')) {
+                alert('개인정보 수집 및 이용에 동의해주세요.');
+                return;
+            }
+
+            // 모든 유효성 검사를 통과하면 폼 제출
             alert('회원가입이 완료되었습니다!'); 
             this.submit(); 
         } else {
-            alert('비밀번호가 일치하지 않거나 이메일이 유효하지 않습니다. 정보를 다시 확인해주세요.');
+            alert('입력 정보를 다시 확인해주세요.');
         }
     });
     
-    // 이메일 입력 필드에 입력할 때마다 메시지 초기화
-    $('#userEmail').on('input', function() {
-        $('#emailCheckMessage').text('');
-        emailValid = false; // 이메일 입력 시 유효성 초기화
-        $submitBtn.prop('disabled', true); // 버튼 비활성화
-    });
-
     // 이메일 중복 확인
     $('#checkEmailBtn').on('click', function(e) {
         e.preventDefault();
