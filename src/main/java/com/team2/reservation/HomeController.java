@@ -93,6 +93,7 @@ public class HomeController {
         session.invalidate(); 
         return "redirect:/";
     }
+<<<<<<< HEAD
     @GetMapping("/review")
     public String reviewForm(@RequestParam("reservationId") int reservationId, Model model) {
         model.addAttribute("reservationId", reservationId);
@@ -111,3 +112,14 @@ public class HomeController {
 
 
 
+=======
+    
+    //intro
+    @GetMapping("/restaurant")
+    public String showRestaurants(Model model) {
+    	restService.list(model);
+        return "restaurant"; // 
+    }
+
+}
+>>>>>>> parent of a8d1264 (레스토랑 자세한 정보 UI 추가)
