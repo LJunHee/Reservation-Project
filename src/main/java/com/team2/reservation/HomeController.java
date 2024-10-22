@@ -94,6 +94,12 @@ public class HomeController {
         session.invalidate(); 
         return "redirect:/";
     }
+    @GetMapping("/review")
+    public String reviewForm(@RequestParam("reservationId") int reservationId, Model model) {
+        model.addAttribute("reservationId", reservationId);
+        return "user/review";  // "user" 폴더 하위의 review.jsp로 이동
+    }
+
     
 
     // restaurant intro
