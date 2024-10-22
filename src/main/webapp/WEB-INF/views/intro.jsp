@@ -1,11 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <%@ include file = "template/head.jspf" %>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>레스토랑 예약</title>
-
+    <%@ include file = "template/head.jspf" %>
+    
     <script>
         var currentRestaurant = null;
 
@@ -40,7 +41,29 @@
     </script>
 </head>
 <body>
+<nav class="navbar navbar-default">
+	<div class="container">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle collapsed"
+				data-toggle="collapse" data-target="#navbar" aria-expanded="false"
+				aria-controls="navbar">
+				<span class="sr-only">Toggle navigation</span> 
+				<span class="icon-bar"></span> 
+				<span class="icon-bar"></span> 
+				<span class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" href="${root}/">레스토랑 예약</a>
+		</div>
+		<div id="navbar" class="navbar-collapse collapse">
+			<ul class="nav navbar-nav">
+				<li><a href="${root}/">HOME</a></li>
+				<li class="active"><a href="${root}/intro">예약하기</a></li>
+				<c:if test="${not empty sessionScope.loggedInUser}">
+					<li><a href="${root}/review/">마이페이지</a></li>
+				</c:if>
+			</ul>
 <%@ include file="template/menu.jspf" %>
+
     <div class="container">
         <div class="jumbotron">
             <h1>레스토랑 예약</h1>
