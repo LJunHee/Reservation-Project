@@ -17,7 +17,13 @@
                         <label for="password">비밀번호:</label>
                         <input type="password" class="form-control" id="password" name="userPw" required>
                     </div>
+<<<<<<< HEAD
                     <button type="submit" class="btn btn-primary">로그인</button>
+=======
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">로그인</button>
+                    </div>
+>>>>>>> parent of eefec97 (예약 기능 수정)
                 </form>
             </div>
         </div>
