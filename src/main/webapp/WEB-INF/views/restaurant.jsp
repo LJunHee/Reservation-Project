@@ -27,7 +27,7 @@
                 <li><a href="${root}/">HOME</a></li>
                 <li class="active"><a href="${root}/restaurant">예약하기</a></li>
                 <c:if test="${not empty sessionScope.loggedInUser}">
-                    <li><a href="${root}/review/">마이페이지</a></li>
+                    <li><a href="${root}/mypage/">마이페이지</a></li>
                 </c:if>
             </ul>
             <%@ include file="template/menu.jspf" %>
