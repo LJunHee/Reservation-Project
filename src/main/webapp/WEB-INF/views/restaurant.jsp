@@ -83,6 +83,7 @@
 	</div>
 
 	<%@ include file="restaurant/restInfo.jspf"%>
+	<%@ include file="restaurant/reservation.jspf" %>
 	<%@ include file="template/footer.jspf"%>
 
 	<!-- 모달의 JavaScript 함수 -->
