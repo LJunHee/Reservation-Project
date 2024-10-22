@@ -25,10 +25,20 @@
                         <label for="restTime">영업시간</label>
                         <p class="form-control-static" id="restTime"></p> 
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">취소</button>
-                        <a href="#" class="btn btn-primary" role="button" data-toggle="modal" data-target="#reservationModal">예약</a>
-                    </div>
+                    <c:choose>
+                        <c:when test="${empty sessionScope.loggedInUser}">
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">취소</button>
+                                <a href="#" class="btn btn-primary" role="button" data-toggle="modal" data-target="#loginModal" data-dismiss="modal">예약</a>
+                            </div>
+                        </c:when>
+                        <c:otherwise>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">취소</button>
+                                <a href="#" class="btn btn-primary" role="button" data-toggle="modal" data-target="#reservationModal">예약</a>
+                            </div>
+                        </c:otherwise>
+                    </c:choose>
                 </form>
             </div>
         </div>
