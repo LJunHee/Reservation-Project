@@ -9,88 +9,88 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.*;
 
-@WebServlet({"/intro", "/reservation", "/submitReservation"})  // 3ê°œì˜ URL íŒ¨í„´ì„ ì²˜ë¦¬
+@WebServlet({"/intro", "/reservation", "/submitReservation"})  // 3°³ÀÇ URL ÆĞÅÏÀ» Ã³¸®
 public class IntroController extends HttpServlet {
 
-    // ê°¤ëŸ¬ë¦¬ í˜ì´ì§€ì™€ ì˜ˆì•½ í¼ì„ ì²˜ë¦¬í•˜ëŠ” ë©”ì†Œë“œ
+    // °¶·¯¸® ÆäÀÌÁö¿Í ¿¹¾à ÆûÀ» Ã³¸®ÇÏ´Â ¸Ş¼Òµå
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String path = request.getRequestURI();
 
         if (path.endsWith("/intro")) {
-            showGallery(request, response);  // ê°¤ëŸ¬ë¦¬ í˜ì´ì§€ ìš”ì²­
+            showGallery(request, response);  // °¶·¯¸® ÆäÀÌÁö ¿äÃ»
         } else if (path.endsWith("/reservation")) {
-            showReservationForm(request, response);  // ì˜ˆì•½ í¼ ìš”ì²­
+            showReservationForm(request, response);  // ¿¹¾à Æû ¿äÃ»
         }
     }
 
-    // ì˜ˆì•½ ì²˜ë¦¬í•˜ëŠ” ë©”ì†Œë“œ
+    // ¿¹¾à Ã³¸®ÇÏ´Â ¸Ş¼Òµå
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String path = request.getRequestURI();
 
         if (path.endsWith("/submitReservation")) {
-            processReservation(request, response);  // ì˜ˆì•½ ì²˜ë¦¬
+            processReservation(request, response);  // ¿¹¾à Ã³¸®
         }
     }
 
-    // ê°¤ëŸ¬ë¦¬ í˜ì´ì§€ í‘œì‹œ
+    // °¶·¯¸® ÆäÀÌÁö Ç¥½Ã
     private void showGallery(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Map<String, String>> galleryItems = new ArrayList<>();
 
-        // ë ˆìŠ¤í† ë‘ 1
+        // ·¹½ºÅä¶û 1
         Map<String, String> item1 = new HashMap<>();
         item1.put("id", "1");
         item1.put("image", "photo1.jpg");
-        item1.put("title", "ë ˆìŠ¤í† ë‘ 1");
-        item1.put("description", "ì´ ë ˆìŠ¤í† ë‘ì— ëŒ€í•œ ê°„ë‹¨í•œ ì„¤ëª…ì…ë‹ˆë‹¤.");
+        item1.put("title", "·¹½ºÅä¶û 1");
+        item1.put("description", "ÀÌ ·¹½ºÅä¶û¿¡ ´ëÇÑ °£´ÜÇÑ ¼³¸íÀÔ´Ï´Ù.");
         galleryItems.add(item1);
 
-        // ë ˆìŠ¤í† ë‘ 2
+        // ·¹½ºÅä¶û 2
         Map<String, String> item2 = new HashMap<>();
         item2.put("id", "2");
         item2.put("image", "photo2.jpg");
-        item2.put("title", "ë ˆìŠ¤í† ë‘ 2");
-        item2.put("description", "ì´ ë ˆìŠ¤í† ë‘ì— ëŒ€í•œ ê°„ë‹¨í•œ ì„¤ëª…ì…ë‹ˆë‹¤.");
+        item2.put("title", "·¹½ºÅä¶û 2");
+        item2.put("description", "ÀÌ ·¹½ºÅä¶û¿¡ ´ëÇÑ °£´ÜÇÑ ¼³¸íÀÔ´Ï´Ù.");
         galleryItems.add(item2);
 
-        // ë ˆìŠ¤í† ë‘ 3
+        // ·¹½ºÅä¶û 3
         Map<String, String> item3 = new HashMap<>();
         item3.put("id", "3");
         item3.put("image", "photo3.jpg");
-        item3.put("title", "ë ˆìŠ¤í† ë‘ 3");
-        item3.put("description", "ì´ ë ˆìŠ¤í† ë‘ì— ëŒ€í•œ ê°„ë‹¨í•œ ì„¤ëª…ì…ë‹ˆë‹¤.");
+        item3.put("title", "·¹½ºÅä¶û 3");
+        item3.put("description", "ÀÌ ·¹½ºÅä¶û¿¡ ´ëÇÑ °£´ÜÇÑ ¼³¸íÀÔ´Ï´Ù.");
         galleryItems.add(item3);
 
-        // ë ˆìŠ¤í† ë‘ 4
+        // ·¹½ºÅä¶û 4
         Map<String, String> item4 = new HashMap<>();
         item4.put("id", "4");
         item4.put("image", "photo4.jpg");
-        item4.put("title", "ë ˆìŠ¤í† ë‘ 4");
-        item4.put("description", "ì´ ë ˆìŠ¤í† ë‘ì— ëŒ€í•œ ê°„ë‹¨í•œ ì„¤ëª…ì…ë‹ˆë‹¤.");
+        item4.put("title", "·¹½ºÅä¶û 4");
+        item4.put("description", "ÀÌ ·¹½ºÅä¶û¿¡ ´ëÇÑ °£´ÜÇÑ ¼³¸íÀÔ´Ï´Ù.");
         galleryItems.add(item4);
 
-        request.setAttribute("IntroItems", galleryItems);  // ë°ì´í„°ë¥¼ JSPë¡œ ì „ë‹¬
+        request.setAttribute("IntroItems", galleryItems);  // µ¥ÀÌÅÍ¸¦ JSP·Î Àü´Ş
         RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/views/intro.jsp");
-        dispatcher.forward(request, response);  // ê°¤ëŸ¬ë¦¬ í˜ì´ì§€ë¡œ í¬ì›Œë”©
+        dispatcher.forward(request, response);  // °¶·¯¸® ÆäÀÌÁö·Î Æ÷¿öµù
     }
 
-    // ì˜ˆì•½ í¼ í‘œì‹œ
+    // ¿¹¾à Æû Ç¥½Ã
     private void showReservationForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/views/reservationForm.jsp");
-        dispatcher.forward(request, response);  // ì˜ˆì•½ í¼ í˜ì´ì§€ë¡œ í¬ì›Œë”©
+        dispatcher.forward(request, response);  // ¿¹¾à Æû ÆäÀÌÁö·Î Æ÷¿öµù
     }
 
-    // ì˜ˆì•½ ì²˜ë¦¬
+    // ¿¹¾à Ã³¸®
     private void processReservation(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String people = request.getParameter("people");  // ì˜ˆì•½ ì¸ì›
-        String reservationDate = request.getParameter("reservationDate");  // ì˜ˆì•½ ë‚ ì§œ
+        String people = request.getParameter("people");  // ¿¹¾à ÀÎ¿ø
+        String reservationDate = request.getParameter("reservationDate");  // ¿¹¾à ³¯Â¥
 
-        // ì˜ˆì•½ ì²˜ë¦¬ (ì˜ˆì‹œë¡œ ê°„ë‹¨íˆ ì¶œë ¥)
-        System.out.println("ì˜ˆì•½ëœ ì¸ì›: " + people);
-        System.out.println("ì˜ˆì•½ ë‚ ì§œ: " + reservationDate);
+        // ¿¹¾à Ã³¸® (¿¹½Ã·Î °£´ÜÈ÷ Ãâ·Â)
+        System.out.println("¿¹¾àµÈ ÀÎ¿ø: " + people);
+        System.out.println("¿¹¾à ³¯Â¥: " + reservationDate);
 
-        // ì˜ˆì•½ ì™„ë£Œ í›„ ê°¤ëŸ¬ë¦¬ë¡œ ë¦¬ë‹¤ì´ë ‰íŠ¸
+        // ¿¹¾à ¿Ï·á ÈÄ °¶·¯¸®·Î ¸®´ÙÀÌ·ºÆ®
         response.sendRedirect(request.getContextPath() + "/intro");
     }
 }
