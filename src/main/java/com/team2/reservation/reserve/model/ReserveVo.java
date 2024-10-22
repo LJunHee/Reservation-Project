@@ -12,6 +12,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class ReserveVo {
-	private String restName,restReview;
-	private Timestamp restTime;
+    private int reserveNo;     // 예약 번호
+    private int restNo;        // 식당 번호
+    private String restName;   // 식당 이름
+    private String restReview; // 리뷰
+    private Timestamp restTime;  // 예약 시간
+    private int userNo;        // 사용자 번호
 }
