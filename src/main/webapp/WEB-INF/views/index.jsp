@@ -24,7 +24,7 @@
 		<div id="navbar" class="navbar-collapse collapse">
 			<ul class="nav navbar-nav">
 				<li class="active"><a href="${root}/">HOME</a></li>
-				<li><a href="${root}/intro">예약하기</a></li>
+				<li><a href="${root}/restaurant">예약하기</a></li>
 				<c:if test="${not empty sessionScope.loggedInUser}">
 					<li><a href="${root}/mypage/">마이페이지</a></li>
 				</c:if>
