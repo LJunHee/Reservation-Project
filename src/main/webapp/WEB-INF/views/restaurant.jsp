@@ -82,19 +82,18 @@
 </div>
 
 <%@ include file="restaurant/restInfo.jspf" %>
+<%@ include file="restaurant/reservation.jspf" %>
 <%@ include file="template/footer.jspf" %>
 
 <!-- 모달의 JavaScript 함수 -->
 <script>
 function setRestaurantDetails(button) {
-    // 버튼의 data-* 속성에서 정보 가져오기
     var name = button.getAttribute('data-name');
     var info = button.getAttribute('data-info');
     var phone = button.getAttribute('data-phone');
     var openTime = button.getAttribute('data-open');
     var closeTime = button.getAttribute('data-close');
 
-    // 모달에 정보 설정
     document.querySelector('#restInfoModal #restName').textContent = name;
     document.querySelector('#restInfoModal #restInfo').textContent = info;
     document.querySelector('#restInfoModal #restPhone').textContent = phone;
