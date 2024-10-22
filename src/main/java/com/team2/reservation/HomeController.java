@@ -82,11 +82,12 @@ public class HomeController {
         return "redirect:/";
     }
     
-    //intro
+    //restaurant
     @GetMapping("/restaurant")
     public String showRestaurants(Model model) {
     	restService.list(model);
         return "restaurant"; // 
     }
+
 
 }
