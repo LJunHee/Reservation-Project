@@ -2,11 +2,35 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <%@ include file = "template/head.jspf" %>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
    	<title>레스토랑 예약 플랫폼</title>
+    <%@ include file = "template/head.jspf" %>
 </head>
 <body>
-	<%@ include file="template/menu.jspf" %>
+<nav class="navbar navbar-default">
+	<div class="container">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle collapsed"
+				data-toggle="collapse" data-target="#navbar" aria-expanded="false"
+				aria-controls="navbar">
+				<span class="sr-only">Toggle navigation</span> 
+				<span class="icon-bar"></span> 
+				<span class="icon-bar"></span> 
+				<span class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" href="${root}/">레스토랑 예약</a>
+		</div>
+		<div id="navbar" class="navbar-collapse collapse">
+			<ul class="nav navbar-nav">
+				<li class="active"><a href="${root}/">HOME</a></li>
+				<li><a href="${root}/intro">예약하기</a></li>
+				<c:if test="${not empty sessionScope.loggedInUser}">
+					<li><a href="${root}/review/">마이페이지</a></li>
+				</c:if>
+			</ul>
+<%@ include file="template/menu.jspf" %>
+
     <div class="container">
         <div class="jumbotron">
             <h1>맛있는 식사를 예약하세요</h1>
