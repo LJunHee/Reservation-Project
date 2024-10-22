@@ -12,10 +12,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class ReserveVo {
-    private int reserveNo;     // ¿¹¾à ¹øÈ£
-    private int restNo;        // ½Ä´ç ¹øÈ£
-    private String restName;   // ½Ä´ç ÀÌ¸§
-    private String restReview; // ¸®ºä
-    private Timestamp restTime;  // ¿¹¾à ½Ã°£
-    private int userNo;        // »ç¿ëÀÚ ¹øÈ£
+    private int reserveNo;     // ì˜ˆì•½ ë²ˆí˜¸
+    private int restNo;        // ì‹ë‹¹ ë²ˆí˜¸
+    private String restName;   // ì‹ë‹¹ ì´ë¦„
+    private String restReview; // ë¦¬ë·°
+    private Timestamp restTime;  // ì˜ˆì•½ ì‹œê°„
+    private int userNo;        // ì‚¬ìš©ì ë²ˆí˜¸
 }
