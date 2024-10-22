@@ -10,28 +10,27 @@ import org.apache.ibatis.annotations.Update;
 @Mapper
 public interface ReserveDao {
     
-    // »ç¿ëÀÚÀÇ ¿¹¾à ¸ñ·ÏÀ» Á¶È¸ (userNo¸¦ ÅëÇØ)
+    // ì‚¬ìš©ìì˜ ì˜ˆì•½ ëª©ë¡ì„ ì¡°íšŒ (userNoë¥¼ í†µí•´)
     @Select("SELECT r.restNo, r.restName, r.restReview, res.reserveTime AS restTime, res.reserveNo "
           + "FROM restaurant r JOIN reservation res ON r.restNo = res.restNo "
           + "WHERE res.userNo = #{userNo} ORDER BY res.reserveNo")
     List<ReserveVo> pullListByUser(int userNo);
     
-    // Æ¯Á¤ ¿¹¾à Á¤º¸ Á¶È¸
+    // íŠ¹ì • ì˜ˆì•½ ì •ë³´ ì¡°íšŒ
     @Select("SELECT r.restNo, r.restName, r.restReview, res.reserveTime AS restTime, res.reserveNo "
           + "FROM restaurant r JOIN reservation res ON r.restNo = res.restNo WHERE res.reserveNo = #{reserveNo}")
     ReserveVo getList(int reserveNo);
     
-    // ¿¹¾à Ãß°¡
+    // ì˜ˆì•½ ì¶”ê°€
     @Update("INSERT INTO reservation (restNo, userNo, reserveTime) VALUES (#{restNo}, #{userNo}, NOW())")
     int addList(ReserveVo bean);
     
-    // ¿¹¾à Á¤º¸ ¼öÁ¤
+    // ì˜ˆì•½ ì •ë³´ ìˆ˜ì •
     @Update("UPDATE restaurant SET restName=#{restName}, restReview=#{restReview} WHERE restNo=#{restNo}; "
           + "UPDATE reservation SET reserveTime=NOW() WHERE reserveNo=#{reserveNo}")
     int setList(ReserveVo bean);
 
-    // ¿¹¾à »èÁ¦
+    // ì˜ˆì•½ ì‚­ì œ
     @Delete("DELETE FROM reservation WHERE reserveNo=#{reserveNo}")
     int rmList(int reserveNo);
 }
-

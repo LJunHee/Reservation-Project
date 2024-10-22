@@ -16,7 +16,7 @@ public class ReserveService {
         this.reserveDao = restDao;
     }
 
-    // »ç¿ëÀÚÀÇ ¿¹¾à ¸ñ·ÏÀ» Á¶È¸ÇÏ´Â ¸Ş¼­µå
+    // ì‚¬ìš©ìì˜ ì˜ˆì•½ ëª©ë¡ì„ ì¡°íšŒí•˜ëŠ” ë©”ì„œë“œ
     public void listByUser(int userNo, Model model) {
         model.addAttribute("list", reserveDao.pullListByUser(userNo));
     }
