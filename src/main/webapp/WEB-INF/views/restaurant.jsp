@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>레스토랑 예약</title>
-    <%@ include file = "template/head.jspf" %>
+    <%@ include file="template/head.jspf" %>
     <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 </head>
 <body>
@@ -15,9 +15,9 @@
             <button type="button" class="navbar-toggle collapsed"
                     data-toggle="collapse" data-target="#navbar" aria-expanded="false"
                     aria-controls="navbar">
-                <span class="sr-only">Toggle navigation</span> 
-                <span class="icon-bar"></span> 
-                <span class="icon-bar"></span> 
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
             <a class="navbar-brand" href="${root}/">레스토랑 예약</a>
@@ -30,7 +30,10 @@
                     <li><a href="${root}/review/">마이페이지</a></li>
                 </c:if>
             </ul>
-<%@include file = "template/menu.jspf" %>
+            <%@ include file="template/menu.jspf" %>
+        </div>
+    </div>
+</nav>
 
 <div class="container">
     <div class="jumbotron">
@@ -55,15 +58,17 @@
                                         <h4>${item.restName != null ? item.restName : '이름 없음'}</h4>
                                         <p>${item.restInfo != null ? item.restInfo : '설명이 없습니다.'}</p>
                                         <p>
-                                            <button class="btn btn-primary" 
-                                                    onclick="showRestaurantDetails({
-                                                        name: '${fn:escapeXml(item.restName)}', 
-                                                        description: '${fn:escapeXml(item.restInfo)}',
-                                                        phone: '${fn:escapeXml(item.formattedPhone)}',
-                                                        openTime: '${fn:escapeXml(item.openTimeStr)}',
-                                                        closeTime: '${fn:escapeXml(item.closeTimeStr)}'
-                                                    })" 
-                                                    role="button">자세히 보기</button>
+                                            <a href="#" 
+                                               class="btn btn-primary" 
+                                               role="button" 
+                                               data-toggle="modal" 
+                                               data-target="#restInfoModal"
+                                               data-name="${fn:escapeXml(item.restName)}"
+                                               data-info="${fn:escapeXml(item.restInfo)}"
+                                               data-phone="${fn:escapeXml(item.formattedPhone)}"
+                                               data-open="${fn:escapeXml(item.openTimeStr)}"
+                                               data-close="${fn:escapeXml(item.closeTimeStr)}"
+                                               onclick="setRestaurantDetails(this)">자세히 보기</a>
                                         </p>
                                     </div>
                                 </div>
@@ -76,15 +81,26 @@
     </div>
 </div>
 
-<%@ include file = "template/footer.jspf" %>
+<%@ include file="restaurant/restInfo.jspf" %>
+<%@ include file="template/footer.jspf" %>
+
+<!-- 모달의 JavaScript 함수 -->
 <script>
-    // 레스토랑 상세 정보 알림 표시 함수
-    function showRestaurantDetails(details) {
-        alert("레스토랑: " + details.name + 
-              "\n설명: " + details.description + 
-              "\n전화번호: " + details.phone + 
-              "\n영업시간: " + details.openTime + " - " + details.closeTime);
-    }
+function setRestaurantDetails(button) {
+    // 버튼의 data-* 속성에서 정보 가져오기
+    var name = button.getAttribute('data-name');
+    var info = button.getAttribute('data-info');
+    var phone = button.getAttribute('data-phone');
+    var openTime = button.getAttribute('data-open');
+    var closeTime = button.getAttribute('data-close');
+
+    // 모달에 정보 설정
+    document.querySelector('#restInfoModal #restName').textContent = name;
+    document.querySelector('#restInfoModal #restInfo').textContent = info;
+    document.querySelector('#restInfoModal #restPhone').textContent = phone;
+    document.querySelector('#restInfoModal #restTime').textContent = openTime + " - " + closeTime;
+}
 </script>
+
 </body>
 </html>
