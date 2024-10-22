@@ -18,9 +18,8 @@ public class RestaurantVo {
 	private int restNo;
 	private String restName, restInfo, restPhone;
 	private Time openTime, closeTime;
-<<<<<<< Updated upstream
+
 }
-=======
+
 	
-}
->>>>>>> Stashed changes
+

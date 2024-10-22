@@ -5,16 +5,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>마이 페이지</title>
+    <title>예약 목록</title>
     
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-<%@ page import="java.text.SimpleDateFormat" %>
-<%
-    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-%>
     <%@ include file="template/menu.jspf" %>
     <div class="container mt-5">
         <h2 class="text-center mb-4">예약 목록</h2>
@@ -40,11 +36,7 @@
                 <c:forEach var="reservation" items="${list}">
                     <tr>
                         <td>${reservation.restName}</td>
-<<<<<<< Updated upstream
                         <td>${reservation.restTime}</td>
-=======
-                        <td>${reservation.reserveTime}</td>
->>>>>>> Stashed changes
                         <td>
                             <!-- 리뷰 작성 버튼 -->
                             <form action="${root}/review" method="get" class="d-inline">

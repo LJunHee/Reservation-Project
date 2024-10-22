@@ -12,9 +12,5 @@ import lombok.NoArgsConstructor;
 public class UserVo {
 	private int userNo;
 	private String userName ,userEmail, userPw, userPhone;
-<<<<<<< Updated upstream
-=======
-	
 
->>>>>>> Stashed changes
 }
