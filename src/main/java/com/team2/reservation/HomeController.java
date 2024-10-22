@@ -3,7 +3,10 @@ package com.team2.reservation;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+<<<<<<< Updated upstream
 import org.springframework.http.ResponseEntity;
+=======
+>>>>>>> Stashed changes
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,8 +18,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.team2.reservation.restaurant.model.RestaurantVo;
 import com.team2.reservation.restaurant.service.RestaurantService;
+<<<<<<< Updated upstream
 import com.team2.reservation.reserve.service.ReserveService;
 import com.team2.reservation.user.model.UserDao;
+=======
+import com.team2.reservation.reserve.service.ReserveService; // ReserveService 추가
+>>>>>>> Stashed changes
 import com.team2.reservation.user.model.UserVo;
 import com.team2.reservation.user.service.UserService;
 
@@ -24,6 +31,7 @@ import com.team2.reservation.user.service.UserService;
 public class HomeController {
     private final UserService userService;
     private final RestaurantService restService;
+<<<<<<< Updated upstream
     private final ReserveService reserveService;  // 예약 서비스 추가
     private final UserDao userDao;
 
@@ -33,6 +41,15 @@ public class HomeController {
         this.userService = userService;
         this.reserveService = reserveService;  // 예약 서비스 초기화
         this.userDao = userDao;
+=======
+    private final ReserveService reserveService; // ReserveService 추가
+
+    @Autowired
+    public HomeController(RestaurantService restService, UserService userService, ReserveService reserveService) {
+        this.restService = restService;
+        this.userService = userService;
+        this.reserveService = reserveService; // ReserveService 초기화
+>>>>>>> Stashed changes
     }
     
     // index page
@@ -43,6 +60,7 @@ public class HomeController {
         restService.list(model);
         return "index";
     }
+<<<<<<< Updated upstream
     
     // 마이페이지: 사용자의 예약 목록을 보여주는 기능 추가
     @GetMapping("/mypage")
@@ -58,12 +76,16 @@ public class HomeController {
     }
 
     // register
+=======
+
+>>>>>>> Stashed changes
     @PostMapping("/")
     public String add(@ModelAttribute UserVo bean) {
         userService.add(bean);
         return "redirect:/";
     }
     
+<<<<<<< Updated upstream
     // check-email
     @PostMapping("/check-email")
     public ResponseEntity<String> checkEmail(@RequestParam String userEmail) {
@@ -73,11 +95,17 @@ public class HomeController {
     }
 
     // login
+=======
+>>>>>>> Stashed changes
     @PostMapping("/login")
     public String login(@RequestParam String userEmail, @RequestParam String userPw, HttpSession session, Model model) {
         UserVo user = userService.login(userEmail, userPw);
         if (user != null) {
+<<<<<<< Updated upstream
             System.out.println("Login Success : " + user);
+=======
+            System.out.println("Login successful: " + user);
+>>>>>>> Stashed changes
             session.setAttribute("loggedInUser", user);
             return "redirect:/"; 
         } else {
@@ -86,14 +114,32 @@ public class HomeController {
         }
     }
 
+<<<<<<< Updated upstream
     // logout
+=======
+>>>>>>> Stashed changes
     @GetMapping("/logout")
     public String logout(HttpSession session) {
         session.invalidate(); 
         return "redirect:/";
     }
     
+<<<<<<< Updated upstream
     // restaurant intro
+=======
+    // 마이페이지 조회
+    @GetMapping("/mypage")
+    public String myPage(Model model, HttpSession session) {
+        UserVo user = (UserVo) session.getAttribute("loggedInUser"); 
+        if (user != null) {
+            reserveService.list(model); // 예약 목록을 추가
+            return "mypage"; 
+        } else {
+            return "redirect:/"; // 로그인하지 않은 경우 index로 리다이렉트
+        }
+    }
+    
+>>>>>>> Stashed changes
     @GetMapping("/restaurant/{restNo}")
     @ResponseBody
     public RestaurantVo detail(@PathVariable int restNo) {

@@ -1,13 +1,18 @@
 package com.team2.reservation.user.model;
 
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+<<<<<<< Updated upstream
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
+=======
+>>>>>>> Stashed changes
 
 @Mapper
 public interface UserDao {
     
+<<<<<<< Updated upstream
     // ë¡œê·¸ì¸ í™•ì¸ (ë¹„ë°€ë²ˆí˜¸ëŠ” ì¡°íšŒí•˜ì§€ ì•ŠìŒ)
     @Select("SELECT userNo, userName, userEmail, userPhone FROM users WHERE userEmail = #{userEmail}")
     UserVo findByEmail(@Param("userEmail") String userEmail);
@@ -22,5 +27,17 @@ public interface UserDao {
     
     // íšŒì›ê°€ìž…
     @Insert("INSERT INTO users (userName, userEmail, userPw, userPhone) VALUES (#{userName}, #{userEmail}, #{userPw}, #{userPhone})")
+=======
+    //·Î±×ÀÎ È®ÀÎ
+    @Select(value = "select * from users where userEmail = #{userEmail}")
+    UserVo chklogin(String userEmail);
+    
+    //Áßº¹ ÀÌ¸ÞÀÏ È®ÀÎ
+    @Select(value = "select count(*) from users where userEmail = #{userEmail}")
+    int countByEmail(String userEmail);
+    
+    //È¸¿ø°¡ÀÔ (ºñ¹Ð¹øÈ£´Â ÀÌ¹Ì ¾ÏÈ£È­µÇ¾î Àü´ÞµÊ)
+    @Insert(value = "insert into users (userName,userEmail,userPw,userPhone) values (#{userName},#{userEmail},#{userPw},#{userPhone})")
+>>>>>>> Stashed changes
     int addInfo(UserVo bean);
 }
