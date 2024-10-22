@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.team2.reservation.restaurant.model.RestaurantVo;
 import com.team2.reservation.restaurant.service.RestaurantService;
+import com.team2.reservation.reserve.service.ReserveService;
 import com.team2.reservation.user.model.UserDao;
 import com.team2.reservation.user.model.UserVo;
 import com.team2.reservation.user.service.UserService;
@@ -23,33 +24,47 @@ import com.team2.reservation.user.service.UserService;
 public class HomeController {
     private final UserService userService;
     private final RestaurantService restService;
-	private final UserDao userDao;
+    private final ReserveService reserveService;  // ¿¹¾à ¼­ºñ½º Ãß°¡
+    private final UserDao userDao;
 
     @Autowired
-    public HomeController(RestaurantService restService, UserService userService, UserDao userDao) {
+    public HomeController(RestaurantService restService, UserService userService, ReserveService reserveService, UserDao userDao) {
         this.restService = restService;
         this.userService = userService;
+        this.reserveService = reserveService;  // ¿¹¾à ¼­ºñ½º ÃÊ±âÈ­
         this.userDao = userDao;
     }
     
-    //index page
+    // index page
     @GetMapping("/")
     public String index(Model model, HttpSession session) {
         UserVo user = (UserVo) session.getAttribute("loggedInUser"); 
-        model.addAttribute("user", user); // ï¿½ğµ¨¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½
+        model.addAttribute("user", user); 
         restService.list(model);
         return "index";
     }
-
     
-    //register
+    // ¸¶ÀÌÆäÀÌÁö: »ç¿ëÀÚÀÇ ¿¹¾à ¸ñ·ÏÀ» º¸¿©ÁÖ´Â ±â´É Ãß°¡
+    @GetMapping("/mypage")
+    public String myPage(Model model, HttpSession session) {
+        UserVo user = (UserVo) session.getAttribute("loggedInUser");  // ·Î±×ÀÎÇÑ »ç¿ëÀÚ °¡Á®¿À±â
+        if (user == null) {
+            return "redirect:/login";  // ·Î±×ÀÎµÇ¾î ÀÖÁö ¾ÊÀ¸¸é ·Î±×ÀÎ ÆäÀÌÁö·Î ¸®´ÙÀÌ·ºÆ®
+        }
+
+        // »ç¿ëÀÚÀÇ ¿¹¾à ¸ñ·Ï Á¶È¸ (userNo »ç¿ë)
+        reserveService.listByUser(user.getUserNo(), model);  // ¿¹¾à ¸ñ·ÏÀ» model¿¡ Ãß°¡
+        return "mypage";  // mypage.jsp·Î ÀÌµ¿
+    }
+
+    // register
     @PostMapping("/")
     public String add(@ModelAttribute UserVo bean) {
         userService.add(bean);
         return "redirect:/";
     }
     
-    //check-email
+    // check-email
     @PostMapping("/check-email")
     public ResponseEntity<String> checkEmail(@RequestParam String userEmail) {
         System.out.println("recieve msg : " + userEmail);  
@@ -57,33 +72,31 @@ public class HomeController {
         return isAvailable ? ResponseEntity.ok("available") : ResponseEntity.ok("exists");
     }
 
-
-    
-    //login
+    // login
     @PostMapping("/login")
     public String login(@RequestParam String userEmail, @RequestParam String userPw, HttpSession session, Model model) {
         UserVo user = userService.login(userEmail, userPw);
         if (user != null) {
             System.out.println("Login Success : " + user);
             session.setAttribute("loggedInUser", user);
-            return "redirect:/"; // ë¡œê·¸ì¸ ì„±ê³µì‹œ indexë¡œ ë¦¬ë‹¤ì´ë ‰íŠ¸
+            return "redirect:/"; 
         } else {
             model.addAttribute("errorMessage", "Wrong email or Password");
-            return "index"; // ë¡œê·¸ì¸ ì‹¤íŒ¨ ì‹œ ë¡œê·¸ì¸ í˜ì´ì§€ë¡œ ì´ë™
+            return "index";
         }
     }
 
-    //logout
+    // logout
     @GetMapping("/logout")
     public String logout(HttpSession session) {
         session.invalidate(); 
         return "redirect:/";
     }
     
-    //intro
+    // restaurant intro
     @GetMapping("/restaurant/{restNo}")
-	@ResponseBody
-	public RestaurantVo detail(@PathVariable int restNo) {
-		return restService.detail(restNo);
-	}
+    @ResponseBody
+    public RestaurantVo detail(@PathVariable int restNo) {
+        return restService.detail(restNo);
+    }
 }

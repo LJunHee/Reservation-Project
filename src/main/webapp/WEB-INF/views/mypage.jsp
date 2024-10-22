@@ -26,17 +26,23 @@
             </thead>
             <tbody>
                 <!-- JSTL을 사용하여 예약 목록을 반복 출력 -->
+                <c:if test="${empty list}">
+                    <!-- 예약이 없을 때 안내 문구 -->
+                    <tr>
+                        <td colspan="3" class="text-center">예약이 없습니다.</td>
+                    </tr>
+                </c:if>
+                
                 <c:forEach var="reservation" items="${list}">
                     <tr>
-                        <td>${reservation.restaurantName}</td>
-                        <td>${reservation.reserveDate}</td>
+                        <td>${reservation.restName}</td>
+                        <td>${reservation.restTime}</td>
                         <td>
                             <!-- 리뷰 작성 버튼 -->
-                            <form action="${root}/review" method="post" class="d-inline">
-                                <!-- 예약 ID를 리뷰 페이지로 넘겨주기 위해 hidden 필드 사용 -->
-                                <input type="hidden" name="reservationId" value="${reservation.reserveNo}">
-                                <button type="submit" class="btn btn-primary">리뷰 작성</button>
-                            </form>
+                            <form action="${root}/review" method="get" class="d-inline">
+							    <input type="hidden" name="reservationId" value="${reservation.reserveNo}">
+							    <button type="submit" class="btn btn-primary">리뷰 작성</button>
+							</form>
                         </td>
                     </tr>
                 </c:forEach>
