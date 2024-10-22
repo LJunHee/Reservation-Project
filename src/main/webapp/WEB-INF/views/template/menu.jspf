@@ -2,11 +2,11 @@
 			<ul class="nav navbar-nav navbar-right">
 				<c:choose>
 					<c:when test="${empty sessionScope.loggedInUser}">
-						<li><a href="#" data-toggle="modal" data-target="#loginModal"><span
-								class="glyphicon glyphicon-log-in"></span> 로그인</a></li>
 						<li><a href="#" data-toggle="modal"
 							data-target="#signupModal"><span
 								class="glyphicon glyphicon-user"></span> 회원가입</a></li>
+						<li><a href="#" data-toggle="modal" data-target="#loginModal"><span
+								class="glyphicon glyphicon-log-in"></span> 로그인</a></li>
 					</c:when>
 					<c:otherwise>
 						<li> ${sessionScope.loggedInUser.userName}님 환영합니다!</li>

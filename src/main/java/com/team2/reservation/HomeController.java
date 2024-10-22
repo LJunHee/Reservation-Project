@@ -1,5 +1,7 @@
 package com.team2.reservation;
 
+import java.util.List;
+
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,14 +26,14 @@ import com.team2.reservation.user.service.UserService;
 public class HomeController {
     private final UserService userService;
     private final RestaurantService restService;
-    private final ReserveService reserveService;  // ¿¹¾à ¼­ºñ½º Ãß°¡
+    private final ReserveService reserveService;  // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½
     private final UserDao userDao;
 
     @Autowired
     public HomeController(RestaurantService restService, UserService userService, ReserveService reserveService, UserDao userDao) {
         this.restService = restService;
         this.userService = userService;
-        this.reserveService = reserveService;  // ¿¹¾à ¼­ºñ½º ÃÊ±âÈ­
+        this.reserveService = reserveService;  // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½È­
         this.userDao = userDao;
     }
     
@@ -44,17 +46,17 @@ public class HomeController {
         return "index";
     }
     
-    // ¸¶ÀÌÆäÀÌÁö: »ç¿ëÀÚÀÇ ¿¹¾à ¸ñ·ÏÀ» º¸¿©ÁÖ´Â ±â´É Ãß°¡
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½: ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½ ï¿½ß°ï¿½
     @GetMapping("/mypage")
     public String myPage(Model model, HttpSession session) {
-        UserVo user = (UserVo) session.getAttribute("loggedInUser");  // ·Î±×ÀÎÇÑ »ç¿ëÀÚ °¡Á®¿À±â
+        UserVo user = (UserVo) session.getAttribute("loggedInUser");  // ï¿½Î±ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         if (user == null) {
-            return "redirect:/login";  // ·Î±×ÀÎµÇ¾î ÀÖÁö ¾ÊÀ¸¸é ·Î±×ÀÎ ÆäÀÌÁö·Î ¸®´ÙÀÌ·ºÆ®
+            return "redirect:/login";  // ï¿½Î±ï¿½ï¿½ÎµÇ¾ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Î±ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ì·ï¿½Æ®
         }
 
-        // »ç¿ëÀÚÀÇ ¿¹¾à ¸ñ·Ï Á¶È¸ (userNo »ç¿ë)
-        reserveService.listByUser(user.getUserNo(), model);  // ¿¹¾à ¸ñ·ÏÀ» model¿¡ Ãß°¡
-        return "mypage";  // mypage.jsp·Î ÀÌµ¿
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½È¸ (userNo ï¿½ï¿½ï¿½)
+        reserveService.listByUser(user.getUserNo(), model);  // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ modelï¿½ï¿½ ï¿½ß°ï¿½
+        return "mypage";  // mypage.jspï¿½ï¿½ ï¿½Ìµï¿½
     }
 
     // register
@@ -99,6 +101,7 @@ public class HomeController {
     }
 
     
+
     // restaurant intro
     @GetMapping("/restaurant/{restNo}")
     @ResponseBody
@@ -106,3 +109,8 @@ public class HomeController {
         return restService.detail(restNo);
     }
 }
+
+
+
+}
+
