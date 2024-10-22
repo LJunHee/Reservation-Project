@@ -26,14 +26,14 @@ import com.team2.reservation.user.service.UserService;
 public class HomeController {
     private final UserService userService;
     private final RestaurantService restService;
-    private final ReserveService reserveService;  // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½
+    private final ReserveService reserveService;  
     private final UserDao userDao;
 
     @Autowired
     public HomeController(RestaurantService restService, UserService userService, ReserveService reserveService, UserDao userDao) {
         this.restService = restService;
         this.userService = userService;
-        this.reserveService = reserveService;  // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½È­
+        this.reserveService = reserveService;  
         this.userDao = userDao;
     }
     
@@ -46,17 +46,16 @@ public class HomeController {
         return "index";
     }
     
-    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½: ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½ ï¿½ß°ï¿½
+    // mypage
     @GetMapping("/mypage")
     public String myPage(Model model, HttpSession session) {
-        UserVo user = (UserVo) session.getAttribute("loggedInUser");  // ï¿½Î±ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+        UserVo user = (UserVo) session.getAttribute("loggedInUser");  
         if (user == null) {
-            return "redirect:/login";  // ï¿½Î±ï¿½ï¿½ÎµÇ¾ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Î±ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ì·ï¿½Æ®
+            return "redirect:/login";  
         }
 
-        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½È¸ (userNo ï¿½ï¿½ï¿½)
-        reserveService.listByUser(user.getUserNo(), model);  // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ modelï¿½ï¿½ ï¿½ß°ï¿½
-        return "mypage";  // mypage.jspï¿½ï¿½ ï¿½Ìµï¿½
+        reserveService.listByUser(user.getUserNo(), model);
+        return "mypage"; 
     }
 
     // register
@@ -97,7 +96,7 @@ public class HomeController {
     @GetMapping("/review")
     public String reviewForm(@RequestParam("reservationId") int reservationId, Model model) {
         model.addAttribute("reservationId", reservationId);
-        return "user/review";  // "user" Æú´õ ÇÏÀ§ÀÇ review.jsp·Î ÀÌµ¿
+        return "user/review";  // "user" ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ review.jspï¿½ï¿½ ï¿½Ìµï¿½
     }
 
     
@@ -111,6 +110,4 @@ public class HomeController {
 }
 
 
-
-}
 
