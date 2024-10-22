@@ -1,5 +1,7 @@
 package com.team2.reservation;
 
+import java.util.List;
+
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +38,7 @@ public class HomeController {
     @GetMapping("/")
     public String index(Model model, HttpSession session) {
         UserVo user = (UserVo) session.getAttribute("loggedInUser"); 
-        model.addAttribute("user", user); // �𵨿� ����� ���� �߰�
+        model.addAttribute("user", user); // 모델에 사용자 정보 추가
         restService.list(model);
         return "index";
     }
@@ -78,6 +80,13 @@ public class HomeController {
     public String logout(HttpSession session) {
         session.invalidate(); 
         return "redirect:/";
+    }
+    
+    //intro
+    @GetMapping("/intro")
+    public String showRestaurants(Model model) {
+    	restService.list(model);
+        return "intro"; // 갤러리 페이지로 이동
     }
     
     //intro
