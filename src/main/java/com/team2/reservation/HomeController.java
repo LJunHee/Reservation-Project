@@ -36,7 +36,7 @@ public class HomeController {
     @GetMapping("/")
     public String index(Model model, HttpSession session) {
         UserVo user = (UserVo) session.getAttribute("loggedInUser"); 
-        model.addAttribute("user", user); // 占쏜델울옙 占쏙옙占쏙옙占� 占쏙옙占쏙옙 占쌩곤옙
+        model.addAttribute("user", user); // �𵨿� ����� ���� �߰�
         restService.list(model);
         return "index";
     }
@@ -66,10 +66,10 @@ public class HomeController {
         if (user != null) {
             System.out.println("Login Success : " + user);
             session.setAttribute("loggedInUser", user);
-            return "redirect:/"; // 濡쒓렇�씤 �꽦怨듭떆 index濡� 由щ떎�씠�젆�듃
+            return "redirect:/"; // 로그인 성공시 index로 리다이렉트
         } else {
             model.addAttribute("errorMessage", "Wrong email or Password");
-            return "index"; // 濡쒓렇�씤 �떎�뙣 �떆 濡쒓렇�씤 �럹�씠吏�濡� �씠�룞
+            return "index"; // 로그인 실패 시 로그인 페이지로 이동
         }
     }
 
@@ -79,10 +79,7 @@ public class HomeController {
         session.invalidate(); 
         return "redirect:/";
     }
-    @GetMapping("/intro")
-    public String intro(Model model) {
-    	return "intro";
-    }
+    
     //intro
     @GetMapping("/restaurant/{restNo}")
 	@ResponseBody
