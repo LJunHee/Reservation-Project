@@ -10,30 +10,32 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 </head>
 <body>
-	<nav class="navbar navbar-default">
-		<div class="container">
-			<div class="navbar-header">
-				<button type="button" class="navbar-toggle collapsed"
-					data-toggle="collapse" data-target="#navbar" aria-expanded="false"
-					aria-controls="navbar">
-					<span class="sr-only">Toggle navigation</span> <span
-						class="icon-bar"></span> <span class="icon-bar"></span> <span
-						class="icon-bar"></span>
-				</button>
-				<a class="navbar-brand" href="${root}/">레스토랑 예약</a>
-			</div>
-			<div id="navbar" class="navbar-collapse collapse">
-				<ul class="nav navbar-nav">
-					<li><a href="${root}/">HOME</a></li>
-					<li class="active"><a href="${root}/restaurant">예약하기</a></li>
-					<c:if test="${not empty sessionScope.loggedInUser}">
-						<li><a href="${root}/review/">마이페이지</a></li>
-					</c:if>
-				</ul>
-				<%@ include file="template/menu.jspf"%>
-			</div>
-		</div>
-	</nav>
+
+<nav class="navbar navbar-default">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed"
+                    data-toggle="collapse" data-target="#navbar" aria-expanded="false"
+                    aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="${root}/">레스토랑 예약</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li><a href="${root}/">HOME</a></li>
+                <li class="active"><a href="${root}/restaurant">예약하기</a></li>
+                <c:if test="${not empty sessionScope.loggedInUser}">
+                    <li><a href="${root}/mypage/">마이페이지</a></li>
+                </c:if>
+            </ul>
+            <%@ include file="template/menu.jspf" %>
+        </div>
+    </div>
+</nav>
 
 	<div class="container">
 		<div class="jumbotron">
@@ -82,28 +84,26 @@
 		</div>
 	</div>
 
-	<%@ include file="restaurant/restInfo.jspf"%>
-	<%@ include file="restaurant/reservation.jspf" %>
-	<%@ include file="template/footer.jspf"%>
 
-	<!-- 모달의 JavaScript 함수 -->
-	<script>
-		function setRestaurantDetails(button) {
-			// 버튼의 data-* 속성에서 정보 가져오기
-			var name = button.getAttribute('data-name');
-			var info = button.getAttribute('data-info');
-			var phone = button.getAttribute('data-phone');
-			var openTime = button.getAttribute('data-open');
-			var closeTime = button.getAttribute('data-close');
+<%@ include file="restaurant/restInfo.jspf" %>
+<%@ include file="restaurant/reservation.jspf" %>
+<%@ include file="template/footer.jspf" %>
 
-			// 모달에 정보 설정
-			document.querySelector('#restInfoModal #restName').textContent = name;
-			document.querySelector('#restInfoModal #restInfo').textContent = info;
-			document.querySelector('#restInfoModal #restPhone').textContent = phone;
-			document.querySelector('#restInfoModal #restTime').textContent = openTime
-					+ " - " + closeTime;
-		}
-	</script>
+<!-- 모달의 JavaScript 함수 -->
+<script>
+function setRestaurantDetails(button) {
+    var name = button.getAttribute('data-name');
+    var info = button.getAttribute('data-info');
+    var phone = button.getAttribute('data-phone');
+    var openTime = button.getAttribute('data-open');
+    var closeTime = button.getAttribute('data-close');
+
+    document.querySelector('#restInfoModal #restName').textContent = name;
+    document.querySelector('#restInfoModal #restInfo').textContent = info;
+    document.querySelector('#restInfoModal #restPhone').textContent = phone;
+    document.querySelector('#restInfoModal #restTime').textContent = openTime + " - " + closeTime;
+}
+</script>
 
 </body>
 </html>

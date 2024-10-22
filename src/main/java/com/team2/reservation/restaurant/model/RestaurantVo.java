@@ -31,3 +31,4 @@ public class RestaurantVo {
         return closeTime != null ? closeTime.toString().substring(0, 5) : null;
     }
 }
+

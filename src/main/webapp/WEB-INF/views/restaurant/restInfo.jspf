@@ -10,25 +10,35 @@
             <div class="modal-body">
                 <form id="restInfoForm" action="${root}/restaurant" method="post">
                     <div class="form-group">
-                        <label for="restName">레스토랑 명:</label>
+                        <label for="restName">레스토랑 명</label>
                         <p class="form-control-static" id="restName"></p> 
                     </div>
                     <div class="form-group">
-                        <label for="restInfo">레스토랑 설명:</label>
+                        <label for="restInfo">레스토랑 설명</label>
                         <p class="form-control-static" id="restInfo"></p> 
                     </div>
                     <div class="form-group">
-                        <label for="restPhone">전화번호:</label>
+                        <label for="restPhone">전화번호</label>
                         <p class="form-control-static" id="restPhone"></p> 
                     </div>
                     <div class="form-group">
-                        <label for="restTime">영업시간:</label>
+                        <label for="restTime">영업시간</label>
                         <p class="form-control-static" id="restTime"></p> 
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">취소</button>
-                        <button type="submit" class="btn btn-primary">예약하기</button>
-                    </div>
+                    <c:choose>
+                        <c:when test="${empty sessionScope.loggedInUser}">
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">취소</button>
+                                <a href="#" class="btn btn-primary" role="button" data-toggle="modal" data-target="#loginModal" data-dismiss="modal">예약</a>
+                            </div>
+                        </c:when>
+                        <c:otherwise>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">취소</button>
+                                <a href="#" class="btn btn-primary" role="button" data-toggle="modal" data-target="#reservationModal">예약</a>
+                            </div>
+                        </c:otherwise>
+                    </c:choose>
                 </form>
             </div>
         </div>

@@ -1,7 +1,5 @@
 package com.team2.reservation;
 
-import java.util.List;
-
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,12 +8,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.team2.reservation.restaurant.model.RestaurantVo;
+import com.team2.reservation.reserve.service.ReserveService;
 import com.team2.reservation.restaurant.service.RestaurantService;
 import com.team2.reservation.user.model.UserDao;
 import com.team2.reservation.user.model.UserVo;
@@ -25,13 +21,16 @@ import com.team2.reservation.user.service.UserService;
 public class HomeController {
     private final UserService userService;
     private final RestaurantService restService;
+    private final ReserveService reserveService;
 	private final UserDao userDao;
 
     @Autowired
-    public HomeController(RestaurantService restService, UserService userService, UserDao userDao) {
+    public HomeController(RestaurantService restService, ReserveService reserveService, UserService userService, UserDao userDao) {
         this.restService = restService;
         this.userService = userService;
+        this.reserveService = reserveService; 
         this.userDao = userDao;
+        
     }
     
     //index page
@@ -81,6 +80,18 @@ public class HomeController {
         session.invalidate(); 
         return "redirect:/";
     }
+    
+    // 마이페이지- 사용자의 예약 목록을 보여주는 기능 추가
+    @GetMapping("/mypage")
+    public String myPage(Model model, HttpSession session) {
+        UserVo user = (UserVo) session.getAttribute("loggedInUser");  // 로그인한 사용자 가져오기
+
+        // 사용자의 예약 목록 조회 (userNo 사용)
+        reserveService.listByUser(user.getUserNo(), model);  // 예약 목록을 model에 추가
+        return "mypage";  // mypage.jsp로 이동
+    }
+    
+
     
     //restaurant
     @GetMapping("/restaurant")
