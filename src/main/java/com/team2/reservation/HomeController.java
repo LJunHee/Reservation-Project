@@ -83,16 +83,10 @@ public class HomeController {
     }
     
     //intro
-    @GetMapping("/intro")
+    @GetMapping("/restaurant")
     public String showRestaurants(Model model) {
     	restService.list(model);
-        return "intro"; // 갤러리 페이지로 이동
+        return "restaurant"; // 
     }
-    
-    //intro
-    @GetMapping("/restaurant/{restNo}")
-	@ResponseBody
-	public RestaurantVo detail(@PathVariable int restNo) {
-		return restService.detail(restNo);
-	}
+
 }
