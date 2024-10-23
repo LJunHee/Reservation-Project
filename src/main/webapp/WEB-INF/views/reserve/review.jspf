@@ -10,12 +10,13 @@
             </div>
             <div class="modal-body">
                 <form id="reviewForm" action="${root}/review/add" method="post">
-                	<input type="hidden" name="restNo" id = "restNo" value="">
+                    <input type="hidden" id="restNo" name="restNo" value="">
                     <div class="form-group">
                         <label for="restName">레스토랑 선택</label>
-                        <select id="restName" name="restName" class="form-control" required>
-                            <c:forEach var="reservation" items="${list}" varStatus="status">
-                                <option value="${status.index + 1}">${reservation.restName} / Time : ${reservation.getReserveTimeStr()}</option>
+                        <select id="restName" name="restName" class="form-control" onchange="setRestNo(this.value)" required>
+                            <option value="">선택하세요</option>
+                            <c:forEach var="reservation" items="${list}">
+                                <option value="${reservation.restNo}">${reservation.restName} / Time : ${reservation.getReserveTimeStr()}</option>
                             </c:forEach>
                         </select>
                     </div>
@@ -50,38 +51,42 @@
         </div>
     </div>
 </div>
+
 <script>
 function setRestNo(restNo) {
     document.getElementById('restNo').value = restNo;
 }
 </script>
+
 <style>
-    .star-rating {
-        direction: rtl;
-        display: flex;
-        justify-content: flex-start; /* 왼쪽 정렬 */
-    }
+.star-rating {
+    display: flex;
+    direction: rtl; /* 오른쪽에서 왼쪽으로 설정 */
+    justify-content: flex-start; /* 왼쪽 정렬 */
+}
 
-    .star-rating input {
-        display: none; /* 숨기기 */
-    }
+.star-rating input {
+    display: none; /* 숨기기 */
+}
 
-    .star {
-        font-size: 30px; /* 별 크기 조절 */
-        color: lightgray; /* 기본 색상 */
-        cursor: pointer;
-        padding: 0 5px; /* 간격 추가 */
-    }
+.star {
+    font-size: 30px; /* 별 크기 조절 */
+    color: lightgray; /* 기본 색상 */
+    cursor: pointer;
+    margin-right: 5px; /* 오른쪽 여백 추가 */
+}
 
-    /* Hover 시 및 선택된 별 */ 
-    .star:hover,
-    .star:hover ~ .star {
-        color: gold; /* 선택된 별 색상 */
-    }
+/* Hover 시 별 색상 변경 */
+.star:hover,
+.star:hover ~ .star {
+    color: gold; /* 선택된 별 색상 */
+}
 
-    /* 체크된 별 및 그 이전 별 색상 */
-    .star-rating input:checked + .star,
-    .star-rating input:checked + .star ~ .star {
-        color: gold; /* 체크된 별 및 이전 별 색상 */
-    }
+/* 체크된 별 및 그 이전 별 색상 */
+.star-rating input:checked + .star,
+.star-rating input:checked + .star ~ .star {
+    color: gold; /* 체크된 별 및 이전 별 색상 */
+}
+
+
 </style>
