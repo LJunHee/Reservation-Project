@@ -56,7 +56,7 @@
 								<div class="col-md-3">
 									<div class="thumbnail">
 										<img
-											src="${pageContext.request.contextPath}/resources/img/${item.restName}.jpg"
+											src="${root}/resources/img/${item.restName}.jpg"
 											alt="사진 ${item.restName}"
 											onerror="this.src='${pageContext.request.contextPath}/images/default.jpg'"
 											class="img-responsive">

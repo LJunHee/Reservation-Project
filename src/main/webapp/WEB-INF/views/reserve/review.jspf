@@ -6,16 +6,16 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="reviewModalLabel">예약</h4>
+                <h4 class="modal-title" id="reviewModalLabel">리뷰 작성</h4>
             </div>
             <div class="modal-body">
                 <form id="reviewForm" action="${root}/restaurant" method="post">
                     <div class="form-group">
                         <label for="restName">레스토랑 선택</label>
                         <select id="restName" name="restName" class="form-control" required>
-                            <option value="1">모수</option>
-                            <option value="2">티엔미미</option>
-                            <option value="3">트리드</option>
+                        	<c:forEach var="reservation" items="${list}" varStatus = "status">
+                        		<option value="${status.index + 1}">${reservation.restName}</option>
+                        	</c:forEach>
                         </select>
                     </div>
                     <div class="form-group">
