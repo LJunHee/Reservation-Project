@@ -10,23 +10,38 @@
             </div>
             <div class="modal-body">
                 <form id="reviewForm" action="${root}/review/add" method="post">
-                    <input type="hidden" id="restNo" name="restNo" value="0"/>
+                    <input type="hidden" id="restNo" name="restNo" value="">
                     <div class="form-group">
-                        <label for="reviewScore">별점</label>
-                        <select id="reviewScore" name="reviewScore" class="form-control" required>
-                            <option value="1">★☆☆☆☆</option>
-                            <option value="2">★★☆☆☆</option>
-                            <option value="3">★★★☆☆</option>
-                            <option value="4">★★★★☆</option>
-                            <option value="5">★★★★★</option>
+                        <label for="restName">레스토랑 선택</label>
+                        <select id="restName" name="restName" class="form-control" onchange="setRestNo(this.value)" required>
+                            <option value="">선택하세요</option>
+                            <c:forEach var="reservation" items="${list}">
+                                <option value="${reservation.restNo}">${reservation.restName} / Time : ${reservation.getReserveTimeStr()}</option>
+                            </c:forEach>
                         </select>
                     </div>
 
                     <div class="form-group">
-                        <label for="reviewContent">리뷰 내용</label>
-                        <textarea id="reviewContent" name="reviewContent" class="form-control" 
-                                rows="5" style="resize: none;" required></textarea>
+                        <label for="reviewScore">별점</label>
+                        <div id="starRating" class="star-rating" style="justify-content: flex-start;">
+                            <input type="radio" name="reviewScore" value="1" id="star1" required />
+                            <label for="star1" class="star">&#9733;</label>
+                            <input type="radio" name="reviewScore" value="2" id="star2" />
+                            <label for="star2" class="star">&#9733;</label>
+                            <input type="radio" name="reviewScore" value="3" id="star3" />
+                            <label for="star3" class="star">&#9733;</label>
+                            <input type="radio" name="reviewScore" value="4" id="star4" />
+                            <label for="star4" class="star">&#9733;</label>
+                            <input type="radio" name="reviewScore" value="5" id="star5" />
+                            <label for="star5" class="star">&#9733;</label>
+                        </div>
                     </div>
+                    
+                    <div class="form-group">
+                        <label for="reviewContent">리뷰 내용</label>
+                        <textarea id="reviewContent" name="reviewContent" class="form-control" rows="5" style="width: 100%; height: 200px; resize: none;"></textarea>
+                    </div>
+
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">취소</button>
                         <button type="submit" class="btn btn-primary">작성</button>
@@ -42,3 +57,36 @@ function setRestNo(restNo) {
     document.getElementById('restNo').value = restNo;
 }
 </script>
+
+<style>
+.star-rating {
+    display: flex;
+    direction: rtl; /* 오른쪽에서 왼쪽으로 설정 */
+    justify-content: flex-start; /* 왼쪽 정렬 */
+}
+
+.star-rating input {
+    display: none; /* 숨기기 */
+}
+
+.star {
+    font-size: 30px; /* 별 크기 조절 */
+    color: lightgray; /* 기본 색상 */
+    cursor: pointer;
+    margin-right: 5px; /* 오른쪽 여백 추가 */
+}
+
+/* Hover 시 별 색상 변경 */
+.star:hover,
+.star:hover ~ .star {
+    color: gold; /* 선택된 별 색상 */
+}
+
+/* 체크된 별 및 그 이전 별 색상 */
+.star-rating input:checked + .star,
+.star-rating input:checked + .star ~ .star {
+    color: gold; /* 체크된 별 및 이전 별 색상 */
+}
+
+
+</style>
