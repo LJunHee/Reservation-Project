@@ -30,39 +30,11 @@
 						<label for="restTime">영업시간</label>
 						<p class="form-control-static" id="restTime"></p>
 					</div>
-
-
-					<div id="reviewList" class="review-list">
-						<label>리뷰</label>
-						<c:forEach var="review" items="${reviews}">
-							<div class="review-item card mb-3">
-								<div class="card-body">
-									<div class="review-header">
-										<span class="review-stars"> 
-											<c:forEach begin="1" end="${review.reviewScore}">
-												<span class="star filled">★</span>
-											</c:forEach> 
-											<c:forEach begin="${review.reviewScore + 1}" end="5">
-												<span class="star">☆</span>
-											</c:forEach>
-										</span> 
-										<span class="review-date"> 
-											<fmt:formatDate value="${review.createDate}" pattern="yyyy-MM-dd HH:mm" />
-										</span>
-									</div>
-									<div class="review-content mt-2">${review.reviewContent}
-									</div>
-									<div class="review-footer text-muted">
-										<small>작성자: ${review.userName}</small>
-										<c:if test="${sessionScope.userNo eq review.userNo}">
-											<button class="btn btn-sm btn-danger float-right"
-												onclick="deleteReview(${review.reviewNo})">삭제</button>
-										</c:if>
-									</div>
-								</div>
-							</div>
-						</c:forEach>
+					<div class="form-group">
+						<label for="restTime">리뷰</label>
 					</div>
+
+
 					<c:choose>
 						<c:when test="${empty sessionScope.loggedInUser}">
 							<div class="modal-footer">
@@ -70,7 +42,7 @@
 									data-dismiss="modal">취소</button>
 								<a href="#" class="btn btn-primary" role="button"
 									data-toggle="modal" data-target="#loginModal"
-									data-dismiss="modal">예약</a>
+									data-dismiss="modal">로그인</a>
 							</div>
 						</c:when>
 						<c:otherwise>
