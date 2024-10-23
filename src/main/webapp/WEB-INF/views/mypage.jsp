@@ -70,11 +70,7 @@
         </div>
     </div>
 </nav>
-<script>
-function setRestNo(restNo) {
-    document.getElementById('restNo').value = restNo;
-}
-</script>
+
 <%@ include file="reserve/review.jspf" %>
 </body>
 </html>
