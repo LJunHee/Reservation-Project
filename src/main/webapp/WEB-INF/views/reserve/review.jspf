@@ -10,7 +10,7 @@
             </div>
             <div class="modal-body">
                 <form id="reviewForm" action="${root}/review/add" method="post">
-                    <input type="hidden" id="restNo" name="restNo" value="0"/>
+                	<input type="hidden" name="restNo" id = "restNo" value="">
                     <div class="form-group">
                         <label for="restName">레스토랑 선택</label>
                         <select id="restName" name="restName" class="form-control" required>
@@ -21,24 +21,24 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="restScore">별점</label>
+                        <label for="reviewScore">별점</label>
                         <div id="starRating" class="star-rating" style="justify-content: flex-start;">
-                            <input type="radio" name="restScore" value="1" id="star1" required />
+                            <input type="radio" name="reviewScore" value="1" id="star1" required />
                             <label for="star1" class="star">&#9733;</label>
-                            <input type="radio" name="restScore" value="2" id="star2" />
+                            <input type="radio" name="reviewScore" value="2" id="star2" />
                             <label for="star2" class="star">&#9733;</label>
-                            <input type="radio" name="restScore" value="3" id="star3" />
+                            <input type="radio" name="reviewScore" value="3" id="star3" />
                             <label for="star3" class="star">&#9733;</label>
-                            <input type="radio" name="restScore" value="4" id="star4" />
+                            <input type="radio" name="reviewScore" value="4" id="star4" />
                             <label for="star4" class="star">&#9733;</label>
-                            <input type="radio" name="restScore" value="5" id="star5" />
+                            <input type="radio" name="reviewScore" value="5" id="star5" />
                             <label for="star5" class="star">&#9733;</label>
                         </div>
                     </div>
                     
                     <div class="form-group">
-                        <label for="restReview">리뷰 내용</label>
-                        <textarea id="restReview" name="restReview" class="form-control" rows="5" style="width: 100%; height: 200px; resize: none;"></textarea>
+                        <label for="reviewContent">리뷰 내용</label>
+                        <textarea id="reviewContent" name="reviewContent" class="form-control" rows="5" style="width: 100%; height: 200px; resize: none;"></textarea>
                     </div>
 
                     <div class="modal-footer">
@@ -50,7 +50,11 @@
         </div>
     </div>
 </div>
-
+<script>
+function setRestNo(restNo) {
+    document.getElementById('restNo').value = restNo;
+}
+</script>
 <style>
     .star-rating {
         direction: rtl;
