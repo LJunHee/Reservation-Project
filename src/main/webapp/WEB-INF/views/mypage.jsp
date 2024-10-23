@@ -32,7 +32,7 @@
 			</ul>
     <%@ include file="template/menu.jspf" %>
     <div class="container mt-5">
-        <h2 class="text-center mb-4">예약 목록</h2>
+        <h2 class="text-center mb-4">나의 예약 목록</h2>
 
         <!-- 예약 목록 테이블 -->
         <table class="table table-striped table-bordered">
@@ -40,6 +40,7 @@
                 <tr>
                     <th scope="col">식당명</th>
                     <th scope="col">예약 날짜</th>
+                    <th scope="col">예약 인원 수</th>
                     <th scope="col">리뷰 작성</th>
                 </tr>
             </thead>
@@ -56,12 +57,9 @@
                     <tr>
                         <td>${reservation.restName}</td>
                         <td>${reservation.restTime}</td>
+                        <td>${reservation.headCount}</td>
                         <td>
-                            <!-- 리뷰 작성 버튼 -->
-                            <form action="${root}/review" method="get" class="d-inline">
-							    <input type="hidden" name="reservationId" value="${reservation.reserveNo}">
-							    <button type="submit" class="btn btn-primary">리뷰 작성</button>
-							</form>
+                           <a href="#" class="btn btn-primary" role="button"data-toggle="modal" data-target="#reviewModal">리뷰 작성</a>
                         </td>
                     </tr>
                 </c:forEach>
@@ -69,7 +67,6 @@
         </table>
     </div>
 
-    <!-- Bootstrap JS (Optional for interactive components like modals or tooltips) -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<%@ include file="reserve/review.jspf" %>
 </body>
 </html>
