@@ -39,7 +39,7 @@
 						<p>다양한 레스토랑을 쉽고 빠르게 예약할 수 있습니다.</p>
 						<p>
 							<a class="btn btn-primary btn-lg"
-								href="${pageContext.request.contextPath}/intro" role="button">지금
+								href="${pageContext.request.contextPath}/restaurant" role="button">지금
 								예약하기</a>
 						</p>
 
