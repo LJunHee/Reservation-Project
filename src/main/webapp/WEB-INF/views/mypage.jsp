@@ -39,9 +39,8 @@
             <thead class="table-dark">
                 <tr>
                     <th scope="col">식당명</th>
-                    <th scope="col">예약 날짜</th>
+                    <th scope="col">예약 시간</th>
                     <th scope="col">예약 인원 수</th>
-                    <th scope="col">리뷰 작성</th>
                 </tr>
             </thead>
             <tbody>
@@ -55,16 +54,16 @@
                 
                 <c:forEach var="reservation" items="${list}">
                     <tr>
-                        <td>${reservation.restName}</td>
-                        <td>${reservation.restTime}</td>
-                        <td>${reservation.headCount}</td>
-                        <td>
-                           <a href="#" class="btn btn-primary" role="button"data-toggle="modal" data-target="#reviewModal">리뷰 작성</a>
-                        </td>
+                        <td><a href = "#">${reservation.restName}</a></td>
+                        <td><a href = "#">${reservation.getReserveTimeStr()}</a></td>
+                        <td><a href = "#">${reservation.headCount}</a></td>
                     </tr>
                 </c:forEach>
             </tbody>
         </table>
+        <div class = "text-right">
+	        <a href="#" class="btn btn-primary" role="button"data-toggle="modal" data-target="#reviewModal">리뷰 작성</a>        
+        </div>
     </div>
 
 <%@ include file="reserve/review.jspf" %>
