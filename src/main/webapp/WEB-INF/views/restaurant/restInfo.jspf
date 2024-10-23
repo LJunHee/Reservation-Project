@@ -26,6 +26,10 @@
                         <label for="restTime">영업시간</label>
                         <p class="form-control-static" id="restTime"></p> 
                     </div>
+                    <div class="form-group">
+                    	<label for="restReview">리뷰</label>
+                    	<p class="form-control-static" id="restReview"></p>
+                    </div>
                     <c:choose>
                         <c:when test="${empty sessionScope.loggedInUser}">
                             <div class="modal-footer">
