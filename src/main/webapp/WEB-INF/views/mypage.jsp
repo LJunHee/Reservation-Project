@@ -39,7 +39,7 @@
             <thead class="table-dark">
                 <tr>
                     <th scope="col">식당명</th>
-                    <th scope="col">예약 날짜</th>
+                    <th scope="col">예약 시간</th>
                     <th scope="col">예약 인원 수</th>
                 </tr>
             </thead>
@@ -54,9 +54,9 @@
                 
                 <c:forEach var="reservation" items="${list}">
                     <tr>
-                        <td>${reservation.restName}</td>
-                        <td>${reservation.restTime}</td>
-                        <td>${reservation.headCount}</td>
+                        <td><a href = "#">${reservation.restName}</a></td>
+                        <td><a href = "#">${reservation.getRestTimeStr()}</a></td>
+                        <td><a href = "#">${reservation.headCount}</a></td>
                     </tr>
                 </c:forEach>
             </tbody>

@@ -19,4 +19,8 @@ public class ReserveVo {
     private String restName;   // 식당 이름
     private String restReview; // 리뷰
     private Timestamp restTime;  // 예약 시간
+    
+    public String getRestTimeStr() {
+        return restTime != null ? restTime.toString().substring(0, 16) : null;
+    }
 }
