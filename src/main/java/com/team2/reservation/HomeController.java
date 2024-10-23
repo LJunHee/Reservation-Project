@@ -1,5 +1,7 @@
 package com.team2.reservation;
 
+import java.sql.Timestamp;
+
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.team2.reservation.reserve.model.ReserveVo;
 import com.team2.reservation.reserve.service.ReserveService;
 import com.team2.reservation.restaurant.service.RestaurantService;
 import com.team2.reservation.review.model.ReviewVo;
@@ -103,6 +106,26 @@ public class HomeController {
     	restService.list(model);
         return "restaurant"; // 
     }
+    
+    //restaurant reservation
+    @PostMapping("/restaurant")
+    public String makeReservation(@RequestParam int restNo, @RequestParam int headCount, @RequestParam String reserveDate, HttpSession session, Model model) {
+        UserVo user = (UserVo) session.getAttribute("loggedInUser");
+        if (user == null) {
+            return "redirect:/"; // 로그인 상태가 아닐 경우 리다이렉트
+        }
+      
+        try {
+            reserveService.addReservation(restNo, headCount, reserveDate, user.getUserNo());
+            return "redirect:/mypage"; // 예약 후 마이페이지로 리다이렉트
+        } catch (IllegalStateException e) {
+            model.addAttribute("errorMessage", "당일에 이미 예약된 레스토랑입니다.");
+        } catch (Exception e) {
+            model.addAttribute("errorMessage", "예약을 처리하는 중에 오류가 발생했습니다. 다시 시도해주세요.");
+        }
+
+        restService.list(model);
+        return "restaurant"; // 오류 발생 시 restaurant 페이지로 이동
 
     //review
     @PostMapping("/review/add")
@@ -115,6 +138,7 @@ public class HomeController {
         }
         // 로그인되지 않은 경우
         return "redirect:/";
+
     }
 
 }
