@@ -11,7 +11,7 @@ import org.apache.ibatis.annotations.Update;
 public interface ReserveDao {
     
     // 사용자의 예약 목록을 조회 (userNo를 통해)
-    @Select("SELECT r.restNo, r.restName, r.restReview, res.reserveTime AS restTime, res.reserveNo "
+    @Select("SELECT r.restNo, r.restName, r.restReview, res.reserveTime AS restTime, res.reserveNo, res.headCount "
           + "FROM restaurant r JOIN reservation res ON r.restNo = res.restNo "
           + "WHERE res.userNo = #{userNo} ORDER BY res.reserveNo")
     List<ReserveVo> pullListByUser(int userNo);
