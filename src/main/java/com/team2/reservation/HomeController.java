@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.team2.reservation.reserve.model.ReserveVo;
 import com.team2.reservation.reserve.service.ReserveService;
 import com.team2.reservation.restaurant.service.RestaurantService;
+import com.team2.reservation.review.model.ReviewVo;
+import com.team2.reservation.review.service.ReviewService;
 import com.team2.reservation.user.model.UserDao;
 import com.team2.reservation.user.model.UserVo;
 import com.team2.reservation.user.service.UserService;
@@ -26,13 +28,15 @@ public class HomeController {
     private final RestaurantService restService;
     private final ReserveService reserveService;
 	private final UserDao userDao;
+	private final ReviewService reviewService;
 
     @Autowired
-    public HomeController(RestaurantService restService, ReserveService reserveService, UserService userService, UserDao userDao) {
+    public HomeController(RestaurantService restService, ReserveService reserveService, UserService userService, UserDao userDao, ReviewService reviewService) {
         this.restService = restService;
         this.userService = userService;
         this.reserveService = reserveService; 
         this.userDao = userDao;
+        this.reviewService = reviewService;
         
     }
     
@@ -110,7 +114,7 @@ public class HomeController {
         if (user == null) {
             return "redirect:/"; // 로그인 상태가 아닐 경우 리다이렉트
         }
-
+      
         try {
             reserveService.addReservation(restNo, headCount, reserveDate, user.getUserNo());
             return "redirect:/mypage"; // 예약 후 마이페이지로 리다이렉트
@@ -122,6 +126,19 @@ public class HomeController {
 
         restService.list(model);
         return "restaurant"; // 오류 발생 시 restaurant 페이지로 이동
+
+    //review
+    @PostMapping("/review/add")
+    public String addReview(@ModelAttribute ReviewVo bean, HttpSession session) {
+        UserVo user = (UserVo) session.getAttribute("loggedInUser");
+        if (user != null) {
+            bean.setUserNo(user.getUserNo()); // 로그인한 사용자의 userNo를 ReviewVo에 설정
+            reviewService.add(bean);
+            return "redirect:/mypage";
+        }
+        // 로그인되지 않은 경우
+        return "redirect:/";
+
     }
 
 }
