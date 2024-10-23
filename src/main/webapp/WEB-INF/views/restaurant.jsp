@@ -1,14 +1,16 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>레스토랑 예약</title>
-    <%@ include file="template/head.jspf" %>
-    <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>레스토랑 예약</title>
+<%@ include file="template/head.jspf"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 </head>
 <body>
+
 <nav class="navbar navbar-default">
     <div class="container">
         <div class="navbar-header">
@@ -35,51 +37,53 @@
     </div>
 </nav>
 
-<div class="container">
-    <div class="jumbotron">
-        <h1>레스토랑 예약</h1>
-        <p>원하시는 레스토랑을 예약하세요.</p>
-    </div>
+	<div class="container">
+		<div class="jumbotron">
+			<h1>레스토랑 예약</h1>
+			<p>원하시는 레스토랑을 예약하세요.</p>
+		</div>
 
-    <div class="row">
-        <div class="col-md-12">
-            <c:choose>
-                <c:when test="${empty list}">
-                    <h3 class="text-warning">현재 등록된 레스토랑이 없습니다.</h3>
-                </c:when>
-                <c:otherwise>
-                    <div class="row">
-                        <!-- 레스토랑 목록을 동적으로 생성 -->
-                        <c:forEach var="item" items="${list}">
-                            <div class="col-md-3">
-                                <div class="thumbnail">
-                                    <img src="${pageContext.request.contextPath}/images/${item.restNo}.jpg" alt="사진 ${item.restName}" class="img-responsive">
-                                    <div class="caption">
-                                        <h4>${item.restName != null ? item.restName : '이름 없음'}</h4>
-                                        <p>${item.restInfo != null ? item.restInfo : '설명이 없습니다.'}</p>
-                                        <p>
-                                            <a href="#" 
-                                               class="btn btn-primary" 
-                                               role="button" 
-                                               data-toggle="modal" 
-                                               data-target="#restInfoModal"
-                                               data-name="${fn:escapeXml(item.restName)}"
-                                               data-info="${fn:escapeXml(item.restInfo)}"
-                                               data-phone="${fn:escapeXml(item.formattedPhone)}"
-                                               data-open="${fn:escapeXml(item.openTimeStr)}"
-                                               data-close="${fn:escapeXml(item.closeTimeStr)}"
-                                               onclick="setRestaurantDetails(this)">자세히 보기</a>
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                        </c:forEach>
-                    </div>
-                </c:otherwise>
-            </c:choose>
-        </div>
-    </div>
-</div>
+		<div class="row">
+			<div class="col-md-12">
+				<c:choose>
+					<c:when test="${empty list}">
+						<h3 class="text-warning">현재 등록된 레스토랑이 없습니다.</h3>
+					</c:when>
+					<c:otherwise>
+						<div class="row">
+							<!-- 레스토랑 목록을 동적으로 생성 -->
+							<c:forEach var="item" items="${list}">
+								<div class="col-md-3">
+									<div class="thumbnail">
+										<img
+											src="${pageContext.request.contextPath}/resources/img/${item.restName}.jpg"
+											alt="사진 ${item.restName}"
+											onerror="this.src='${pageContext.request.contextPath}/images/default.jpg'"
+											class="img-responsive">
+										<div class="caption">
+											<h4>${item.restName != null ? item.restName : '이름 없음'}</h4>
+											<p>${item.restInfo != null ? item.restInfo : '설명이 없습니다.'}</p>
+											<p>
+												<a href="#" class="btn btn-primary" role="button"
+													data-toggle="modal" data-target="#restInfoModal"
+													data-name="${fn:escapeXml(item.restName)}"
+													data-info="${fn:escapeXml(item.restInfo)}"
+													data-phone="${fn:escapeXml(item.formattedPhone)}"
+													data-open="${fn:escapeXml(item.openTimeStr)}"
+													data-close="${fn:escapeXml(item.closeTimeStr)}"
+													onclick="setRestaurantDetails(this)">자세히 보기</a>
+											</p>
+										</div>
+									</div>
+								</div>
+							</c:forEach>
+						</div>
+					</c:otherwise>
+				</c:choose>
+			</div>
+		</div>
+	</div>
+
 
 <%@ include file="restaurant/restInfo.jspf" %>
 <%@ include file="template/footer.jspf" %>
