@@ -13,12 +13,12 @@ import org.apache.ibatis.annotations.Update;
 @Mapper
 public interface ReserveDao {
     
-    @Select("SELECT r.restNo, r.restName, r.restReview, res.reserveTime AS reserveTime, res.reserveNo, res.headCount "
+    @Select("SELECT r.restNo, r.restName, res.reserveTime AS reserveTime, res.reserveNo, res.headCount "
           + "FROM restaurant r JOIN reservation res ON r.restNo = res.restNo "
           + "WHERE res.userNo = #{userNo} ORDER BY res.reserveNo")
     List<ReserveVo> pullListByUser(int userNo);
     
-    @Select("SELECT r.restNo, r.restName, r.restReview, res.reserveTime AS reserveTime, res.reserveNo, res.headCount "
+    @Select("SELECT r.restNo, r.restName, res.reserveTime AS reserveTime, res.reserveNo, res.headCount "
           + "FROM restaurant r JOIN reservation res ON r.restNo = res.restNo WHERE res.reserveNo = #{reserveNo}")
     ReserveVo getList(int reserveNo);
     
