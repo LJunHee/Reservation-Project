@@ -14,8 +14,9 @@ import lombok.NoArgsConstructor;
 public class ReserveVo {
     private int reserveNo;     // 예약 번호
     private int restNo;        // 식당 번호
+    private int userNo;        // 사용자 번호
+    private int headCount; // 인원 수
     private String restName;   // 식당 이름
     private String restReview; // 리뷰
     private Timestamp restTime;  // 예약 시간
-    private int userNo;        // 사용자 번호
 }
