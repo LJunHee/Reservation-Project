@@ -71,7 +71,6 @@
 													data-phone="${fn:escapeXml(item.formattedPhone)}"
 													data-open="${fn:escapeXml(item.openTimeStr)}"
 													data-close="${fn:escapeXml(item.closeTimeStr)}"
-													data-review="${fn:escapeXml(item.restReview)}"
 													onclick="setRestaurantDetails(this)">자세히 보기</a>
 											</p>
 										</div>
@@ -98,13 +97,11 @@ function setRestaurantDetails(button) {
     var phone = button.getAttribute('data-phone');
     var openTime = button.getAttribute('data-open');
     var closeTime = button.getAttribute('data-close');
-    var review = button.getAttribute('data-review');
 
     document.querySelector('#restInfoModal #restName').textContent = name;
     document.querySelector('#restInfoModal #restInfo').textContent = info;
     document.querySelector('#restInfoModal #restPhone').textContent = phone;
     document.querySelector('#restInfoModal #restTime').textContent = openTime + " - " + closeTime;
-    document.querySelector('#restInfoModal #restReview').textContent = review;
 }
 </script>
 

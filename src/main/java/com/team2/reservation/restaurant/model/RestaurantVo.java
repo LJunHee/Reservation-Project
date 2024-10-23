@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class RestaurantVo {
 	private int restNo;
-	private String restName, restInfo, restPhone, restReview;
+	private String restName, restInfo, restPhone;
 	private Time openTime, closeTime;
 	
     public String getFormattedPhone() {
