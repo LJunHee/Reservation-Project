@@ -21,21 +21,21 @@
                         </select>
                     </div>
 
-                    <div class="form-group">
-                        <label for="reviewScore">별점</label>
-                        <div id="starRating" class="star-rating" style="justify-content: flex-start;">
-                            <input type="radio" name="reviewScore" value="1" id="star1" required />
-                            <label for="star1" class="star">&#9733;</label>
-                            <input type="radio" name="reviewScore" value="2" id="star2" />
-                            <label for="star2" class="star">&#9733;</label>
-                            <input type="radio" name="reviewScore" value="3" id="star3" />
-                            <label for="star3" class="star">&#9733;</label>
-                            <input type="radio" name="reviewScore" value="4" id="star4" />
-                            <label for="star4" class="star">&#9733;</label>
-                            <input type="radio" name="reviewScore" value="5" id="star5" />
-                            <label for="star5" class="star">&#9733;</label>
-                        </div>
-                    </div>
+					<div class="form-group">
+					    <label for="reviewScore">별점</label>
+					    <div id="starRating" class="star-rating">
+					        <input type="radio" name="reviewScore" value="1" id="star1" required />
+					        <label for="star1" class="star">&#9733;</label>
+					        <input type="radio" name="reviewScore" value="2" id="star2" />
+					        <label for="star2" class="star">&#9733;</label>
+					        <input type="radio" name="reviewScore" value="3" id="star3" />
+					        <label for="star3" class="star">&#9733;</label>
+					        <input type="radio" name="reviewScore" value="4" id="star4" />
+					        <label for="star4" class="star">&#9733;</label>
+					        <input type="radio" name="reviewScore" value="5" id="star5" />
+					        <label for="star5" class="star">&#9733;</label>
+					    </div>
+					</div>
                     
                     <div class="form-group">
                         <label for="reviewContent">리뷰 내용</label>
@@ -60,33 +60,27 @@ function setRestNo(restNo) {
 
 <style>
 .star-rating {
-    display: flex;
-    direction: rtl; /* 오른쪽에서 왼쪽으로 설정 */
-    justify-content: flex-start; /* 왼쪽 정렬 */
+    direction: rtl;
+    width : 191px;
+    height : 100px;
 }
-
 .star-rating input {
-    display: none; /* 숨기기 */
+    display: none;
 }
-
 .star {
-    font-size: 30px; /* 별 크기 조절 */
-    color: lightgray; /* 기본 색상 */
+    font-size: 30px;
+    color: lightgray;
     cursor: pointer;
-    margin-right: 5px; /* 오른쪽 여백 추가 */
+    margin-right: 5px;
 }
-
-/* Hover 시 별 색상 변경 */
+/* Hover 효과 */
 .star:hover,
 .star:hover ~ .star {
-    color: gold; /* 선택된 별 색상 */
+    color: gold;
 }
-
-/* 체크된 별 및 그 이전 별 색상 */
+/* 체크 효과 */
 .star-rating input:checked + .star,
 .star-rating input:checked + .star ~ .star {
-    color: gold; /* 체크된 별 및 이전 별 색상 */
+    color: gold;
 }
-
-
 </style>
