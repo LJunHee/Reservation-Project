@@ -1,8 +1,10 @@
 package com.team2.reservation.reserve.service;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -41,29 +43,32 @@ public class ReserveService {
         System.out.println(reserveDao.rmList(restNo));
     }
     
-    // restNo를 추가 파라미터로 받도록 수정
+ // restNo를 추가 파라미터로 받도록 수정
     public void addReservation(int restNo, int headCount, String reserveDate, int userNo) {
         ReserveVo reserve = new ReserveVo();
-        reserve.setRestNo(restNo); // restNo를 설정
+        reserve.setRestNo(restNo);
         reserve.setHeadCount(headCount);
         reserve.setUserNo(userNo);
-        
+
+        LocalDateTime localDateTime;
         try {
-            // 'T'를 포함한 형식 확인 및 LocalDateTime 변환
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
-            LocalDateTime localDateTime = LocalDateTime.parse(reserveDate, formatter);
-            
-            // 초를 0으로 설정
-            localDateTime = localDateTime.withSecond(0);
-            
-            // LocalDateTime을 Timestamp로 변환
-            reserve.setReserveTime(Timestamp.valueOf(localDateTime));
+            localDateTime = LocalDateTime.parse(reserveDate, formatter).withSecond(0);
         } catch (Exception e) {
-            // 형식이 잘못되었을 때 오류 처리
-            System.out.println("잘못된 시간 형식입니다: " + e.getMessage());
-            return; // 메서드 종료
+            // 예외 처리 코드 제거
+            throw new IllegalStateException("잘못된 요청입니다."); // 필요 시 다른 예외 메시지로 수정 가능
         }
-        
-        reserveDao.addList(reserve); // DB에 예약 추가
+
+        LocalDate today = LocalDate.now();
+        if (localDateTime.toLocalDate().isEqual(today)) {
+            List<ReserveVo> existingReservations = reserveDao.findReservationsByUserAndRestaurant(userNo, restNo, today);
+            if (!existingReservations.isEmpty()) {
+                throw new IllegalStateException("당일에 이미 예약된 레스토랑입니다."); // 중복 예약 시 예외 던짐
+            }
+        }
+
+        reserve.setReserveTime(Timestamp.valueOf(localDateTime));
+        reserveDao.addList(reserve);
     }
+
 }
