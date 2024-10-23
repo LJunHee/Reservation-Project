@@ -1,5 +1,7 @@
 package com.team2.reservation;
 
+import java.sql.Timestamp;
+
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.team2.reservation.reserve.model.ReserveVo;
 import com.team2.reservation.reserve.service.ReserveService;
 import com.team2.reservation.restaurant.service.RestaurantService;
 import com.team2.reservation.user.model.UserDao;
@@ -98,6 +101,25 @@ public class HomeController {
     public String showRestaurants(Model model) {
     	restService.list(model);
         return "restaurant"; // 
+    }
+    
+    //restaurant reservation
+    @PostMapping("/restaurant")
+    public String makeReservation(@RequestParam int restNo, @RequestParam int headCount, @RequestParam String reserveDate, HttpSession session, Model model) {
+        UserVo user = (UserVo) session.getAttribute("loggedInUser");
+        if (user == null) {
+            return "redirect:/"; // 로그인 상태가 아닐 경우 리다이렉트
+        }
+
+        try {
+            // addReservation 메서드 호출
+            reserveService.addReservation(restNo, headCount, reserveDate, user.getUserNo()); // 예약 추가
+            return "redirect:/mypage"; // 예약 후 마이페이지로 리다이렉트
+        } catch (Exception e) {
+            // 예외가 발생한 경우
+            model.addAttribute("errorMessage", "예약을 처리하는 중에 오류가 발생했습니다. 다시 시도해주세요."); 
+            return "restaurant"; // restaurant 페이지로 이동하여 오류 메시지 표시
+        }
     }
 
 

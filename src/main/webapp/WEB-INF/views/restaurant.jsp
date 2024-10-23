@@ -71,7 +71,8 @@
 													data-phone="${fn:escapeXml(item.formattedPhone)}"
 													data-open="${fn:escapeXml(item.openTimeStr)}"
 													data-close="${fn:escapeXml(item.closeTimeStr)}"
-													data-review="${fn:escapeXml(item.restReview)}"
+													data-restno="${fn:escapeXml(item.restNo)}"
+
 													onclick="setRestaurantDetails(this)">자세히 보기</a>
 											</p>
 										</div>
@@ -98,14 +99,21 @@ function setRestaurantDetails(button) {
     var phone = button.getAttribute('data-phone');
     var openTime = button.getAttribute('data-open');
     var closeTime = button.getAttribute('data-close');
-    var review = button.getAttribute('data-review');
+    var restNo = button.getAttribute('data-restno');
+
 
     document.querySelector('#restInfoModal #restName').textContent = name;
     document.querySelector('#restInfoModal #restInfo').textContent = info;
     document.querySelector('#restInfoModal #restPhone').textContent = phone;
     document.querySelector('#restInfoModal #restTime').textContent = openTime + " - " + closeTime;
-    document.querySelector('#restInfoModal #restReview').textContent = review;
+
+    // 숨은 입력 필드에 restNo 설정
+    var restNoInput = document.querySelector('#restInfoModal input[name="restNo"]');
+    var reservationRestNoInput = document.querySelector('#reservationModal input[name="restNo"]');
+        restNoInput.value = restNo; // 값 설정
+        reservationRestNoInput.value = restNo; // 예약 모달의 restNo에 값 설정
 }
+
 </script>
 
 </body>
