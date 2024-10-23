@@ -58,7 +58,7 @@
 										<img
 											src="${pageContext.request.contextPath}/resources/img/${item.restName}.jpg"
 											alt="사진 ${item.restName}"
-											onerror="this.src='${pageContext.request.contextPath}/images/default.jpg'"
+											onerror="this.src='${pageContext.request.contextPath}/img/default.jpg'"
 											class="img-responsive">
 										<div class="caption">
 											<h4>${item.restName != null ? item.restName : '이름 없음'}</h4>
@@ -71,6 +71,7 @@
 													data-phone="${fn:escapeXml(item.formattedPhone)}"
 													data-open="${fn:escapeXml(item.openTimeStr)}"
 													data-close="${fn:escapeXml(item.closeTimeStr)}"
+													data-review="${fn:escapeXml(item.restReview)}"
 													onclick="setRestaurantDetails(this)">자세히 보기</a>
 											</p>
 										</div>
@@ -97,11 +98,13 @@ function setRestaurantDetails(button) {
     var phone = button.getAttribute('data-phone');
     var openTime = button.getAttribute('data-open');
     var closeTime = button.getAttribute('data-close');
+    var review = button.getAttribute('data-review');
 
     document.querySelector('#restInfoModal #restName').textContent = name;
     document.querySelector('#restInfoModal #restInfo').textContent = info;
     document.querySelector('#restInfoModal #restPhone').textContent = phone;
     document.querySelector('#restInfoModal #restTime').textContent = openTime + " - " + closeTime;
+    document.querySelector('#restInfoModal #restReview').textContent = review;
 }
 </script>
 
