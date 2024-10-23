@@ -55,7 +55,7 @@
                 <c:forEach var="reservation" items="${list}">
                     <tr>
                         <td><a href = "#">${reservation.restName}</a></td>
-                        <td><a href = "#">${reservation.getRestTimeStr()}</a></td>
+                        <td><a href = "#">${reservation.getReserveTimeStr()}</a></td>
                         <td><a href = "#">${reservation.headCount}</a></td>
                     </tr>
                 </c:forEach>

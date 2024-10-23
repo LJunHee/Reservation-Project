@@ -18,9 +18,9 @@ public class ReserveVo {
     private int headCount; // 인원 수
     private String restName;   // 식당 이름
     private String restReview; // 리뷰
-    private Timestamp restTime;  // 예약 시간
+    private Timestamp reserveTime;  // 예약 시간
     
-    public String getRestTimeStr() {
-        return restTime != null ? restTime.toString().substring(0, 16) : null;
+    public String getReserveTimeStr() {
+        return reserveTime != null ? reserveTime.toString().substring(0, 16) : null;
     }
 }

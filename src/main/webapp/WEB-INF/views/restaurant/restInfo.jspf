@@ -9,6 +9,7 @@
             </div>
             <div class="modal-body">
                 <form id="restInfoForm" action="${root}/restaurant" method="post">
+					<input type="hidden" name="restNo" value="">
                     <div class="form-group">
                         <label for="restName">레스토랑 명</label>
                         <p class="form-control-static" id="restName"></p> 
