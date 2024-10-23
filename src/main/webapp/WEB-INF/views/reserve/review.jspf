@@ -9,7 +9,8 @@
                 <h4 class="modal-title" id="reviewModalLabel">리뷰 작성</h4>
             </div>
             <div class="modal-body">
-                <form id="reviewForm" action="${root}/restaurant" method="post">
+                <form id="reviewForm" action="${root}/review/add" method="post">
+                    <input type="hidden" id="restNo" name="restNo" value="0"/>
                     <div class="form-group">
                         <label for="restName">레스토랑 선택</label>
                         <select id="restName" name="restName" class="form-control" required>
