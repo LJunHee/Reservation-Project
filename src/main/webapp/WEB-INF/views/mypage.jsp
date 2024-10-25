@@ -86,7 +86,7 @@
         </div>
     </div>
 </nav>
-
+</body>
 <%@ include file="reserve/review.jspf" %>
 <%@ include file="reserve/edit.jspf" %>
 <script>
@@ -96,5 +96,6 @@
         document.getElementById('editModalHeadCount').value = headCount;
     }
 </script>
-</body>
+
+
 </html>

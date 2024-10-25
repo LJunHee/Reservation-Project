@@ -32,8 +32,8 @@ public class HomeController {
     @Autowired
     public HomeController(RestaurantService restService, ReserveService reserveService, UserService userService, UserDao userDao) {
         this.restService = restService;
-        this.userService = userService;
-        this.reserveService = reserveService; 
+        this.userService = userService; 
+        this.reserveService = reserveService;  
         this.userDao = userDao;
         
     }
@@ -48,7 +48,8 @@ public class HomeController {
     }
 
     
-    //register
+
+   
     @PostMapping("/")
     public String add(@ModelAttribute UserVo bean) {
         userService.add(bean);
@@ -149,3 +150,5 @@ public class HomeController {
     }
 
 }
+
+
