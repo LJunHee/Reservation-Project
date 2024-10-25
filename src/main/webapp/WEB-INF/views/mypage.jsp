@@ -1,12 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %> <!-- JSTL fmt 태그 선언 -->
 <!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>예약 목록</title>
-    <%@include file = "template/head.jspf" %>
+    <%@include file="template/head.jspf" %>
 </head>
 <body>
 <nav class="navbar navbar-default">
@@ -52,13 +53,28 @@
                         </tr>
                     </c:if>
                     
-                    <c:forEach var="reservation" items="${list}">
-                        <tr>
-                            <td><a href="#">${reservation.restName}</a></td>
-                            <td><a href="#">${reservation.getReserveTimeStr()}</a></td>
-                            <td><a href="#">${reservation.headCount}</a></td>
-                        </tr>
-                    </c:forEach>
+                     <c:forEach var="reservation" items="${list}">
+					    <tr>
+					        <td><a href="#">${reservation.restName}</a></td>
+					        <!-- 예약 시간 클릭 시 edit.jspf 모달 열기 -->
+					        <td>
+					            <a href="#" 
+					               onclick="setEditModal('${reservation.reserveNo}', '${reservation.reserveTime}', '${reservation.headCount}')" 
+					               data-toggle="modal" data-target="#editModal">
+                                   <!-- 시간 포맷 적용: 초를 제외한 yyyy-MM-dd HH:mm 형식으로 출력 -->
+					               <fmt:formatDate value="${reservation.reserveTime}" pattern="yyyy-MM-dd HH:mm"/>
+					            </a>
+					        </td>
+					        <!-- 예약 인원 수 클릭 시 edit.jspf 모달 열기 -->
+					        <td>
+					            <a href="#" 
+					               onclick="setEditModal('${reservation.reserveNo}', '${reservation.reserveTime}', '${reservation.headCount}')" 
+					               data-toggle="modal" data-target="#editModal">
+					               ${reservation.headCount}
+					            </a>
+					        </td>
+					    </tr>
+					</c:forEach>
                 </tbody>
             </table>
 
@@ -70,7 +86,17 @@
         </div>
     </div>
 </nav>
-
-<%@ include file="reserve/review.jspf" %>
 </body>
+<%@ include file="reserve/review.jspf" %>
+<%@ include file="reserve/edit.jspf" %>
+<script>
+    function setEditModal(reserveNo, reserveTime, headCount) {
+        document.getElementById('editModalReserveNo').value = reserveNo;
+        document.getElementById('editModalReserveTime').value = reserveTime;
+        document.getElementById('editModalHeadCount').value = headCount;
+    }
+</script>
+
+
 </html>
+

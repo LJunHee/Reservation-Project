@@ -18,32 +18,36 @@ public class ReserveService {
     private final ReserveDao reserveDao;
 
     @Autowired
-    public ReserveService(ReserveDao restDao) {
-        this.reserveDao = restDao;
+    public ReserveService(ReserveDao reserveDao) {
+        this.reserveDao = reserveDao;
     }
 
-    // ì‚¬ìš©ìì˜ ì˜ˆì•½ ëª©ë¡ì„ ì¡°íšŒí•˜ëŠ” ë©”ì„œë“œ
+    // »ç¿ëÀÚÀÇ ¿¹¾à ¸ñ·ÏÀ» Á¶È¸ÇÏ´Â ¸Ş¼­µå
     public void listByUser(int userNo, Model model) {
         model.addAttribute("list", reserveDao.pullListByUser(userNo));
     }
     
-    public ReserveVo detail(int restNo) {
-        return reserveDao.getList(restNo);
+    // ¿¹¾à »ó¼¼ Á¤º¸ Á¶È¸
+    public ReserveVo detail(int reserveNo) {
+        return reserveDao.getList(reserveNo);
     }
 
+    // ¿¹¾à Ãß°¡
     public void add(ReserveVo bean) {
         System.out.println(reserveDao.addList(bean));
     }
 
+    // ¿¹¾à ¼öÁ¤
     public void edit(ReserveVo bean) {
-        System.out.println(reserveDao.setList(bean));
+        reserveDao.setList(bean);
     }
 
-    public void delete(int restNo) {
-        System.out.println(reserveDao.rmList(restNo));
+    // ¿¹¾à »èÁ¦
+    public void delete(int reserveNo) {
+        reserveDao.rmList(reserveNo);
     }
     
- // restNoë¥¼ ì¶”ê°€ íŒŒë¼ë¯¸í„°ë¡œ ë°›ë„ë¡ ìˆ˜ì •
+    // ¿¹¾à Ãß°¡ ±â´É (¿¹¾à Áßº¹ Ã¼Å© Æ÷ÇÔ)
     public void addReservation(int restNo, int headCount, String reserveDate, int userNo) {
         ReserveVo reserve = new ReserveVo();
         reserve.setRestNo(restNo);
@@ -55,20 +59,18 @@ public class ReserveService {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
             localDateTime = LocalDateTime.parse(reserveDate, formatter).withSecond(0);
         } catch (Exception e) {
-            // ì˜ˆì™¸ ì²˜ë¦¬ ì½”ë“œ ì œê±°
-            throw new IllegalStateException("ì˜ëª»ëœ ìš”ì²­ì…ë‹ˆë‹¤."); // í•„ìš” ì‹œ ë‹¤ë¥¸ ì˜ˆì™¸ ë©”ì‹œì§€ë¡œ ìˆ˜ì • ê°€ëŠ¥
+            throw new IllegalStateException("Àß¸øµÈ ¿äÃ»ÀÔ´Ï´Ù."); 
         }
 
         LocalDate today = LocalDate.now();
         if (localDateTime.toLocalDate().isEqual(today)) {
             List<ReserveVo> existingReservations = reserveDao.findReservationsByUserAndRestaurant(userNo, restNo, today);
             if (!existingReservations.isEmpty()) {
-                throw new IllegalStateException("ë‹¹ì¼ì— ì´ë¯¸ ì˜ˆì•½ëœ ë ˆìŠ¤í† ë‘ì…ë‹ˆë‹¤."); // ì¤‘ë³µ ì˜ˆì•½ ì‹œ ì˜ˆì™¸ ë˜ì§
+                throw new IllegalStateException("´çÀÏ¿¡ ÀÌ¹Ì ¿¹¾àµÈ ·¹½ºÅä¶ûÀÔ´Ï´Ù.");
             }
         }
 
         reserve.setReserveTime(Timestamp.valueOf(localDateTime));
         reserveDao.addList(reserve);
     }
-
 }
