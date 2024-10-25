@@ -1,6 +1,8 @@
 package com.team2.reservation;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import javax.servlet.http.HttpSession;
 
@@ -40,7 +42,7 @@ public class HomeController {
     @GetMapping("/")
     public String index(Model model, HttpSession session) {
         UserVo user = (UserVo) session.getAttribute("loggedInUser"); 
-        model.addAttribute("user", user); // ëª¨ë¸ì— ì‚¬ìš©ì ì •ë³´ ì¶”ê°€
+        model.addAttribute("user", user); 
         restService.list(model);
         return "index";
     }
@@ -70,10 +72,10 @@ public class HomeController {
         if (user != null) {
             System.out.println("Login Success : " + user);
             session.setAttribute("loggedInUser", user);
-            return "redirect:/"; // ë¡œê·¸ì¸ ì„±ê³µì‹œ indexë¡œ ë¦¬ë‹¤ì´ë ‰íŠ¸
+            return "redirect:/"; 
         } else {
             model.addAttribute("errorMessage", "Wrong email or Password");
-            return "index"; // ë¡œê·¸ì¸ ì‹¤íŒ¨ ì‹œ ë¡œê·¸ì¸ í˜ì´ì§€ë¡œ ì´ë™
+            return "index"; 
         }
     }
 
@@ -84,15 +86,37 @@ public class HomeController {
         return "redirect:/";
     }
     
-    // ë§ˆì´í˜ì´ì§€- ì‚¬ìš©ìì˜ ì˜ˆì•½ ëª©ë¡ì„ ë³´ì—¬ì£¼ëŠ” ê¸°ëŠ¥ ì¶”ê°€
+    
+    // ¸¶ÀÌÆäÀÌÁö - »ç¿ëÀÚÀÇ ¿¹¾à ¸ñ·ÏÀ» º¸¿©ÁÖ´Â ±â´É Ãß°¡
     @GetMapping("/mypage")
     public String myPage(Model model, HttpSession session) {
-        UserVo user = (UserVo) session.getAttribute("loggedInUser");  // ë¡œê·¸ì¸í•œ ì‚¬ìš©ì ê°€ì ¸ì˜¤ê¸°
-
-        // ì‚¬ìš©ìì˜ ì˜ˆì•½ ëª©ë¡ ì¡°íšŒ (userNo ì‚¬ìš©)
-        reserveService.listByUser(user.getUserNo(), model);  // ì˜ˆì•½ ëª©ë¡ì„ modelì— ì¶”ê°€
-        return "mypage";  // mypage.jspë¡œ ì´ë™
+        UserVo user = (UserVo) session.getAttribute("loggedInUser");
+        reserveService.listByUser(user.getUserNo(), model);
+        return "mypage";
     }
+    @PostMapping("/mypage/edit")
+    public String editReservation(@ModelAttribute ReserveVo reserveVo, @RequestParam("reserveTime") String reserveTimeStr) {
+        // reserveTimeStr (datetime-local) -> Timestamp·Î º¯È¯
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+        LocalDateTime localDateTime = LocalDateTime.parse(reserveTimeStr, formatter);
+        Timestamp reserveTime = Timestamp.valueOf(localDateTime);
+
+        // º¯È¯µÈ reserveTimeÀ» ReserveVo¿¡ ¼³Á¤
+        reserveVo.setReserveTime(reserveTime);
+
+        // ¿¹¾à ¼öÁ¤ Ã³¸®
+        reserveService.edit(reserveVo);
+        return "redirect:/mypage";
+    }
+
+    @PostMapping("/mypage/delete")
+    public String deleteReservation(@RequestParam("reserveNo") int reserveNo) {
+        reserveService.delete(reserveNo);
+        return "redirect:/mypage";
+    }
+
+  
+
     
 
     
@@ -108,20 +132,20 @@ public class HomeController {
     public String makeReservation(@RequestParam int restNo, @RequestParam int headCount, @RequestParam String reserveDate, HttpSession session, Model model) {
         UserVo user = (UserVo) session.getAttribute("loggedInUser");
         if (user == null) {
-            return "redirect:/"; // ë¡œê·¸ì¸ ìƒíƒœê°€ ì•„ë‹ ê²½ìš° ë¦¬ë‹¤ì´ë ‰íŠ¸
+            return "redirect:/"; 
         }
 
         try {
             reserveService.addReservation(restNo, headCount, reserveDate, user.getUserNo());
-            return "redirect:/mypage"; // ì˜ˆì•½ í›„ ë§ˆì´í˜ì´ì§€ë¡œ ë¦¬ë‹¤ì´ë ‰íŠ¸
+            return "redirect:/mypage"; 
         } catch (IllegalStateException e) {
-            model.addAttribute("errorMessage", "ë‹¹ì¼ì— ì´ë¯¸ ì˜ˆì•½ëœ ë ˆìŠ¤í† ë‘ì…ë‹ˆë‹¤.");
+            model.addAttribute("errorMessage", "´çÀÏ¿¡ ÀÌ¹Ì ¿¹¾àµÈ ·¹½ºÅä¶ûÀÔ´Ï´Ù.");
         } catch (Exception e) {
-            model.addAttribute("errorMessage", "ì˜ˆì•½ì„ ì²˜ë¦¬í•˜ëŠ” ì¤‘ì— ì˜¤ë¥˜ê°€ ë°œìƒí–ˆìŠµë‹ˆë‹¤. ë‹¤ì‹œ ì‹œë„í•´ì£¼ì„¸ìš”.");
+            model.addAttribute("errorMessage", "¿¹¾àÀ» Ã³¸®ÇÏ´Â Áß¿¡ ¿À·ù°¡ ¹ß»ıÇß½À´Ï´Ù. ´Ù½Ã ½ÃµµÇØÁÖ¼¼¿ä.");
         }
 
         restService.list(model);
-        return "restaurant"; // ì˜¤ë¥˜ ë°œìƒ ì‹œ restaurant í˜ì´ì§€ë¡œ ì´ë™
+        return "restaurant"; 
     }
 
 }
