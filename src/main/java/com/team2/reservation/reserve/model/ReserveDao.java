@@ -32,14 +32,10 @@ public interface ReserveDao {
  
 
     
-    // ���� ���� ����
-    @Update("UPDATE restaurant SET restName=#{restName} WHERE restNo=#{restNo}; "
-          + "UPDATE reservation SET reserveTime=NOW(), totalNumber=#{totalNumber} WHERE reserveNo=#{reserveNo}")
 
-
-
-
+    @Update("UPDATE reservation SET reserveTime=#{reserveTime}, headCount=#{headCount} WHERE reserveNo=#{reserveNo}")
     int setList(ReserveVo bean);
+
 
     @Delete("DELETE FROM reservation WHERE reserveNo=#{reserveNo}")
     int rmList(int reserveNo);
