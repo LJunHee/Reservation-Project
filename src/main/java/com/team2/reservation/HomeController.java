@@ -15,9 +15,10 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.team2.reservation.reserve.model.ReserveVo;
 import com.team2.reservation.reserve.service.ReserveService;
 import com.team2.reservation.restaurant.service.RestaurantService;
+import com.team2.reservation.review.model.ReviewVo;
+import com.team2.reservation.review.service.ReviewService;
 import com.team2.reservation.user.model.UserDao;
 import com.team2.reservation.user.model.UserVo;
 import com.team2.reservation.user.service.UserService;
@@ -28,13 +29,15 @@ public class HomeController {
     private final RestaurantService restService;
     private final ReserveService reserveService;
 	private final UserDao userDao;
+	private final ReviewService reviewService;
 
     @Autowired
-    public HomeController(RestaurantService restService, ReserveService reserveService, UserService userService, UserDao userDao) {
+    public HomeController(RestaurantService restService, ReserveService reserveService, UserService userService, UserDao userDao, ReviewService reviewService) {
         this.restService = restService;
         this.userService = userService; 
         this.reserveService = reserveService;  
         this.userDao = userDao;
+        this.reviewService = reviewService;
         
     }
     
@@ -88,7 +91,7 @@ public class HomeController {
     }
     
     
-    // ¸¶ÀÌÆäÀÌÁö - »ç¿ëÀÚÀÇ ¿¹¾à ¸ñ·ÏÀ» º¸¿©ÁÖ´Â ±â´É Ãß°¡
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ - ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½ ï¿½ß°ï¿½
     @GetMapping("/mypage")
     public String myPage(Model model, HttpSession session) {
         UserVo user = (UserVo) session.getAttribute("loggedInUser");
@@ -97,15 +100,15 @@ public class HomeController {
     }
     @PostMapping("/mypage/edit")
     public String editReservation(@ModelAttribute ReserveVo reserveVo, @RequestParam("reserveTime") String reserveTimeStr) {
-        // reserveTimeStr (datetime-local) -> Timestamp·Î º¯È¯
+        // reserveTimeStr (datetime-local) -> Timestampï¿½ï¿½ ï¿½ï¿½È¯
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
         LocalDateTime localDateTime = LocalDateTime.parse(reserveTimeStr, formatter);
         Timestamp reserveTime = Timestamp.valueOf(localDateTime);
 
-        // º¯È¯µÈ reserveTimeÀ» ReserveVo¿¡ ¼³Á¤
+        // ï¿½ï¿½È¯ï¿½ï¿½ reserveTimeï¿½ï¿½ ReserveVoï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         reserveVo.setReserveTime(reserveTime);
 
-        // ¿¹¾à ¼öÁ¤ Ã³¸®
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½
         reserveService.edit(reserveVo);
         return "redirect:/mypage";
     }
@@ -140,13 +143,27 @@ public class HomeController {
             reserveService.addReservation(restNo, headCount, reserveDate, user.getUserNo());
             return "redirect:/mypage"; 
         } catch (IllegalStateException e) {
-            model.addAttribute("errorMessage", "´çÀÏ¿¡ ÀÌ¹Ì ¿¹¾àµÈ ·¹½ºÅä¶ûÀÔ´Ï´Ù.");
+            model.addAttribute("errorMessage", "ï¿½ï¿½ï¿½Ï¿ï¿½ ï¿½Ì¹ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô´Ï´ï¿½.");
         } catch (Exception e) {
-            model.addAttribute("errorMessage", "¿¹¾àÀ» Ã³¸®ÇÏ´Â Áß¿¡ ¿À·ù°¡ ¹ß»ıÇß½À´Ï´Ù. ´Ù½Ã ½ÃµµÇØÁÖ¼¼¿ä.");
+            model.addAttribute("errorMessage", "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ß¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ß»ï¿½ï¿½ß½ï¿½ï¿½Ï´ï¿½. ï¿½Ù½ï¿½ ï¿½Ãµï¿½ï¿½ï¿½ï¿½Ö¼ï¿½ï¿½ï¿½.");
         }
 
         restService.list(model);
         return "restaurant"; 
+    }
+    
+    //review
+    @PostMapping("/review/add")
+    public String addReview(@ModelAttribute ReviewVo bean, HttpSession session) {
+        UserVo user = (UserVo) session.getAttribute("loggedInUser");
+        if (user != null) {
+            bean.setUserNo(user.getUserNo()); // ë¡œê·¸ì¸í•œ ì‚¬ìš©ìì˜ userNoë¥¼ ReviewVoì— ì„¤ì •
+            reviewService.add(bean);
+            return "redirect:/mypage";
+        }
+        // ë¡œê·¸ì¸ë˜ì§€ ì•Šì€ ê²½ìš°
+        return "redirect:/";
+
     }
 
 }

@@ -3,8 +3,10 @@ CREATE TABLE `reservation` (
 	`userNo` INT NULL DEFAULT NULL,
 	`restNo` INT NULL DEFAULT NULL,
 	`reserveTime` TIMESTAMP NOT NULL,
+	`headCount` INT NULL DEFAULT NULL,
 	PRIMARY KEY (`reserveNo`) USING BTREE
 )
 COLLATE='utf8mb4_0900_ai_ci'
 ENGINE=InnoDB
+AUTO_INCREMENT=1
 ;
