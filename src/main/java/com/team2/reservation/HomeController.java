@@ -96,40 +96,6 @@ public class HomeController {
         reserveService.listByUser(user.getUserNo(), model);
         return "mypage";
     }
-    @PostMapping("/mypage/edit")
-    public String editReservation(
-            @RequestParam int reserveNo, // 추가된 부분
-            @RequestParam int restNo,
-            @RequestParam int headCount,
-            @RequestParam String reserveDate,
-            HttpSession session,
-            Model model) {
-
-        UserVo user = (UserVo) session.getAttribute("loggedInUser");
-
-        try {
-            // 예약 수정 로직에 reserveNo 전달
-            reserveService.updateReservation(reserveNo, restNo, headCount, reserveDate, user.getUserNo());
-            return "redirect:/mypage"; 
-        } catch (IllegalStateException e) {
-            model.addAttribute("errorMessage", "당일에 이미 예약된 레스토랑입니다.");
-        } catch (Exception e) {
-            model.addAttribute("errorMessage", "예약을 처리하는 중에 오류가 발생했습니다. 다시 시도해주세요.");
-        }
-
-        restService.list(model);
-        return "mypage"; 
-    }
-
-
-    @PostMapping("/mypage/delete")
-    public String deleteReservation(@RequestParam("reserveNo") int reserveNo) {
-        reserveService.delete(reserveNo);
-        return "redirect:/mypage";
-    }
-
-  
-
     
     @PostMapping("/mypage/edit")
     public String editReservation(@RequestParam int reserveNo, @RequestParam int restNo,@RequestParam int headCount,@RequestParam String reserveDate,
@@ -155,7 +121,7 @@ public class HomeController {
         reserveService.deleteReservation(reserveNo);
         return "redirect:/mypage";
     }
-    
+
     
     
     //restaurant
