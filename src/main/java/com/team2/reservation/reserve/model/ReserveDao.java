@@ -15,6 +15,7 @@ public interface ReserveDao {
     
 	//User Info
     @Select("SELECT r.restNo, r.restName, res.reserveTime AS reserveTime, res.reserveNo, res.headCount "
+
           + "FROM restaurant r JOIN reservation res ON r.restNo = res.restNo "
           + "WHERE res.userNo = #{userNo} ORDER BY res.reserveNo")
     List<ReserveVo> pullListByUser(int userNo);
@@ -40,5 +41,3 @@ public interface ReserveDao {
     @Delete("DELETE FROM reservation WHERE reserveNo=#{reserveNo}")
     int rmList(int reserveNo);
 }
-
-

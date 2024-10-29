@@ -7,6 +7,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>레스토랑 예약 플랫폼</title>
 <%@ include file="template/head.jspf"%>
+<style>
+    .fixed-size-img {
+        width: 100%; /* 부모 요소에 맞게 가로 크기 조정 */
+        height: 200px; /* 원하는 고정 높이 설정 */
+        object-fit: cover; /* 비율을 유지하면서 이미지를 자름 */
+    }
+</style>
 </head>
 <body>
 
