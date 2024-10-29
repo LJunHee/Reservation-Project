@@ -39,7 +39,7 @@
 						<p>다양한 레스토랑을 쉽고 빠르게 예약할 수 있습니다.</p>
 						<p>
 							<a class="btn btn-primary btn-lg"
-								href="${pageContext.request.contextPath}/restaurant" role="button">지금
+								href="${root}/restaurant" role="button">지금
 								예약하기</a>
 						</p>
 
@@ -79,9 +79,9 @@
 									<div class="col-md-3">
 										<div class="thumbnail">
 											<img
-												src="${pageContext.request.contextPath}/resources/img/${item.restName}.jpg"
+												src="${root}/resources/img/${item.restName}.jpg"
 												alt="사진 ${item.restName}"
-												onerror="this.src='${pageContext.request.contextPath}/resources/img/default.jpg'"
+												onerror="this.src='${root}/resources/img/default.jpg'"
 												class="img-responsive">
 											<div class="caption">
 												<h4>${item.restName}</h4>
