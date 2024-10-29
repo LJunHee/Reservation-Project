@@ -14,7 +14,6 @@ import org.apache.ibatis.annotations.Update;
 public interface ReserveDao {
     
     @Select("SELECT r.restNo, r.restName, res.reserveTime AS reserveTime, res.reserveNo, res.headCount "
-
           + "FROM restaurant r JOIN reservation res ON r.restNo = res.restNo "
           + "WHERE res.userNo = #{userNo} ORDER BY res.reserveNo")
     List<ReserveVo> pullListByUser(int userNo);
@@ -29,13 +28,8 @@ public interface ReserveDao {
     @Insert("INSERT INTO reservation (restNo, userNo, reserveTime, headCount) VALUES (#{restNo}, #{userNo}, #{reserveTime}, #{headCount})")
     int addList(ReserveVo bean);
     
- 
-
-    
-
     @Update("UPDATE reservation SET reserveTime=#{reserveTime}, headCount=#{headCount} WHERE reserveNo=#{reserveNo}")
     int setList(ReserveVo bean);
-
 
     @Delete("DELETE FROM reservation WHERE reserveNo=#{reserveNo}")
     int rmList(int reserveNo);

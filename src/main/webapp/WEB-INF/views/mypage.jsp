@@ -59,9 +59,8 @@
                     <a href="#" 
                        onclick="setEditModal('${reservation.reserveNo}', '${reservation.restNo}', '${reservation.reserveTime}', '${reservation.headCount}')"
                        data-toggle="modal" 
-                       data-target="#EditModal">${reservation.reserveTime}</a>
+                       data-target="#EditModal">${reservation.getReserveTimeStr()}</a>
                 </td>
-                <!-- 예약 인원 수 클릭 시 edit.jspf 모달 열기 -->
                 <td>
                     <a href="#" 
                        onclick="setEditModal('${reservation.reserveNo}', '${reservation.restNo}', '${reservation.reserveTime}', '${reservation.headCount}')"
@@ -72,6 +71,11 @@
         </c:forEach>
     </tbody>
 </table>
+<div class="text-right">
+    <c:if test="${not empty list}">
+        <a href="#" class="btn btn-primary" role="button" data-toggle="modal" data-target="#reviewModal">리뷰 작성</a>
+    </c:if>
+</div>
 <%@ include file="reserve/review.jspf" %>
 <%@ include file="reserve/edit.jspf" %>
 

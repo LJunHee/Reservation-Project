@@ -22,32 +22,32 @@ public class ReserveService {
         this.reserveDao = reserveDao;
     }
 
-    // »ç¿ëÀÚÀÇ ¿¹¾à ¸ñ·ÏÀ» Á¶È¸ÇÏ´Â ¸Ş¼­µå
+    // ì‚¬ìš©ìì˜ ì˜ˆì•½ ëª©ë¡ì„ ì¡°íšŒí•˜ëŠ” ë©”ì„œë“œ
     public void listByUser(int userNo, Model model) {
         model.addAttribute("list", reserveDao.pullListByUser(userNo));
     }
     
-    // ¿¹¾à »ó¼¼ Á¤º¸ Á¶È¸
+    // ì˜ˆì•½ ìƒì„¸ ì •ë³´ ì¡°íšŒ
     public ReserveVo detail(int reserveNo) {
         return reserveDao.getList(reserveNo);
     }
 
-    // ¿¹¾à Ãß°¡
+    // ì˜ˆì•½ ì¶”ê°€
     public void add(ReserveVo bean) {
         System.out.println(reserveDao.addList(bean));
     }
 
-    // ¿¹¾à ¼öÁ¤
+    // ì˜ˆì•½ ìˆ˜ì •
     public void edit(ReserveVo bean) {
         reserveDao.setList(bean);
     }
 
-    // ¿¹¾à »èÁ¦
+    // ì˜ˆì•½ ì‚­ì œ
     public void delete(int reserveNo) {
         reserveDao.rmList(reserveNo);
     }
     
-    // ¿¹¾à Ãß°¡ ±â´É (¿¹¾à Áßº¹ Ã¼Å© Æ÷ÇÔ)
+    // ì˜ˆì•½ ì¶”ê°€ ê¸°ëŠ¥ (ì˜ˆì•½ ì¤‘ë³µ ì²´í¬ í¬í•¨)
     public void addReservation(int restNo, int headCount, String reserveDate, int userNo) {
         ReserveVo reserve = new ReserveVo();
         reserve.setRestNo(restNo);
@@ -59,45 +59,45 @@ public class ReserveService {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
             localDateTime = LocalDateTime.parse(reserveDate, formatter).withSecond(0);
         } catch (Exception e) {
-            throw new IllegalStateException("Àß¸øµÈ ¿äÃ»ÀÔ´Ï´Ù."); 
+            throw new IllegalStateException("ì˜ëª»ëœ ìš”ì²­ì…ë‹ˆë‹¤."); 
         }
 
         LocalDate today = LocalDate.now();
         if (localDateTime.toLocalDate().isEqual(today)) {
             List<ReserveVo> existingReservations = reserveDao.findReservationsByUserAndRestaurant(userNo, restNo, today);
             if (!existingReservations.isEmpty()) {
-                throw new IllegalStateException("´çÀÏ¿¡ ÀÌ¹Ì ¿¹¾àµÈ ·¹½ºÅä¶ûÀÔ´Ï´Ù.");
+                throw new IllegalStateException("ë‹¹ì¼ì— ì´ë¯¸ ì˜ˆì•½ëœ ë ˆìŠ¤í† ë‘ì…ë‹ˆë‹¤.");
             }
         }
 
         reserve.setReserveTime(Timestamp.valueOf(localDateTime));
         reserveDao.addList(reserve);
     }
- // ¿¹¾à ¼öÁ¤
+ // ì˜ˆì•½ ìˆ˜ì •
     public void updateReservation(int reserveNo, int restNo, int headCount, String reserveDate, int userNo) {
-        ReserveVo existingReservation = reserveDao.getList(reserveNo); // ¿¹¾à ¹øÈ£·Î ±âÁ¸ ¿¹¾à Á¶È¸
+        ReserveVo existingReservation = reserveDao.getList(reserveNo); // ì˜ˆì•½ ë²ˆí˜¸ë¡œ ê¸°ì¡´ ì˜ˆì•½ ì¡°íšŒ
 
-        // ¿¹¾àÀÌ Á¸ÀçÇÏ´ÂÁö È®ÀÎ
+        // ì˜ˆì•½ì´ ì¡´ì¬í•˜ëŠ”ì§€ í™•ì¸
         if (existingReservation == null) {
-            throw new IllegalStateException("Á¸ÀçÇÏÁö ¾Ê´Â ¿¹¾àÀÔ´Ï´Ù.");
+            throw new IllegalStateException("ì¡´ì¬í•˜ì§€ ì•ŠëŠ” ì˜ˆì•½ì…ë‹ˆë‹¤.");
         }
 
-        // ¿¹¾à Á¤º¸ ¼öÁ¤
+        // ì˜ˆì•½ ì •ë³´ ìˆ˜ì •
         existingReservation.setRestNo(restNo);
         existingReservation.setHeadCount(headCount);
         existingReservation.setUserNo(userNo);
 
-        // reserveDate¸¦ LocalDateTimeÀ¸·Î º¯È¯
+        // reserveDateë¥¼ LocalDateTimeìœ¼ë¡œ ë³€í™˜
         LocalDateTime localDateTime;
         try {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
             localDateTime = LocalDateTime.parse(reserveDate, formatter).withSecond(0);
         } catch (Exception e) {
-            throw new IllegalStateException("Àß¸øµÈ ³¯Â¥ Çü½ÄÀÔ´Ï´Ù.");
+            throw new IllegalStateException("ì˜ëª»ëœ ë‚ ì§œ í˜•ì‹ì…ë‹ˆë‹¤.");
         }
 
         existingReservation.setReserveTime(Timestamp.valueOf(localDateTime));
-        reserveDao.setList(existingReservation); // DB¿¡ ¾÷µ¥ÀÌÆ®
+        reserveDao.setList(existingReservation); // DBì— ì—…ë°ì´íŠ¸
     }
 
 }

@@ -30,21 +30,14 @@
                         <label for="editModalReserveTime">예약 시간</label>
                         <input type="datetime-local" id="editModalReserveTime" name="reserveDate" class="form-control" required>
                     </div>
-
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">취소</button>
-                        <button type="submit" class="btn btn-primary">저장</button>
-                    </div>
+					<div class="modal-footer">
+				        <button type="button" class="btn btn-danger" onclick="if(confirm('정말로 삭제하시겠습니까?')) { document.getElementById('editForm').action='${root}/mypage/delete'; document.getElementById('editForm').submit(); }">삭제</button>
+					    <button type="submit" class="btn btn-primary">수정</button>
+					    <button type="button" class="btn btn-default" data-dismiss="modal">취소</button>
+					</div>
                 </form>
-                
-                <!-- 삭제 폼 -->
-                <form action="${root}/mypage/delete" method="post" style="display:inline;">
-				    <!-- 삭제 시 reserveNo만 전달 -->
-				    <input type="hidden" name="reserveNo" id="deleteReserveNo">
-				    <button type="submit" class="btn btn-danger" onclick="return confirm('정말로 삭제하시겠습니까?');">삭제</button>
-				</form>
-
             </div>
         </div>
     </div>
 </div>
+
