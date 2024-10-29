@@ -73,4 +73,31 @@ public class ReserveService {
         reserve.setReserveTime(Timestamp.valueOf(localDateTime));
         reserveDao.addList(reserve);
     }
+ // 예약 수정
+    public void updateReservation(int reserveNo, int restNo, int headCount, String reserveDate, int userNo) {
+        ReserveVo existingReservation = reserveDao.getList(reserveNo); // 예약 번호로 기존 예약 조회
+
+        // 예약이 존재하는지 확인
+        if (existingReservation == null) {
+            throw new IllegalStateException("존재하지 않는 예약입니다.");
+        }
+
+        // 예약 정보 수정
+        existingReservation.setRestNo(restNo);
+        existingReservation.setHeadCount(headCount);
+        existingReservation.setUserNo(userNo);
+
+        // reserveDate를 LocalDateTime으로 변환
+        LocalDateTime localDateTime;
+        try {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+            localDateTime = LocalDateTime.parse(reserveDate, formatter).withSecond(0);
+        } catch (Exception e) {
+            throw new IllegalStateException("잘못된 날짜 형식입니다.");
+        }
+
+        existingReservation.setReserveTime(Timestamp.valueOf(localDateTime));
+        reserveDao.setList(existingReservation); // DB에 업데이트
+    }
+
 }

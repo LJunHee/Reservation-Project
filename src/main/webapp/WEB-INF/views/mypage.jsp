@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -37,57 +36,56 @@
             <h2 class="text-center mb-4">나의 예약 목록</h2>
 
             <!-- 예약 목록 테이블 -->
-            <table class="table table-striped table-bordered">
-                <thead class="table-dark">
-                    <tr>
-                        <th scope="col">식당명</th>
-                        <th scope="col">예약 시간</th>
-                        <th scope="col">예약 인원 수</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <c:if test="${empty list}">
-                        <tr>
-                            <td colspan="4" class="text-center">예약이 없습니다.</td>
-                        </tr>
-                    </c:if>
-                
-                    <c:forEach var="reservation" items="${list}">
-					    <tr>
-					        <td><a href="#">${reservation.restName}</a></td>
-					        <!-- 예약 시간 클릭 시 edit.jspf 모달 열기 -->
-					        <td>
-                                <a href="#" onclick="setEditModal('${reservation.reserveNo}', '${reservation.reserveTime}', '${reservation.headCount}')" data-toggle="modal" data-target="#editModal">
-                                    <fmt:formatDate value="${reservation.reserveTime}" pattern="yyyy-MM-dd HH:mm" />
-                                </a>
-                            </td>
-					        <!-- 예약 인원 수 클릭 시 edit.jspf 모달 열기 -->
-					        <td><a href="#" onclick="setEditModal('${reservation.reserveNo}', '${reservation.reserveTime}', '${reservation.headCount}')" data-toggle="modal" data-target="#editModal">${reservation.headCount}</a></td>
-					    </tr>
-					</c:forEach>
-
-                </tbody>
-            </table>
-
-            <div class="text-right">
-                <c:if test="${not empty list}">
-                    <a href="#" class="btn btn-primary" role="button" data-toggle="modal" data-target="#reviewModal">리뷰 작성</a>
-                </c:if>
-            </div>
-        </div>
-    </div>
-</nav>
-
+<table class="table table-striped table-bordered">
+    <thead class="table-dark">
+        <tr>
+            <th scope="col">식당명</th>
+            <th scope="col">예약 시간</th>
+            <th scope="col">예약 인원 수</th>
+        </tr>
+    </thead>
+    <tbody>
+        <c:if test="${empty list}">
+            <tr>
+                <td colspan="4" class="text-center">예약이 없습니다.</td>
+            </tr>
+        </c:if>
+    
+        <c:forEach var="reservation" items="${list}">
+            <tr>
+                <td><a href="#">${reservation.restName}</a></td>
+                <!-- 예약 시간 클릭 시 edit.jspf 모달 열기 -->
+                <td>
+                    <a href="#" 
+                       onclick="setEditModal('${reservation.reserveNo}', '${reservation.restNo}', '${reservation.reserveTime}', '${reservation.headCount}')"
+                       data-toggle="modal" 
+                       data-target="#EditModal">${reservation.reserveTime}</a>
+                </td>
+                <!-- 예약 인원 수 클릭 시 edit.jspf 모달 열기 -->
+                <td>
+                    <a href="#" 
+                       onclick="setEditModal('${reservation.reserveNo}', '${reservation.restNo}', '${reservation.reserveTime}', '${reservation.headCount}')"
+                       data-toggle="modal" 
+                       data-target="#EditModal">${reservation.headCount}</a>
+                </td>
+            </tr>
+        </c:forEach>
+    </tbody>
+</table>
 <%@ include file="reserve/review.jspf" %>
 <%@ include file="reserve/edit.jspf" %>
 
 <script>
-    function setEditModal(reserveNo, reserveTime, headCount) {
-        document.getElementById('editModalReserveNo').value = reserveNo;
-        document.getElementById('editModalReserveTime').value = reserveTime;
-        document.getElementById('editModalHeadCount').value = headCount;
-    }
+	function setEditModal(reserveNo, restNo, reserveTime, headCount) {
+	    document.getElementById('editModalReserveNo').value = reserveNo;
+	    document.getElementById('editModalRestNo').value = restNo;
+	    document.getElementById('editModalReserveTime').value = reserveTime;
+	    document.getElementById('editModalHeadCount').value = headCount;
+	    document.getElementById('deleteReserveNo').value = reserveNo;
+	}
 </script>
+
+
 
 </body>
 </html>
