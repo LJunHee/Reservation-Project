@@ -3,7 +3,7 @@ CREATE TABLE `review` (
 	`userNo` INT NULL DEFAULT NULL,
 	`restNo` INT NULL DEFAULT NULL,
 	`reviewContent` TEXT NOT NULL COLLATE 'utf8mb4_0900_ai_ci',
-	`reviewScore` INT NULL DEFAULT NULL,
+	`reviewScore` INT NULL DEFAULT '1',
 	`createDate` TIMESTAMP NOT NULL DEFAULT (CURRENT_TIMESTAMP),
 	PRIMARY KEY (`reviewNo`) USING BTREE,
 	INDEX `userNo` (`userNo`) USING BTREE,
