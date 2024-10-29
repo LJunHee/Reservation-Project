@@ -100,22 +100,28 @@ public class HomeController {
         return "mypage";
     }
     @PostMapping("/mypage/edit")
-    public String editReservation(@ModelAttribute ReserveVo reserveVo, @RequestParam("reserveTime") String reserveTimeStr) {
+    public String editReservation(
+            @RequestParam int reserveNo, // 추가된 부분
+            @RequestParam int restNo,
+            @RequestParam int headCount,
+            @RequestParam String reserveDate,
+            HttpSession session,
+            Model model) {
+
+        UserVo user = (UserVo) session.getAttribute("loggedInUser");
+
         try {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
-            LocalDateTime localDateTime = LocalDateTime.parse(reserveTimeStr, formatter);
-            Timestamp reserveTime = Timestamp.valueOf(localDateTime);
-
-            // 변환된 reserveTime을 ReserveVo에 설정
-            reserveVo.setReserveTime(reserveTime);
-
-            // 예약 수정 처리
-            reserveService.edit(reserveVo);
-            return "redirect:/mypage";
+            // 예약 수정 로직에 reserveNo 전달
+            reserveService.updateReservation(reserveNo, restNo, headCount, reserveDate, user.getUserNo());
+            return "redirect:/mypage"; 
+        } catch (IllegalStateException e) {
+            model.addAttribute("errorMessage", "당일에 이미 예약된 레스토랑입니다.");
         } catch (Exception e) {
-            e.printStackTrace();  // 예외 로그 출력
-            return "redirect:/mypage?error=edit-failed";  // 오류 시 리다이렉트
+            model.addAttribute("errorMessage", "예약을 처리하는 중에 오류가 발생했습니다. 다시 시도해주세요.");
         }
+
+        restService.list(model);
+        return "mypage"; 
     }
 
 
