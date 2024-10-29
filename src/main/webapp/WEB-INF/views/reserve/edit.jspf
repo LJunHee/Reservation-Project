@@ -32,19 +32,22 @@
                     </div>
 
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">취소</button>
-                        <button type="submit" class="btn btn-primary">저장</button>
+                        <!-- 삭제와 저장 버튼 -->
+				        <button type="button" class="btn btn-danger" onclick="submitForm('${root}/mypage/delete')">삭제</button>
+				        <button type="button" class="btn btn-primary" onclick="submitForm('${root}/mypage/edit')">저장</button>
+				        <button type="button" class="btn btn-default" data-dismiss="modal">취소</button>
                     </div>
                 </form>
-                
-                <!-- 삭제 폼 -->
-                <form action="${root}/mypage/delete" method="post" style="display:inline;">
-				    <!-- 삭제 시 reserveNo만 전달 -->
-				    <input type="hidden" name="reserveNo" id="deleteReserveNo">
-				    <button type="submit" class="btn btn-danger" onclick="return confirm('정말로 삭제하시겠습니까?');">삭제</button>
-				</form>
-
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    // 폼 전송 경로를 설정하는 함수
+    function submitForm(actionUrl) {
+        const form = document.getElementById("editForm");
+        form.action = actionUrl; // 폼의 action을 동적으로 설정
+        form.submit(); // 폼 전송
+    }
+</script>
