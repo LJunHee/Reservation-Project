@@ -58,15 +58,17 @@
 										<img
 											src="${root}/resources/img/${item.restName}.jpg"
 											alt="사진 ${item.restName}"
-											onerror="this.src='${pageContext.request.contextPath}/img/default.jpg'"
+											onerror="this.src='${root}/resources/img/default.jpg'"
 											class="img-responsive">
 										<div class="caption">
 											<h4>${item.restName != null ? item.restName : '이름 없음'}</h4>
+											<p>${item.restAddress != null ? item.restAddress : '주소가 없습니다.'}</p>
 											<p>${item.restInfo != null ? item.restInfo : '설명이 없습니다.'}</p>
 											<p>
 												<a href="#" class="btn btn-primary" role="button"
 													data-toggle="modal" data-target="#restInfoModal"
 													data-name="${fn:escapeXml(item.restName)}"
+													data-address="${fn:escapeXml(item.restAddress)}"
 													data-info="${fn:escapeXml(item.restInfo)}"
 													data-phone="${fn:escapeXml(item.formattedPhone)}"
 													data-open="${fn:escapeXml(item.openTimeStr)}"
@@ -95,6 +97,7 @@
 function setRestaurantDetails(button) {
     // 버튼의 data-* 속성에서 정보 가져오기
     var name = button.getAttribute('data-name');
+    var address = button.getAttribute('data-address');
     var info = button.getAttribute('data-info');
     var phone = button.getAttribute('data-phone');
     var openTime = button.getAttribute('data-open');
@@ -104,6 +107,7 @@ function setRestaurantDetails(button) {
 
     // 모달에 정보 설정
     document.querySelector('#restInfoModal #restName').textContent = name;
+    document.querySelector('#restInfoModal #restAddress').textContent = address;
     document.querySelector('#restInfoModal #restInfo').textContent = info;
     document.querySelector('#restInfoModal #restPhone').textContent = phone;
     document.querySelector('#restInfoModal #restTime').textContent = openTime + " - " + closeTime;

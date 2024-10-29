@@ -1,13 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>마이페이지 - 예약 목록</title>
-    <%@include file="template/head.jspf" %>
+    <title>예약 목록</title>
+    <%@include file = "template/head.jspf" %>
 </head>
 <body>
 <nav class="navbar navbar-default">
@@ -31,7 +30,6 @@
                     <li class="active"><a href="${root}/mypage/">마이페이지</a></li>
                 </c:if>
             </ul>
-        </div>
         <%@ include file="template/menu.jspf" %>
         <div class="container mt-5">
             <h2 class="text-center mb-4">나의 예약 목록</h2>
@@ -46,26 +44,31 @@
                     </tr>
                 </thead>
                 <tbody>
+                    <!-- JSTL을 사용하여 예약 목록을 반복 출력 -->
                     <c:if test="${empty list}">
+                        <!-- 예약이 없을 때 안내 문구 -->
                         <tr>
-                            <td colspan="4" class="text-center">예약이 없습니다.</td>
+                            <td colspan="3" class="text-center">예약이 없습니다.</td>
                         </tr>
                     </c:if>
-                
+                    
                     <c:forEach var="reservation" items="${list}">
-					    <tr>
-					        <td><a href="#">${reservation.restName}</a></td>
-					        <!-- 예약 시간 클릭 시 edit.jspf 모달 열기 -->
-					        <td>
-                                <a href="#" onclick="setEditModal('${reservation.reserveNo}', '${reservation.reserveTime}', '${reservation.headCount}')" data-toggle="modal" data-target="#editModal">
-                                    <fmt:formatDate value="${reservation.reserveTime}" pattern="yyyy-MM-dd HH:mm" />
-                                </a>
-                            </td>
-					        <!-- 예약 인원 수 클릭 시 edit.jspf 모달 열기 -->
-					        <td><a href="#" onclick="setEditModal('${reservation.reserveNo}', '${reservation.reserveTime}', '${reservation.headCount}')" data-toggle="modal" data-target="#editModal">${reservation.headCount}</a></td>
-					    </tr>
-					</c:forEach>
-
+                        <tr>
+                            <td>${reservation.restName}</td>
+                            <td>
+			                    <a href="#" 
+			                       onclick="setEditModal('${reservation.reserveNo}', '${reservation.restNo}', '${reservation.reserveTime}', '${reservation.headCount}')"
+			                       data-toggle="modal" 
+			                       data-target="#EditModal">${reservation.getReserveTimeStr()}</a>
+			                </td>
+			                <td>
+			                    <a href="#" 
+			                       onclick="setEditModal('${reservation.reserveNo}', '${reservation.restNo}', '${reservation.reserveTime}', '${reservation.headCount}')"
+			                       data-toggle="modal" 
+			                       data-target="#EditModal">${reservation.headCount}</a>
+			                </td>
+                        </tr>
+                    </c:forEach>
                 </tbody>
             </table>
 
@@ -82,12 +85,13 @@
 <%@ include file="reserve/edit.jspf" %>
 
 <script>
-    function setEditModal(reserveNo, reserveTime, headCount) {
-        document.getElementById('editModalReserveNo').value = reserveNo;
-        document.getElementById('editModalReserveTime').value = reserveTime;
-        document.getElementById('editModalHeadCount').value = headCount;
-    }
+	function setEditModal(reserveNo, restNo, reserveTime, headCount) {
+	    document.getElementById('editReserveNo').value = reserveNo;
+	    document.getElementById('editRestNo').value = restNo;
+	    document.getElementById('editReserveTime').value = reserveTime;
+	    document.getElementById('editHeadCount').value = headCount;
+	    document.getElementById('deleteReserveNo').value = reserveNo;
+	}
 </script>
-
 </body>
 </html>
