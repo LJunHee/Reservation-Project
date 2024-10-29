@@ -58,7 +58,7 @@
 										<img
 											src="${root}/resources/img/${item.restName}.jpg"
 											alt="사진 ${item.restName}"
-											onerror="this.src='${pageContext.request.contextPath}/img/default.jpg'"
+											onerror="this.src='${root}/resources/img/default.jpg'"
 											class="img-responsive">
 										<div class="caption">
 											<h4>${item.restName != null ? item.restName : '이름 없음'}</h4>
