@@ -5,99 +5,96 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
-
 import com.team2.reservation.reserve.model.ReserveDao;
 import com.team2.reservation.reserve.model.ReserveVo;
 
 @Service
 public class ReserveService {
+    private static final DateTimeFormatter DATETIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
     private final ReserveDao reserveDao;
 
     @Autowired
-    public ReserveService(ReserveDao reserveDao) {
-        this.reserveDao = reserveDao;
+    public ReserveService(ReserveDao restDao) {
+        this.reserveDao = restDao;
     }
 
-    // »ç¿ëÀÚÀÇ ¿¹¾à ¸ñ·ÏÀ» Á¶È¸ÇÏ´Â ¸Ş¼­µå
+    // ì‚¬ìš©ì ì˜ˆì•½ ëª©ë¡ ì¡°íšŒ
     public void listByUser(int userNo, Model model) {
         model.addAttribute("list", reserveDao.pullListByUser(userNo));
     }
     
-    // ¿¹¾à »ó¼¼ Á¤º¸ Á¶È¸
-    public ReserveVo detail(int reserveNo) {
-        return reserveDao.getList(reserveNo);
-    }
-
-    // ¿¹¾à Ãß°¡
-    public void add(ReserveVo bean) {
-        System.out.println(reserveDao.addList(bean));
-    }
-
-    // ¿¹¾à ¼öÁ¤
-    public void edit(ReserveVo bean) {
-        reserveDao.setList(bean);
-    }
-
-    // ¿¹¾à »èÁ¦
-    public void delete(int reserveNo) {
-        reserveDao.rmList(reserveNo);
+    // ì‚¬ìš©ì ì˜ˆì•½ ê¸°ëŠ¥ (ì˜ˆì•½ ì¤‘ë³µ ì²´í¬)
+    public void addReservation(int restNo, int headCount, String reserveDate, int userNo) {
+        ReserveVo reserve = createReserveVo(restNo, headCount, userNo);
+        LocalDateTime localDateTime = parseReserveDate(reserveDate);
+        
+        chkDuplReservation(userNo, restNo, localDateTime.toLocalDate());
+        reserve.setReserveTime(Timestamp.valueOf(localDateTime));
+        reserveDao.addList(reserve);
     }
     
-    // ¿¹¾à Ãß°¡ ±â´É (¿¹¾à Áßº¹ Ã¼Å© Æ÷ÇÔ)
-    public void addReservation(int restNo, int headCount, String reserveDate, int userNo) {
+    // ì˜ˆì•½ ìˆ˜ì •
+    public void updateReservation(int reserveNo, int restNo, int headCount, String reserveDate, int userNo) {
+        ReserveVo existingReservation = existingReservation(reserveNo);
+        LocalDateTime localDateTime = parseReserveDate(reserveDate);
+        
+        updateReservation(existingReservation, restNo, headCount, userNo, localDateTime);
+        reserveDao.setList(existingReservation);
+    }
+    
+    // ì˜ˆì•½ ì‚­ì œ
+    public void deleteReservation(int reserveNo) {
+        reserveDao.rmList(reserveNo);
+    }  
+
+    
+    
+    // ì˜ˆì•½ ê°ì²´ ìƒì„±
+    private ReserveVo createReserveVo(int restNo, int headCount, int userNo) {
         ReserveVo reserve = new ReserveVo();
         reserve.setRestNo(restNo);
         reserve.setHeadCount(headCount);
         reserve.setUserNo(userNo);
+        return reserve;
+    }
 
-        LocalDateTime localDateTime;
+    // ë‚ ì§œ ë¬¸ìì—´ íŒŒì‹±
+    private LocalDateTime parseReserveDate(String reserveDate) {
         try {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
-            localDateTime = LocalDateTime.parse(reserveDate, formatter).withSecond(0);
+            return LocalDateTime.parse(reserveDate, DATETIME_FORMATTER).withSecond(0);
         } catch (Exception e) {
-            throw new IllegalStateException("Àß¸øµÈ ¿äÃ»ÀÔ´Ï´Ù."); 
+            throw new IllegalStateException("ì˜ëª»ëœ ìš”ì²­ì…ë‹ˆë‹¤.");
         }
+    }
 
+    // ì¤‘ë³µ ì˜ˆì•½ í™•ì¸
+    private void chkDuplReservation(int userNo, int restNo, LocalDate reservationDate) {
         LocalDate today = LocalDate.now();
-        if (localDateTime.toLocalDate().isEqual(today)) {
+        if (reservationDate.isEqual(today)) {
             List<ReserveVo> existingReservations = reserveDao.findReservationsByUserAndRestaurant(userNo, restNo, today);
             if (!existingReservations.isEmpty()) {
-                throw new IllegalStateException("´çÀÏ¿¡ ÀÌ¹Ì ¿¹¾àµÈ ·¹½ºÅä¶ûÀÔ´Ï´Ù.");
+                throw new IllegalStateException("ë‹¹ì¼ì— ì´ë¯¸ ì˜ˆì•½ëœ ë ˆìŠ¤í† ë‘ì…ë‹ˆë‹¤.");
             }
         }
-
-        reserve.setReserveTime(Timestamp.valueOf(localDateTime));
-        reserveDao.addList(reserve);
     }
- // ¿¹¾à ¼öÁ¤
-    public void updateReservation(int reserveNo, int restNo, int headCount, String reserveDate, int userNo) {
-        ReserveVo existingReservation = reserveDao.getList(reserveNo); // ¿¹¾à ¹øÈ£·Î ±âÁ¸ ¿¹¾à Á¶È¸
 
-        // ¿¹¾àÀÌ Á¸ÀçÇÏ´ÂÁö È®ÀÎ
+    // ê¸°ì¡´ ì˜ˆì•½ ì¡°íšŒ
+    private ReserveVo existingReservation(int reserveNo) {
+        ReserveVo existingReservation = reserveDao.getList(reserveNo);
         if (existingReservation == null) {
-            throw new IllegalStateException("Á¸ÀçÇÏÁö ¾Ê´Â ¿¹¾àÀÔ´Ï´Ù.");
+            throw new IllegalStateException("ì¡´ì¬í•˜ì§€ ì•ŠëŠ” ì˜ˆì•½ì…ë‹ˆë‹¤.");
         }
-
-        // ¿¹¾à Á¤º¸ ¼öÁ¤
-        existingReservation.setRestNo(restNo);
-        existingReservation.setHeadCount(headCount);
-        existingReservation.setUserNo(userNo);
-
-        // reserveDate¸¦ LocalDateTimeÀ¸·Î º¯È¯
-        LocalDateTime localDateTime;
-        try {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
-            localDateTime = LocalDateTime.parse(reserveDate, formatter).withSecond(0);
-        } catch (Exception e) {
-            throw new IllegalStateException("Àß¸øµÈ ³¯Â¥ Çü½ÄÀÔ´Ï´Ù.");
-        }
-
-        existingReservation.setReserveTime(Timestamp.valueOf(localDateTime));
-        reserveDao.setList(existingReservation); // DB¿¡ ¾÷µ¥ÀÌÆ®
+        return existingReservation;
     }
 
+    //ì˜ˆì•½ ì •ë³´ ì—…ë°ì´íŠ¸
+    private void updateReservation(ReserveVo reservation, int restNo, int headCount, int userNo, LocalDateTime localDateTime) {
+        reservation.setRestNo(restNo);
+        reservation.setHeadCount(headCount);
+        reservation.setUserNo(userNo);
+        reservation.setReserveTime(Timestamp.valueOf(localDateTime));
+    }
 }

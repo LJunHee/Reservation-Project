@@ -12,42 +12,31 @@
             <div class="modal-body">
                 <!-- 예약 수정 폼 -->
                 <form id="editForm" action="${root}/mypage/edit" method="post">
-                    <!-- 숨겨진 필드에 예약 및 레스토랑 번호 설정 -->
-                    <input type="hidden" id="editModalReserveNo" name="reserveNo">
-                    <input type="hidden" id="editModalRestNo" name="restNo">
+                    <input type="hidden" id="editReserveNo" name="reserveNo">
+                    <input type="hidden" id="editRestNo" name="restNo">
                     
                     <div class="form-group">
-                        <label for="editModalHeadCount">인원 수</label>
+                        <label for="editHeadCount">인원 수</label>
                         <p class="text-danger">*인원이 10명 이상일 경우 전화로 예약 부탁드립니다.</p>
-                        <select id="editModalHeadCount" name="headCount" class="form-control">
-                            <c:forEach var="count" begin="1" end="10">
+                        <select id="editHeadCount" name="headCount" class="form-control">
+                            <c:forEach var="count" begin="1" end="9">
                                 <option value="${count}">${count}명</option>
                             </c:forEach>
                         </select>
                     </div>
 
                     <div class="form-group">
-                        <label for="editModalReserveTime">예약 시간</label>
-                        <input type="datetime-local" id="editModalReserveTime" name="reserveDate" class="form-control" required>
+                        <label for="editReserveTime">예약 시간</label>
+                        <input type="datetime-local" id="editReserveTime" name="reserveDate" class="form-control" required>
                     </div>
-
-                    <div class="modal-footer">
-                        <!-- 삭제와 저장 버튼 -->
-				        <button type="button" class="btn btn-danger" onclick="submitForm('${root}/mypage/delete')">삭제</button>
-				        <button type="button" class="btn btn-primary" onclick="submitForm('${root}/mypage/edit')">저장</button>
-				        <button type="button" class="btn btn-default" data-dismiss="modal">취소</button>
-                    </div>
+					<div class="modal-footer">
+				        <button type="button" class="btn btn-danger" onclick="if(confirm('정말로 삭제하시겠습니까?')) { document.getElementById('editForm').action='${root}/mypage/delete'; document.getElementById('editForm').submit(); }">삭제</button>
+					    <button type="submit" class="btn btn-primary">수정</button>
+					    <button type="button" class="btn btn-default" data-dismiss="modal">취소</button>
+					</div>
                 </form>
             </div>
         </div>
     </div>
 </div>
 
-<script>
-    // 폼 전송 경로를 설정하는 함수
-    function submitForm(actionUrl) {
-        const form = document.getElementById("editForm");
-        form.action = actionUrl; // 폼의 action을 동적으로 설정
-        form.submit(); // 폼 전송
-    }
-</script>

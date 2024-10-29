@@ -51,9 +51,7 @@ public class HomeController {
         return "index";
     }
 
-    
-
-   
+    //register
     @PostMapping("/")
     public String add(@ModelAttribute UserVo bean) {
         userService.add(bean);
@@ -67,8 +65,6 @@ public class HomeController {
         boolean isAvailable = userService.isEmailAvailable(userEmail);
         return isAvailable ? ResponseEntity.ok("available") : ResponseEntity.ok("exists");
     }
-
-
     
     //login
     @PostMapping("/login")
@@ -90,9 +86,10 @@ public class HomeController {
         session.invalidate(); 
         return "redirect:/";
     }
+   
     
     
-
+    // mypage - CRUD
     @GetMapping("/mypage")
     public String myPage(Model model, HttpSession session) {
         UserVo user = (UserVo) session.getAttribute("loggedInUser");
@@ -101,7 +98,7 @@ public class HomeController {
     }
     @PostMapping("/mypage/edit")
     public String editReservation(
-            @RequestParam int reserveNo, // Ãß°¡µÈ ºÎºĞ
+            @RequestParam int reserveNo, // ì¶”ê°€ëœ ë¶€ë¶„
             @RequestParam int restNo,
             @RequestParam int headCount,
             @RequestParam String reserveDate,
@@ -111,13 +108,13 @@ public class HomeController {
         UserVo user = (UserVo) session.getAttribute("loggedInUser");
 
         try {
-            // ¿¹¾à ¼öÁ¤ ·ÎÁ÷¿¡ reserveNo Àü´Ş
+            // ì˜ˆì•½ ìˆ˜ì • ë¡œì§ì— reserveNo ì „ë‹¬
             reserveService.updateReservation(reserveNo, restNo, headCount, reserveDate, user.getUserNo());
             return "redirect:/mypage"; 
         } catch (IllegalStateException e) {
-            model.addAttribute("errorMessage", "´çÀÏ¿¡ ÀÌ¹Ì ¿¹¾àµÈ ·¹½ºÅä¶ûÀÔ´Ï´Ù.");
+            model.addAttribute("errorMessage", "ë‹¹ì¼ì— ì´ë¯¸ ì˜ˆì•½ëœ ë ˆìŠ¤í† ë‘ì…ë‹ˆë‹¤.");
         } catch (Exception e) {
-            model.addAttribute("errorMessage", "¿¹¾àÀ» Ã³¸®ÇÏ´Â Áß¿¡ ¿À·ù°¡ ¹ß»ıÇß½À´Ï´Ù. ´Ù½Ã ½ÃµµÇØÁÖ¼¼¿ä.");
+            model.addAttribute("errorMessage", "ì˜ˆì•½ì„ ì²˜ë¦¬í•˜ëŠ” ì¤‘ì— ì˜¤ë¥˜ê°€ ë°œìƒí–ˆìŠµë‹ˆë‹¤. ë‹¤ì‹œ ì‹œë„í•´ì£¼ì„¸ìš”.");
         }
 
         restService.list(model);
@@ -134,30 +131,54 @@ public class HomeController {
   
 
     
+    @PostMapping("/mypage/edit")
+    public String editReservation(@RequestParam int reserveNo, @RequestParam int restNo,@RequestParam int headCount,@RequestParam String reserveDate,
+            HttpSession session,Model model) {
+        UserVo user = (UserVo) session.getAttribute("loggedInUser");
 
+        try {
+            // ì˜ˆì•½ ìˆ˜ì • ë¡œì§ì— reserveNo ì „ë‹¬
+            reserveService.updateReservation(reserveNo, restNo, headCount, reserveDate, user.getUserNo());
+            return "redirect:/mypage"; 
+	        } catch (IllegalStateException e) {
+	            model.addAttribute("errorMessage", "ë‹¹ì¼ì— ì´ë¯¸ ì˜ˆì•½ëœ ë ˆìŠ¤í† ë‘ì…ë‹ˆë‹¤.");
+	        } catch (Exception e) {
+	            model.addAttribute("errorMessage", "ì˜ˆì•½ì„ ìˆ˜ì •í•˜ëŠ” ì¤‘ì— ì˜¤ë¥˜ê°€ ë°œìƒí–ˆìŠµë‹ˆë‹¤. ë‹¤ì‹œ ì‹œë„í•´ì£¼ì„¸ìš”.");
+	        }
+	
+	        restService.list(model);
+	        return "mypage"; 
+    }
+    
+    @PostMapping("/mypage/delete")
+    public String deleteReservation(@RequestParam("reserveNo") int reserveNo) {
+        reserveService.deleteReservation(reserveNo);
+        return "redirect:/mypage";
+    }
+    
+    
     
     //restaurant
     @GetMapping("/restaurant")
     public String showRestaurants(Model model) {
     	restService.list(model);
-        return "restaurant"; // 
+        return "restaurant"; 
     }
     
-    //restaurant reservation
+    //restaurant - reservation
     @PostMapping("/restaurant")
     public String makeReservation(@RequestParam int restNo, @RequestParam int headCount, @RequestParam String reserveDate, HttpSession session, Model model) {
         UserVo user = (UserVo) session.getAttribute("loggedInUser");
-        if (user == null) {
-            return "redirect:/"; 
-        }
+
+        if (user == null) return "redirect:/"; // ë¡œê·¸ì¸ ìƒíƒœê°€ ì•„ë‹ ê²½ìš° ë¦¬ë‹¤ì´ë ‰íŠ¸
 
         try {
             reserveService.addReservation(restNo, headCount, reserveDate, user.getUserNo());
             return "redirect:/mypage"; 
         }  catch (IllegalStateException e) {
-            model.addAttribute("errorMessage", "´çÀÏ¿¡ ÀÌ¹Ì ¿¹¾àµÈ ·¹½ºÅä¶ûÀÔ´Ï´Ù.");
+            model.addAttribute("errorMessage", "ë‹¹ì¼ì— ì´ë¯¸ ì˜ˆì•½ëœ ë ˆìŠ¤í† ë‘ì…ë‹ˆë‹¤.");
         } catch (Exception e) {
-            model.addAttribute("errorMessage", "¿¹¾àÀ» Ã³¸®ÇÏ´Â Áß¿¡ ¿À·ù°¡ ¹ß»ıÇß½À´Ï´Ù. ´Ù½Ã ½ÃµµÇØÁÖ¼¼¿ä.");
+            model.addAttribute("errorMessage", "ì˜ˆì•½ì„ ì²˜ë¦¬í•˜ëŠ” ì¤‘ì— ì˜¤ë¥˜ê°€ ë°œìƒí–ˆìŠµë‹ˆë‹¤. ë‹¤ì‹œ ì‹œë„í•´ì£¼ì„¸ìš”.");
         }
 
         restService.list(model);
@@ -169,11 +190,11 @@ public class HomeController {
     public String addReview(@ModelAttribute ReviewVo bean, HttpSession session) {
         UserVo user = (UserVo) session.getAttribute("loggedInUser");
         if (user != null) {
-            bean.setUserNo(user.getUserNo()); // ·Î±×ÀÎÇÑ »ç¿ëÀÚÀÇ userNo¸¦ ReviewVo¿¡ ¼³Á¤
+            bean.setUserNo(user.getUserNo()); // ë¡œê·¸ì¸í•œ ì‚¬ìš©ìì˜ userNoë¥¼ ReviewVoì— ì„¤ì •
             reviewService.add(bean);
             return "redirect:/mypage";
         }
-        // ·Î±×ÀÎµÇÁö ¾ÊÀº °æ¿ì
+        // ë¡œê·¸ì¸ë˜ì§€ ì•Šì€ ê²½ìš°
         return "redirect:/";
 
     }
