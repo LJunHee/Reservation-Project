@@ -46,7 +46,6 @@ public class HomeController {
         return "index";
     }
 
-    
     //register
     @PostMapping("/")
     public String add(@ModelAttribute UserVo bean) {
@@ -61,8 +60,6 @@ public class HomeController {
         boolean isAvailable = userService.isEmailAvailable(userEmail);
         return isAvailable ? ResponseEntity.ok("available") : ResponseEntity.ok("exists");
     }
-
-
     
     //login
     @PostMapping("/login")
@@ -84,8 +81,10 @@ public class HomeController {
         session.invalidate(); 
         return "redirect:/";
     }
+   
     
-    // 마이페이지- 사용자의 예약 목록을 보여주는 기능 추가
+    
+    // mypage - CRUD
     @GetMapping("/mypage")
     public String myPage(Model model, HttpSession session) {
         UserVo user = (UserVo) session.getAttribute("loggedInUser");  // 로그인한 사용자 가져오기
@@ -95,22 +94,45 @@ public class HomeController {
         return "mypage";  // mypage.jsp로 이동
     }
     
+    @PostMapping("/mypage/edit")
+    public String editReservation(@RequestParam int reserveNo, @RequestParam int restNo,@RequestParam int headCount,@RequestParam String reserveDate,
+            HttpSession session,Model model) {
+        UserVo user = (UserVo) session.getAttribute("loggedInUser");
 
+        try {
+            // 예약 수정 로직에 reserveNo 전달
+            reserveService.updateReservation(reserveNo, restNo, headCount, reserveDate, user.getUserNo());
+            return "redirect:/mypage"; 
+	        } catch (IllegalStateException e) {
+	            model.addAttribute("errorMessage", "당일에 이미 예약된 레스토랑입니다.");
+	        } catch (Exception e) {
+	            model.addAttribute("errorMessage", "예약을 수정하는 중에 오류가 발생했습니다. 다시 시도해주세요.");
+	        }
+	
+	        restService.list(model);
+	        return "mypage"; 
+    }
+    
+    @PostMapping("/mypage/delete")
+    public String deleteReservation(@RequestParam("reserveNo") int reserveNo) {
+        reserveService.deleteReservation(reserveNo);
+        return "redirect:/mypage";
+    }
+    
+    
     
     //restaurant
     @GetMapping("/restaurant")
     public String showRestaurants(Model model) {
     	restService.list(model);
-        return "restaurant"; // 
+        return "restaurant"; 
     }
     
-    //restaurant reservation
+    //restaurant - reservation
     @PostMapping("/restaurant")
     public String makeReservation(@RequestParam int restNo, @RequestParam int headCount, @RequestParam String reserveDate, HttpSession session, Model model) {
         UserVo user = (UserVo) session.getAttribute("loggedInUser");
-        if (user == null) {
-            return "redirect:/"; // 로그인 상태가 아닐 경우 리다이렉트
-        }
+        if (user == null) return "redirect:/"; // 로그인 상태가 아닐 경우 리다이렉트
 
         try {
             reserveService.addReservation(restNo, headCount, reserveDate, user.getUserNo());

@@ -54,9 +54,19 @@
                     
                     <c:forEach var="reservation" items="${list}">
                         <tr>
-                            <td><a href="#">${reservation.restName}</a></td>
-                            <td><a href="#">${reservation.getReserveTimeStr()}</a></td>
-                            <td><a href="#">${reservation.headCount}</a></td>
+                            <td>${reservation.restName}</td>
+                            <td>
+			                    <a href="#" 
+			                       onclick="setEditModal('${reservation.reserveNo}', '${reservation.restNo}', '${reservation.reserveTime}', '${reservation.headCount}')"
+			                       data-toggle="modal" 
+			                       data-target="#EditModal">${reservation.getReserveTimeStr()}</a>
+			                </td>
+			                <td>
+			                    <a href="#" 
+			                       onclick="setEditModal('${reservation.reserveNo}', '${reservation.restNo}', '${reservation.reserveTime}', '${reservation.headCount}')"
+			                       data-toggle="modal" 
+			                       data-target="#EditModal">${reservation.headCount}</a>
+			                </td>
                         </tr>
                     </c:forEach>
                 </tbody>
@@ -72,5 +82,16 @@
 </nav>
 
 <%@ include file="reserve/review.jspf" %>
+<%@ include file="reserve/edit.jspf" %>
+
+<script>
+	function setEditModal(reserveNo, restNo, reserveTime, headCount) {
+	    document.getElementById('editReserveNo').value = reserveNo;
+	    document.getElementById('editRestNo').value = restNo;
+	    document.getElementById('editReserveTime').value = reserveTime;
+	    document.getElementById('editHeadCount').value = headCount;
+	    document.getElementById('deleteReserveNo').value = reserveNo;
+	}
+</script>
 </body>
 </html>
