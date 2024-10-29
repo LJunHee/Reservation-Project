@@ -20,6 +20,10 @@
 						<p class="form-control-static" id="restName"></p>
 					</div>
 					<div class="form-group">
+						<label for="restInfo">레스토랑 주소</label>
+						<p class="form-control-static" id="restAddress"></p>
+					</div>
+					<div class="form-group">
 						<label for="restInfo">레스토랑 설명</label>
 						<p class="form-control-static" id="restInfo"></p>
 					</div>
