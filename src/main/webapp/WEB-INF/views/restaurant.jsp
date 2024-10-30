@@ -90,6 +90,7 @@
 
 
 <%@ include file="restaurant/restInfo.jspf" %>
+<%@ include file="restaurant/restReviews.jspf" %>
 <%@ include file="restaurant/reservation.jspf" %>
 <%@ include file="template/footer.jspf" %>
 
