@@ -56,20 +56,21 @@
 								<div class="col-md-3">
 									<div class="thumbnail">
 										<img
-											src="${root}/resources/img/${item.restName}.jpg"
+											src="${item.restImage}"
 											alt="사진 ${item.restName}"
 											onerror="this.src='${root}/resources/img/default.jpg'"
 											class="img-responsive">
 										<div class="caption">
 											<h4>${item.restName != null ? item.restName : '이름 없음'}</h4>
-											<p>${item.restAddress != null ? item.restAddress : '주소가 없습니다.'}</p>
-											<p>${item.restInfo != null ? item.restInfo : '설명이 없습니다.'}</p>
+											<p>주소 : ${item.restAddress != null ? item.restAddress : '주소가 없습니다.'}</p>
+											<p>전화번호 : ${item.restPhone != null ? item.restPhone : '전화번호가 없습니다.'}</p>
 											<p>
 												<a href="#" class="btn btn-primary" role="button"
 													data-toggle="modal" data-target="#restInfoModal"
 													data-name="${fn:escapeXml(item.restName)}"
 													data-address="${fn:escapeXml(item.restAddress)}"
 													data-info="${fn:escapeXml(item.restInfo)}"
+													data-menu="${fn:escapeXml(item.restMenu)}"
 													data-phone="${fn:escapeXml(item.formattedPhone)}"
 													data-open="${fn:escapeXml(item.openTimeStr)}"
 													data-close="${fn:escapeXml(item.closeTimeStr)}"
@@ -99,6 +100,7 @@ function setRestaurantDetails(button) {
     var name = button.getAttribute('data-name');
     var address = button.getAttribute('data-address');
     var info = button.getAttribute('data-info');
+    var menu = button.getAttribute('data-menu');
     var phone = button.getAttribute('data-phone');
     var openTime = button.getAttribute('data-open');
     var closeTime = button.getAttribute('data-close');
@@ -109,6 +111,7 @@ function setRestaurantDetails(button) {
     document.querySelector('#restInfoModal #restName').textContent = name;
     document.querySelector('#restInfoModal #restAddress').textContent = address;
     document.querySelector('#restInfoModal #restInfo').textContent = info;
+    document.querySelector('#restInfoModal #restMenu').textContent = menu;
     document.querySelector('#restInfoModal #restPhone').textContent = phone;
     document.querySelector('#restInfoModal #restTime').textContent = openTime + " - " + closeTime;
 
