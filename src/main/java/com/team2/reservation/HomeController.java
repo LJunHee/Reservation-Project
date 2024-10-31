@@ -29,8 +29,8 @@ public class HomeController {
     private final UserService userService;
     private final RestaurantService restService;
     private final ReserveService reserveService;
-	private final UserDao userDao;
-	private final ReviewService reviewService;
+    private final UserDao userDao;
+    private final ReviewService reviewService;
 
     @Autowired
     public HomeController(RestaurantService restService, ReserveService reserveService, UserService userService, UserDao userDao, ReviewService reviewService) {
@@ -39,34 +39,33 @@ public class HomeController {
         this.reserveService = reserveService;  
         this.userDao = userDao;
         this.reviewService = reviewService;
-        
     }
-    
-    //index page
+
+    // Index page
     @GetMapping("/")
     public String index(Model model, HttpSession session) {
         UserVo user = (UserVo) session.getAttribute("loggedInUser"); 
         model.addAttribute("user", user); 
-        restService.list(model);
+        restService.list(1, model); // 기본적으로 첫 페이지로 로드 (size는 10으로 설정)
         return "index";
     }
 
-    //register
+    // Register
     @PostMapping("/")
     public String add(@ModelAttribute UserVo bean) {
         userService.add(bean);
         return "redirect:/";
     }
     
-    //check-email
+    // Check email
     @PostMapping("/check-email")
     public ResponseEntity<String> checkEmail(@RequestParam String userEmail) {
-        System.out.println("recieve msg : " + userEmail);  
+        System.out.println("Received msg : " + userEmail);  
         boolean isAvailable = userService.isEmailAvailable(userEmail);
         return isAvailable ? ResponseEntity.ok("available") : ResponseEntity.ok("exists");
     }
     
-    //login
+    // Login
     @PostMapping("/login")
     public String login(@RequestParam String userEmail, @RequestParam String userPw, HttpSession session, Model model) {
         UserVo user = userService.login(userEmail, userPw);
@@ -75,21 +74,19 @@ public class HomeController {
             session.setAttribute("loggedInUser", user);
             return "redirect:/"; 
         } else {
-            model.addAttribute("errorMessage", "Wrong email or Password");
+            model.addAttribute("errorMessage", "Wrong email or password");
             return "index"; 
         }
     }
 
-    //logout
+    // Logout
     @GetMapping("/logout")
     public String logout(HttpSession session) {
         session.invalidate(); 
         return "redirect:/";
     }
    
-    
-    
-    // mypage - CRUD
+    // My Page - CRUD
     @GetMapping("/mypage")
     public String myPage(Model model, HttpSession session) {
         UserVo user = (UserVo) session.getAttribute("loggedInUser");
@@ -109,22 +106,22 @@ public class HomeController {
     }
     
     @PostMapping("/mypage/edit")
-    public String editReservation(@RequestParam int reserveNo, @RequestParam int restNo,@RequestParam int headCount,@RequestParam String reserveDate,
-            HttpSession session,Model model) {
+    public String editReservation(@RequestParam int reserveNo, @RequestParam int restNo, @RequestParam int headCount, @RequestParam String reserveDate,
+            HttpSession session, Model model) {
         UserVo user = (UserVo) session.getAttribute("loggedInUser");
 
         try {
             // 예약 수정 로직에 reserveNo 전달
             reserveService.updateReservation(reserveNo, restNo, headCount, reserveDate, user.getUserNo());
             return "redirect:/mypage"; 
-	        } catch (IllegalStateException e) {
-	            model.addAttribute("errorMessage", "당일에 이미 예약된 레스토랑입니다.");
-	        } catch (Exception e) {
-	            model.addAttribute("errorMessage", "예약을 수정하는 중에 오류가 발생했습니다. 다시 시도해주세요.");
-	        }
+        } catch (IllegalStateException e) {
+            model.addAttribute("errorMessage", "당일에 이미 예약된 레스토랑입니다.");
+        } catch (Exception e) {
+            model.addAttribute("errorMessage", "예약을 수정하는 중에 오류가 발생했습니다. 다시 시도해주세요.");
+        }
 	
-	        restService.list(model);
-	        return "mypage"; 
+        restService.list(1, model);
+        return "mypage"; 
     }
     
     @PostMapping("/mypage/delete")
@@ -133,18 +130,27 @@ public class HomeController {
         return "redirect:/mypage";
     }
 
-    
-    
-    //restaurant
+    // Restaurant list with pagination
     @GetMapping("/restaurant")
-    public String showRestaurants(Model model) {
-    	restService.list(model);
+    public String showRestaurants(
+            @RequestParam(value = "page", defaultValue = "1") int page,
+            Model model) {
+
+        restService.list(page, model); // page와 size 전달
         return "restaurant"; 
     }
     
-    //restaurant - reservation
+    // Restaurant reservation
     @PostMapping("/restaurant")
-    public String makeReservation(@RequestParam int restNo, @RequestParam int headCount, @RequestParam String reserveDate, HttpSession session, Model model) {
+    public String makeReservation(
+            @RequestParam int restNo,
+            @RequestParam int headCount,
+            @RequestParam String reserveDate,
+            @RequestParam(value = "page", defaultValue = "1") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size,
+            HttpSession session,
+            Model model) {
+
         UserVo user = (UserVo) session.getAttribute("loggedInUser");
 
         if (user == null) return "redirect:/"; // 로그인 상태가 아닐 경우 리다이렉트
@@ -152,46 +158,32 @@ public class HomeController {
         try {
             reserveService.addReservation(restNo, headCount, reserveDate, user.getUserNo());
             return "redirect:/mypage"; 
-        }  catch (IllegalStateException e) {
+        } catch (IllegalStateException e) {
             model.addAttribute("errorMessage", "당일에 이미 예약된 레스토랑입니다.");
         } catch (Exception e) {
             model.addAttribute("errorMessage", "예약을 처리하는 중에 오류가 발생했습니다. 다시 시도해주세요.");
         }
 
-        restService.list(model);
+        restService.list(page, model); // 페이지네이션을 적용하여 레스토랑 목록을 로드
         return "restaurant"; 
     }
     
-    //review
+    // Review - Add Review
     @PostMapping("/review/add")
     public String addReview(@ModelAttribute ReviewVo bean, HttpSession session) {
         UserVo user = (UserVo) session.getAttribute("loggedInUser");
         if (user != null) {
             try {
-                // 먼저 userNo 설정
                 bean.setUserNo(user.getUserNo());
                 
-                // 필수 필드 검증
-                if (bean.getRestNo() == 0) {
-                    throw new IllegalArgumentException("식당 정보가 필요합니다.");
-                }
-                if (bean.getReviewContent() == null || bean.getReviewContent().trim().isEmpty()) {
-                    throw new IllegalArgumentException("리뷰 내용을 입력해주세요.");
-                }
-                if (bean.getReviewScore() <= 0) {
-                    bean.setReviewScore(1); // 기본값 설정
-                }
-                
-                System.out.println("리뷰 데이터 확인:");
-                System.out.println("UserNo: " + bean.getUserNo());
-                System.out.println("RestNo: " + bean.getRestNo());
-                System.out.println("Content: " + bean.getReviewContent());
-                System.out.println("Score: " + bean.getReviewScore());
-                
+                if (bean.getRestNo() == 0) throw new IllegalArgumentException("식당 정보가 필요합니다.");
+                if (bean.getReviewContent() == null || bean.getReviewContent().trim().isEmpty()) throw new IllegalArgumentException("리뷰 내용을 입력해주세요.");
+                if (bean.getReviewScore() <= 0) bean.setReviewScore(1); // 기본값 설정
+
                 reviewService.add(bean);
                 session.setAttribute("alertType", "success");
                 session.setAttribute("alertMessage", "리뷰가 성공적으로 작성되었습니다!");
-                
+
             } catch (IllegalStateException e) {
                 session.setAttribute("alertType", "danger");
                 session.setAttribute("alertMessage", e.getMessage());
@@ -216,5 +208,4 @@ public class HomeController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
-
 }
