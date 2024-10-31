@@ -33,6 +33,15 @@
         </div>
         <%@ include file="template/menu.jspf" %>
         <div class="container mt-5">
+        	<c:if test="${not empty alertMessage}">
+                <div class="alert alert-${alertType} alert-dismissible fade in" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    ${alertMessage}
+                </div>
+            </c:if>
+        
             <h2 class="text-center mb-4">나의 예약 목록</h2>
 
             <!-- 예약 목록 테이블 -->

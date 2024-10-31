@@ -1,21 +1,21 @@
 package com.team2.reservation;
 
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.team2.reservation.reserve.model.ReserveVo;
 import com.team2.reservation.reserve.service.ReserveService;
 import com.team2.reservation.restaurant.service.RestaurantService;
 import com.team2.reservation.review.model.ReviewVo;
@@ -96,7 +96,18 @@ public class HomeController {
     @GetMapping("/mypage")
     public String myPage(Model model, HttpSession session) {
         UserVo user = (UserVo) session.getAttribute("loggedInUser");
-        reserveService.listByUser(user.getUserNo(), model);
+        if (user != null) {
+            reserveService.listByUser(user.getUserNo(), model);
+            String alertMessage = (String) session.getAttribute("alertMessage");
+            String alertType = (String) session.getAttribute("alertType");
+            
+            if (alertMessage != null) {
+                model.addAttribute("alertMessage", alertMessage);
+                model.addAttribute("alertType", alertType);
+                session.removeAttribute("alertMessage");
+                session.removeAttribute("alertType");
+            }
+        }
         return "mypage";
     }
     
@@ -164,13 +175,54 @@ public class HomeController {
     public String addReview(@ModelAttribute ReviewVo bean, HttpSession session) {
         UserVo user = (UserVo) session.getAttribute("loggedInUser");
         if (user != null) {
-            bean.setUserNo(user.getUserNo()); // 로그인한 사용자의 userNo를 ReviewVo에 설정
-            reviewService.add(bean);
+            try {
+                // 먼저 userNo 설정
+                bean.setUserNo(user.getUserNo());
+                
+                // 필수 필드 검증
+                if (bean.getRestNo() == 0) {
+                    throw new IllegalArgumentException("식당 정보가 필요합니다.");
+                }
+                if (bean.getReviewContent() == null || bean.getReviewContent().trim().isEmpty()) {
+                    throw new IllegalArgumentException("리뷰 내용을 입력해주세요.");
+                }
+                if (bean.getReviewScore() <= 0) {
+                    bean.setReviewScore(1); // 기본값 설정
+                }
+                
+                System.out.println("리뷰 데이터 확인:");
+                System.out.println("UserNo: " + bean.getUserNo());
+                System.out.println("RestNo: " + bean.getRestNo());
+                System.out.println("Content: " + bean.getReviewContent());
+                System.out.println("Score: " + bean.getReviewScore());
+                
+                reviewService.add(bean);
+                session.setAttribute("alertType", "success");
+                session.setAttribute("alertMessage", "리뷰가 성공적으로 작성되었습니다!");
+                
+            } catch (IllegalStateException e) {
+                session.setAttribute("alertType", "danger");
+                session.setAttribute("alertMessage", e.getMessage());
+            } catch (Exception e) {
+                e.printStackTrace();
+                session.setAttribute("alertType", "danger");
+                session.setAttribute("alertMessage", "리뷰 작성 중 오류가 발생했습니다. 필수 정보를 모두 입력했는지 확인해주세요.");
+            }
             return "redirect:/mypage";
         }
-        // 로그인되지 않은 경우
         return "redirect:/";
-
+    }
+    
+    @GetMapping("/api/reviews/{restNo}")
+    @ResponseBody
+    public ResponseEntity<List<ReviewVo>> getRestaurantReviews(@PathVariable int restNo) {
+        try {
+            List<ReviewVo> reviews = reviewService.getReviewsByRestaurant(restNo);
+            return ResponseEntity.ok(reviews);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
     }
 
 }

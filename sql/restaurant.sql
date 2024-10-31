@@ -1,6 +1,8 @@
 CREATE TABLE `restaurant` (
 	`restNo` INT NOT NULL AUTO_INCREMENT,
 	`restName` VARCHAR(100) NULL DEFAULT '' COLLATE 'utf8mb4_0900_ai_ci',
+	`restAddress` VARCHAR(200) NULL DEFAULT NULL COLLATE 'utf8mb4_0900_ai_ci',
+	`restInfo` TEXT NULL DEFAULT NULL COLLATE 'utf8mb4_0900_ai_ci',
 	`restPhone` VARCHAR(100) NOT NULL DEFAULT '' COLLATE 'utf8mb4_0900_ai_ci',
 	`openTime` TIME NULL DEFAULT NULL,
 	`closeTime` TIME NULL DEFAULT NULL,
