@@ -10,6 +10,7 @@ import com.team2.reservation.review.model.ReviewVo;
 @Service
 public class ReviewService {
     private final ReviewDao reviewDao;
+
     
     @Autowired
     public ReviewService(ReviewDao reviewDao) {

@@ -31,6 +31,10 @@
                 </c:if>
             </ul>
         <%@ include file="template/menu.jspf" %>
+        </div>
+	</div>
+</nav>
+        
         <div class="container mt-5">
         	<c:if test="${not empty alertMessage}">
                 <div class="alert alert-${alertType} alert-dismissible fade in" role="alert">
@@ -87,8 +91,7 @@
                 </c:if>
             </div>
         </div>
-    </div>
-</nav>
+
 
 <%@ include file="reserve/review.jspf" %>
 <%@ include file="reserve/edit.jspf" %>

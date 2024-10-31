@@ -38,7 +38,10 @@
 					<li><a href="${root}/mypage/">마이페이지</a></li>
 				</c:if>
 			</ul>
-<%@ include file="template/menu.jspf" %>
+			<%@ include file="template/menu.jspf" %>
+		</div>
+	</div>
+</nav>
 
 				<div class="container">
 					<div class="jumbotron">
