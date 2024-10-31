@@ -86,13 +86,14 @@
 									<div class="col-md-3">
 										<div class="thumbnail">
 											<img
-												src="${root}/resources/img/${item.restName}.jpg"
+												src="${item.restImage}"
 												alt="사진 ${item.restName}"
 												onerror="this.src='${root}/resources/img/default.jpg'"
 												class="img-responsive">
 											<div class="caption">
 												<h4>${item.restName}</h4>
-												<p>${item.restInfo}</p>
+												<p>주소 : ${item.restAddress}</p>
+												<p>전화번호 :${item.restPhone}</p>
 												<p>
 													<a href="#" class="btn btn-primary" role="button">자세히
 														보기</a>

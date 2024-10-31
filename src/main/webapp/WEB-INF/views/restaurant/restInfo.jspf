@@ -29,6 +29,10 @@
 						<p class="form-control-static" id="restInfo"></p>
 					</div>
 					<div class="form-group">
+						<label for="restMenu">대표 메뉴</label>
+						<p class="form-control-static" id="restMenu"></p>
+					</div>
+					<div class="form-group">
 						<label for="restPhone">전화번호</label>
 						<p class="form-control-static" id="restPhone"></p>
 					</div>
