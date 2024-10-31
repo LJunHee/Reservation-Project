@@ -3,9 +3,11 @@ CREATE TABLE `restaurant` (
 	`restName` VARCHAR(100) NULL DEFAULT '' COLLATE 'utf8mb4_0900_ai_ci',
 	`restAddress` VARCHAR(200) NULL DEFAULT NULL COLLATE 'utf8mb4_0900_ai_ci',
 	`restInfo` TEXT NULL DEFAULT NULL COLLATE 'utf8mb4_0900_ai_ci',
+	`restMenu` VARCHAR(300) NULL DEFAULT NULL COLLATE 'utf8mb4_0900_ai_ci',
 	`restPhone` VARCHAR(100) NOT NULL DEFAULT '' COLLATE 'utf8mb4_0900_ai_ci',
 	`openTime` TIME NULL DEFAULT NULL,
 	`closeTime` TIME NULL DEFAULT NULL,
+	`restImage` VARCHAR(3000) NULL DEFAULT NULL COLLATE 'utf8mb4_0900_ai_ci',
 	PRIMARY KEY (`restNo`) USING BTREE
 )
 COLLATE='utf8mb4_0900_ai_ci'
