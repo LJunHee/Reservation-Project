@@ -65,10 +65,14 @@
                                         <p>
                                             <a href="#" class="btn btn-primary" role="button"
                                                 data-toggle="modal" data-target="#restInfoModal"
-                                                data-name="${item.restName}" data-address="${item.restAddress}"
-                                                data-info="${item.restInfo}" data-menu="${item.restMenu}"
-                                                data-phone="${item.restPhone}" data-open="${item.openTimeStr}"
-                                                data-close="${item.closeTimeStr}" data-restno="${item.restNo}"
+                                                data-name="${item.restName}" 
+                                                data-address="${item.restAddress}"
+                                                data-info="${item.restInfo}" 
+                                                data-menu="${item.restMenu}"
+                                                data-phone="${item.restPhone}" 
+                                                data-open="${item.openTimeStr}"
+                                                data-close="${item.closeTimeStr}" 
+                                                data-restno="${item.restNo}"
                                                 onclick="setRestaurantDetails(this)">자세히 보기</a>
                                         </p>
                                     </div>
@@ -78,35 +82,37 @@
                     </div>
                     
                     <!-- 페이지네이션 -->
-                    <c:if test="${totalPages > 1}">
+                    <c:if test="${totalPages > 1}"> <!-- 총 페이지 수가 1보다 큰 경우에만 페이지네이션을 표시 -->
                         <nav aria-label="Page navigation">
-                            <ul class="pagination">
+                            <ul class="pagination"> <!-- bootstrap에서 가져온 페이지네이션 스타일 -->
                                 <!-- 이전 페이지 그룹으로 이동하는 버튼 -->
-                                <c:if test="${startPage > 1}">
+                                <c:if test="${startPage > 1}"> <!-- 현재 페이지 그룹의 사작 페이지가 1보다 큰 경우에만 이전 페이지 버튼 표시 -->
+                                    <!-- 이전 페이지로 이동할 수 있는 링크 제작 -->
                                     <li>
-                                        <a href="?page=${startPage - 1}" aria-label="Previous">
-                                            <span aria-hidden="true">&laquo;</span>
+                                        <a href="?page=${startPage - 1}" aria-label="Previous"> <!-- 이전 페이지 번호로의  URL 생성 -->
+                                            <span aria-hidden="true">&laquo;</span> <!-- 왼쪽 방향 화살표를 표시 -->
                                         </a>
                                     </li>
                                 </c:if>
-
+								
                                 <!-- 페이지 번호 목록 -->
-                                <c:forEach var="i" begin="${startPage}" end="${endPage}">
+                                <c:forEach var="i" begin="${startPage}" end="${endPage}"> <!-- startPage 부터 endPage까지의 숫자를 반복하여 페이지 번호 생성 -->
                                     <c:choose>
-                                        <c:when test="${i == currentPage}">
-                                            <li class="active"><span>${i}</span></li>
+                                        <c:when test="${i == currentPage}"> 
+                                            <li class="active"><span>${i}</span></li> <!-- 현재 페이지를 클릭할 수 없게 하기 -->
                                         </c:when>
                                         <c:otherwise>
-                                            <li><a href="?page=${i}">${i}</a></li>
+                                            <li><a href="?page=${i}">${i}</a></li> <!-- 현재 페이지 외에 다른 페이지 클릭 가능하게 하기 -->
                                         </c:otherwise>
                                     </c:choose>
                                 </c:forEach>
 
                                 <!-- 다음 페이지 그룹으로 이동하는 버튼 -->
-                                <c:if test="${endPage < totalPages}">
+                                <c:if test="${endPage < totalPages}"> <!-- 현재 페이지 그룹의 마지막 페이지(endPage)가 전체 페이지 수(totalPages)보다 작은 경우에만 다음 페이지 버튼 표시 -->
+                                    
                                     <li>
-                                        <a href="?page=${endPage + 1}" aria-label="Next">
-                                            <span aria-hidden="true">&raquo;</span>
+                                        <a href="?page=${endPage + 1}" aria-label="Next"> <!-- 다음 페이지 번호로의 URL 생성 -->
+                                            <span aria-hidden="true">&raquo;</span> <!-- 오른쪽 방향 화살표 표시 -->
                                         </a>
                                     </li>
                                 </c:if>

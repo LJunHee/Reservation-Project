@@ -131,32 +131,35 @@ public class HomeController {
     }
 
     // Restaurant list with pagination
+    // 추가1 - 페이지네이션 처리
     @GetMapping("/restaurant")
     public String showRestaurants(
-            @RequestParam(value = "page", defaultValue = "1") int page,
+            @RequestParam(value = "page", defaultValue = "1") int page, //URL 파라미터에서 page값을 가져옴, 기본값은 1로 설정되어 있어 사용자가 페이지 번호를 지정하지 않으면 1 페이지 로드
             Model model) {
 
-        restService.list(page, model); // page와 size 전달
+        restService.list(page, model); // 지정된 페이지(page 파라미터)에 해당하는 레스토랑 목록을 model에 추가
         return "restaurant"; 
     }
     
     // Restaurant reservation
-    @PostMapping("/restaurant")
+    // 추가2 - 페이지네이션 관련 매개변수 추가
+    // 사용자가 예약을 할 때 현재 페이지 정보를 유지하도록 페이지와 크기를 매개변수로 받음, 사용자가 에약 후에도 이전에 보고 있던 레스토랑 목록 페이지로 돌아갈 수 있도록 함
+    @PostMapping("/restaurant") 
     public String makeReservation(
-            @RequestParam int restNo,
-            @RequestParam int headCount,
-            @RequestParam String reserveDate,
-            @RequestParam(value = "page", defaultValue = "1") int page,
-            @RequestParam(value = "size", defaultValue = "10") int size,
-            HttpSession session,
+            @RequestParam int restNo, // 예약할 레스토랑의 ID
+            @RequestParam int headCount, // 예약 인원 수
+            @RequestParam String reserveDate, // 예약 날짜
+            @RequestParam(value = "page", defaultValue = "1") int page, // 현재 보고 있는 페이지 번호, 기본값은 1
+            @RequestParam(value = "size", defaultValue = "10") int size, // 한 페이지에 표시할 레스토랑 수, 기본값은 10
+            HttpSession session, 
             Model model) {
-
-        UserVo user = (UserVo) session.getAttribute("loggedInUser");
+    	
+        UserVo user = (UserVo) session.getAttribute("loggedInUser"); // 세션 확인 : 세션에서 로그인된 사용자 정보를 가져옴
 
         if (user == null) return "redirect:/"; // 로그인 상태가 아닐 경우 리다이렉트
 
         try {
-            reserveService.addReservation(restNo, headCount, reserveDate, user.getUserNo());
+            reserveService.addReservation(restNo, headCount, reserveDate, user.getUserNo()); // reserveService.addReservation() 메서드를 호출하여 실제 예약을 처리, 이 때 사용자 ID도 함께 전달
             return "redirect:/mypage"; 
         } catch (IllegalStateException e) {
             model.addAttribute("errorMessage", "당일에 이미 예약된 레스토랑입니다.");
