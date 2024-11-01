@@ -53,9 +53,33 @@
 			<h1>레스토랑 예약</h1>
 			<p>원하시는 레스토랑을 예약하세요.</p>
 		</div>
-
+		
+		<!-- 검색창 -->
+		<div class="row mb-4" style="margin-bottom: 30px">
+            <div class="col-md-8 col-md-offset-2">
+                <form id="searchForm" action="${root}/restaurant/search" method="get" class="form-horizontal">
+                    <div class="input-group">
+                        <input type="text" class="form-control" name="keyword" id="searchKeyword" 
+                               placeholder="레스토랑 이름을 입력하세요" value="${param.keyword}">
+                        <span class="input-group-btn">
+                            <button class="btn btn-primary" type="submit">
+                                <i class="glyphicon glyphicon-search"></i> 검색
+                            </button>
+                        </span>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
         <div class="row">
             <div class="col-md-12">
+                <!-- 검색 결과가 없을 경우 메시지 추가 -->
+                <c:if test="${not empty param.keyword and empty list}">
+                    <div class="alert alert-info text-center">
+                        "${param.keyword}"에 대한 검색 결과가 없습니다.
+                    </div>
+                </c:if>
+                
                 <c:choose>
                     <c:when test="${empty list}">
                         <h3 class="text-warning">현재 등록된 레스토랑이 없습니다.</h3>
@@ -128,8 +152,7 @@
 			</div>
 		</div>
 	</div>
-
-
+                
 
 	<%@ include file="restaurant/restInfo.jspf"%>
 	<%@ include file="restaurant/restReviews.jspf"%>
@@ -164,6 +187,16 @@
 			restNoInput.value = restNo; // 값 설정
 			reservationRestNoInput.value = restNo; // 예약 모달의 restNo에 값 설정
 		}
+		
+		// 검색창
+	    document.getElementById('searchForm').addEventListener('submit', function(e) {
+	        const keyword = document.getElementById('searchKeyword').value.trim();
+	        if (!keyword) {
+	            e.preventDefault();
+	            alert('검색어를 입력해주세요.');
+	            return false;
+	        }
+	    });
 	</script>
 
 </body>
