@@ -131,7 +131,7 @@
 											<div class="caption">
 												<h4>${item.restName}</h4>
 												<p>주소 : ${item.restAddress}</p>
-												<p>전화번호 :${item.restPhone}</p>
+												<p>전화번호 : ${item.restPhone}</p>
 											</div>
 	                                        <div class="button-wrapper">
 													<a href="${root }/restaurant" class="btn btn-info btn-block" role="button">예약하러 가기</a>
