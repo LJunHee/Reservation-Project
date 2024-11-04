@@ -1,5 +1,7 @@
 package com.team2.reservation.restaurant.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
@@ -12,8 +14,8 @@ import java.util.List;
 @Service
 public class RestaurantService {
     private final RestaurantDao restaurantDao;
-    private static final int PAGE_SIZE = 8; // ÆäÀÌÁö´ç ·¹½ºÅä¶û °³¼ö
-    private static final int PAGE_DISPLAY_LIMIT = 10; // Ç¥½ÃÇÒ ÆäÀÌÁö ¹øÈ£ÀÇ ÃÖ´ë °³¼ö
+    private static final int PAGE_SIZE = 8; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+    private static final int PAGE_DISPLAY_LIMIT = 10; // Ç¥ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È£ï¿½ï¿½ ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½ï¿½
 
     @Autowired
     public RestaurantService(RestaurantDao restaurantDao) {
@@ -21,21 +23,21 @@ public class RestaurantService {
     }
 
     public void list(int page, Model model) {
-        int offset = (page - 1) * PAGE_SIZE; // ½ÃÀÛ ÀÎµ¦½º °è»ê
+        int offset = (page - 1) * PAGE_SIZE; // ï¿½ï¿½ï¿½ï¿½ ï¿½Îµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
         List<RestaurantVo> restaurantList = restaurantDao.pullList(offset, PAGE_SIZE);
-        // restaruantDao.pullList() ¸Þ¼­µå ÀÌ¿ë, À§¿¡ °è»êµÈ offset°ú PAGE_SIZE¸¦ ÀÌ¿ëÇÏ¿© DB¿¡¼­ ÇØ´ç ÆäÀÌÁöÀÇ ·¹½ºÅä¶û ¸ñ·ÏÀ» °¡Á®¿È
-        int totalRestaurants = restaurantDao.getTotalCount(); // restaurantDao.getTotalCount() ¸Þ¼­µå ÀÌ¿ë, ÀüÃ¼ ·¹½ºÅä¶ûÀÇ °³¼ö¸¦ Á¶È¸ÇÏ¿© ÀúÀå(ÆäÀÌÁö ¼ö °è»êÀ» À§ÇØ¼­ »ç¿ë)
-        int totalPages = (int) Math.ceil((double) totalRestaurants / PAGE_SIZE); // ÃÑ ·¹½ºÅä¶û °³¼ö¸¦ PAGE_SIZE·Î ³ª´©¾î ÀüÃ¼ ÆäÀÌÁö ¼ö¸¦ °è»êÇÔ(Math.ceilÀº ³ª´©±â ÇÏ¿© ³²Àº ¼Ò¼öÁ¡À» ¿Ã¸²ÇÏ±â À§ÇÔ)
+        // restaruantDao.pullList() ï¿½Þ¼ï¿½ï¿½ï¿½ ï¿½Ì¿ï¿½, ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ offsetï¿½ï¿½ PAGE_SIZEï¿½ï¿½ ï¿½Ì¿ï¿½ï¿½Ï¿ï¿½ DBï¿½ï¿½ï¿½ï¿½ ï¿½Ø´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+        int totalRestaurants = restaurantDao.getTotalCount(); // restaurantDao.getTotalCount() ï¿½Þ¼ï¿½ï¿½ï¿½ ï¿½Ì¿ï¿½, ï¿½ï¿½Ã¼ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¸ï¿½Ï¿ï¿½ ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ø¼ï¿½ ï¿½ï¿½ï¿½)
+        int totalPages = (int) Math.ceil((double) totalRestaurants / PAGE_SIZE); // ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ PAGE_SIZEï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã¼ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½(Math.ceilï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ï¿ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ò¼ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ã¸ï¿½ï¿½Ï±ï¿½ ï¿½ï¿½ï¿½ï¿½)
 
-        // ÆäÀÌÁö³×ÀÌ¼Ç °è»ê
-        int startPage = ((page - 1) / PAGE_DISPLAY_LIMIT) * PAGE_DISPLAY_LIMIT + 1;//ÇöÀç ÆäÀÌÁö°¡ ¼ÓÇÑ ÆäÀÌÁö ±×·ìÀÇ ½ÃÀÛ ÆäÀÌÁö ¹øÈ£ °è»ê
-        int endPage = Math.min(startPage + PAGE_DISPLAY_LIMIT - 1, totalPages); // PAGE_DISPLAY_LIMIT¸¦ ÀÌ¿ëÇÏ¿© ¸¶Áö¸· ÆäÀÌÁö ¹øÈ£ °è»ê
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì¼ï¿½ ï¿½ï¿½ï¿½
+        int startPage = ((page - 1) / PAGE_DISPLAY_LIMIT) * PAGE_DISPLAY_LIMIT + 1;//ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½×·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È£ ï¿½ï¿½ï¿½
+        int endPage = Math.min(startPage + PAGE_DISPLAY_LIMIT - 1, totalPages); // PAGE_DISPLAY_LIMITï¿½ï¿½ ï¿½Ì¿ï¿½ï¿½Ï¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È£ ï¿½ï¿½ï¿½
 
-        model.addAttribute("list", restaurantList); // ÇöÀç ÆäÀÌÁöÀÇ ·¹½ºÅä¶û ¸ñ·ÏÀ» ¸ðµ¨¿¡ Ãß°¡
-        model.addAttribute("currentPage", page); // ÇöÀç ÆäÀÌÁö ¹øÈ£¸¦ ¸ðµ¨¿¡ Ãß°¡
-        model.addAttribute("totalPages", totalPages); // ÀüÃ¼ ÆäÀÌÁö ¼ö¸¦ ¸ðµ¨¿¡ Ãß°¡
-        model.addAttribute("startPage", startPage); // Ç¥½ÃÇÒ ½ÃÀÛ ÆäÀÌÁö ¹øÈ£¸¦ ¸ðµ¨¿¡ Ãß°¡
-        model.addAttribute("endPage", endPage); // Ç¥½ÃÇÒ ¸¶Áö¸· ÆäÀÌÁö ¹øÈ£¸¦ ¸ðµ¨¿¡ Ãß°¡
+        model.addAttribute("list", restaurantList); // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ðµ¨¿ï¿½ ï¿½ß°ï¿½
+        model.addAttribute("currentPage", page); // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È£ï¿½ï¿½ ï¿½ðµ¨¿ï¿½ ï¿½ß°ï¿½
+        model.addAttribute("totalPages", totalPages); // ï¿½ï¿½Ã¼ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ðµ¨¿ï¿½ ï¿½ß°ï¿½
+        model.addAttribute("startPage", startPage); // Ç¥ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È£ï¿½ï¿½ ï¿½ðµ¨¿ï¿½ ï¿½ß°ï¿½
+        model.addAttribute("endPage", endPage); // Ç¥ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È£ï¿½ï¿½ ï¿½ðµ¨¿ï¿½ ï¿½ß°ï¿½
     }
 
     public RestaurantVo detail(int restNo) {

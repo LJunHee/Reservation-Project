@@ -130,17 +130,17 @@
 <%@ include file="restaurant/restInfo.jspf" %>
 <%@ include file="template/footer.jspf" %>
 
-<!-- 모달의 JavaScript 함수 -->
-<script>
-function setRestaurantDetails(button) {
-    var name = button.getAttribute('data-name');
-    var address = button.getAttribute('data-address');
-    var info = button.getAttribute('data-info');
-    var menu = button.getAttribute('data-menu');
-    var phone = button.getAttribute('data-phone');
-    var openTime = button.getAttribute('data-open');
-    var closeTime = button.getAttribute('data-close');
-    var restNo = button.getAttribute('data-restno');
+   <!-- 모달의 JavaScript 함수 -->
+   <script>
+   	function setRestaurantDetails(button) {
+   		var name = button.getAttribute('data-name');
+   		var address = button.getAttribute('data-address');
+   		var info = button.getAttribute('data-info');
+   		var menu = button.getAttribute('data-menu');
+   		var phone = button.getAttribute('data-phone');
+   		var openTime = button.getAttribute('data-open');
+   		var closeTime = button.getAttribute('data-close');
+   		var restNo = button.getAttribute('data-restno');
 
     document.querySelector('#restInfoModal #restName').textContent = name;
     document.querySelector('#restInfoModal #restAddress').textContent = address;

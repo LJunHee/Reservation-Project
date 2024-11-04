@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.team2.reservation.reserve.service.ReserveService;
+import com.team2.reservation.restaurant.model.RestaurantVo;
 import com.team2.reservation.restaurant.service.RestaurantService;
 import com.team2.reservation.review.model.ReviewVo;
 import com.team2.reservation.review.service.ReviewService;
