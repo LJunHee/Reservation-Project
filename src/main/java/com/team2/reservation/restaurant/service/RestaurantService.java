@@ -9,38 +9,51 @@ import org.springframework.ui.Model;
 import com.team2.reservation.restaurant.model.RestaurantDao;
 import com.team2.reservation.restaurant.model.RestaurantVo;
 
-import java.util.List;
+
 
 @Service
 public class RestaurantService {
     private final RestaurantDao restaurantDao;
-    private static final int PAGE_SIZE = 8; // �������� ������� ����
-    private static final int PAGE_DISPLAY_LIMIT = 10; // ǥ���� ������ ��ȣ�� �ִ� ����
+    private static final int PAGE_SIZE = 8; // 페이지당 레스토랑 개수
+    private static final int PAGE_DISPLAY_LIMIT = 10; // 표시할 페이지 번호의 최대 개수
+    
 
     @Autowired
     public RestaurantService(RestaurantDao restaurantDao) {
         this.restaurantDao = restaurantDao;
     }
-
-    public void list(int page, Model model) {
-        int offset = (page - 1) * PAGE_SIZE; // ���� �ε��� ���
+    
+   public void list(int page, Model model) {
+        int offset = (page - 1) * PAGE_SIZE; // 시작 인덱스 계산
         List<RestaurantVo> restaurantList = restaurantDao.pullList(offset, PAGE_SIZE);
-        // restaruantDao.pullList() �޼��� �̿�, ���� ���� offset�� PAGE_SIZE�� �̿��Ͽ� DB���� �ش� �������� ������� ����� ������
-        int totalRestaurants = restaurantDao.getTotalCount(); // restaurantDao.getTotalCount() �޼��� �̿�, ��ü ��������� ������ ��ȸ�Ͽ� ����(������ �� ����� ���ؼ� ���)
-        int totalPages = (int) Math.ceil((double) totalRestaurants / PAGE_SIZE); // �� ������� ������ PAGE_SIZE�� ������ ��ü ������ ���� �����(Math.ceil�� ������ �Ͽ� ���� �Ҽ����� �ø��ϱ� ����)
+        int totalRestaurants = restaurantDao.getTotalCount(); // 총 레스토랑 개수
+        int totalPages = (int) Math.ceil((double) totalRestaurants / PAGE_SIZE);
 
-        // ���������̼� ���
-        int startPage = ((page - 1) / PAGE_DISPLAY_LIMIT) * PAGE_DISPLAY_LIMIT + 1;//���� �������� ���� ������ �׷��� ���� ������ ��ȣ ���
-        int endPage = Math.min(startPage + PAGE_DISPLAY_LIMIT - 1, totalPages); // PAGE_DISPLAY_LIMIT�� �̿��Ͽ� ������ ������ ��ȣ ���
+        // 페이지네이션 계산
+        int startPage = ((page - 1) / PAGE_DISPLAY_LIMIT) * PAGE_DISPLAY_LIMIT + 1;
+        int endPage = Math.min(startPage + PAGE_DISPLAY_LIMIT - 1, totalPages);
 
-        model.addAttribute("list", restaurantList); // ���� �������� ������� ����� �𵨿� �߰�
-        model.addAttribute("currentPage", page); // ���� ������ ��ȣ�� �𵨿� �߰�
-        model.addAttribute("totalPages", totalPages); // ��ü ������ ���� �𵨿� �߰�
-        model.addAttribute("startPage", startPage); // ǥ���� ���� ������ ��ȣ�� �𵨿� �߰�
-        model.addAttribute("endPage", endPage); // ǥ���� ������ ������ ��ȣ�� �𵨿� �߰�
+        model.addAttribute("list", restaurantList); // 현재 페이지의 레스토랑 목록
+        model.addAttribute("currentPage", page); // 현재 페이지 번호
+        model.addAttribute("totalPages", totalPages); // 전체 페이지 수
+        model.addAttribute("startPage", startPage); // 표시할 시작 페이지 번호
+        model.addAttribute("endPage", endPage); // 표시할 마지막 페이지 번호
+   }
+   
+   
+   // 검색
+    public List<RestaurantVo> searchList(String restName) {
+        return restaurantDao.search(restName);
     }
-
-    public RestaurantVo detail(int restNo) {
-        return restaurantDao.getList(restNo);
+    
+    // 최근 등록된 레스토랑 목록
+    public List<RestaurantVo> recentRestaurants() {
+        return restaurantDao.getRecentRestaurants();
     }
+    
+    public RestaurantVo getRestaurantById(int restNo) {
+        return restaurantDao.getRestaurantById(restNo);
+    }
+    
+    
 }
