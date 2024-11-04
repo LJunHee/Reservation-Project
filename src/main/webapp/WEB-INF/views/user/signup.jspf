@@ -17,7 +17,7 @@
                     <div class="form-group">
                         <label for="email">이메일</label>
                         <input type="email" class="form-control" id="userEmail" name="userEmail" placeholder="you@example.com" required>
-                        <button type="button" id="checkEmailBtn" class="btn btn-info">중복 확인</button>
+                        <button type="button" id="checkEmailBtn" class="btn btn-info" style = "margin-top: 5px;">중복 확인</button>
                         <span id="emailCheckMessage"></span>
                     </div>
                     

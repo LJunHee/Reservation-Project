@@ -29,8 +29,8 @@ public class HomeController {
     private final UserService userService;
     private final RestaurantService restService;
     private final ReserveService reserveService;
-   private final UserDao userDao;
-   private final ReviewService reviewService;
+	private final UserDao userDao;
+	private final ReviewService reviewService;
 
     @Autowired
     public HomeController(RestaurantService restService, ReserveService reserveService, UserService userService, UserDao userDao, ReviewService reviewService) {
@@ -47,13 +47,11 @@ public class HomeController {
     public String index(Model model, HttpSession session) {
         UserVo user = (UserVo) session.getAttribute("loggedInUser"); 
         model.addAttribute("user", user); 
-        restService.list(model);
+        restService.list(1, model);
         return "index";
     }
 
-    
-
-   
+    //register
     @PostMapping("/")
     public String add(@ModelAttribute UserVo bean) {
         userService.add(bean);
@@ -67,8 +65,6 @@ public class HomeController {
         boolean isAvailable = userService.isEmailAvailable(userEmail);
         return isAvailable ? ResponseEntity.ok("available") : ResponseEntity.ok("exists");
     }
-
-
     
     //login
     @PostMapping("/login")
@@ -90,9 +86,10 @@ public class HomeController {
         session.invalidate(); 
         return "redirect:/";
     }
+   
     
     
-
+    // mypage - CRUD
     @GetMapping("/mypage")
     public String myPage(Model model, HttpSession session) {
         UserVo user = (UserVo) session.getAttribute("loggedInUser");
@@ -112,50 +109,48 @@ public class HomeController {
     }
     
     @PostMapping("/mypage/edit")
-    public String editReservation(
-            @RequestParam int reserveNo,
-            @RequestParam int restNo,
-            @RequestParam int headCount,
-            @RequestParam String reserveDate,
-            HttpSession session,
-            Model model) {
-
+    public String editReservation(@RequestParam int reserveNo, @RequestParam int restNo,@RequestParam int headCount,@RequestParam String reserveDate,
+            HttpSession session,Model model) {
         UserVo user = (UserVo) session.getAttribute("loggedInUser");
 
         try {
             // 예약 수정 로직에 reserveNo 전달
             reserveService.updateReservation(reserveNo, restNo, headCount, reserveDate, user.getUserNo());
             return "redirect:/mypage"; 
-        } catch (IllegalStateException e) {
-            model.addAttribute("errorMessage", "당일에 이미 예약된 레스토랑입니다.");
-        } catch (Exception e) {
-            model.addAttribute("errorMessage", "예약을 처리하는 중에 오류가 발생했습니다. 다시 시도해주세요.");
-        }
-
-        restService.list(model);
-        return "mypage"; 
+	        } catch (IllegalStateException e) {
+	            model.addAttribute("errorMessage", "당일에 이미 예약된 레스토랑입니다.");
+	        } catch (Exception e) {
+	            model.addAttribute("errorMessage", "예약을 수정하는 중에 오류가 발생했습니다. 다시 시도해주세요.");
+	        }
+	
+	        restService.list(1,model);
+	        return "mypage"; 
     }
-
+    
     @PostMapping("/mypage/delete")
     public String deleteReservation(@RequestParam("reserveNo") int reserveNo) {
-        reserveService.delete(reserveNo);
+        reserveService.deleteReservation(reserveNo);
         return "redirect:/mypage";
     }
 
+    
+    
     //restaurant
     @GetMapping("/restaurant")
-    public String showRestaurants(Model model) {
-       restService.list(model);
-        return "restaurant"; // 
+    public String showRestaurants(@RequestParam(value = "page", defaultValue = "1") int page, Model model) {
+    	restService.list(page, model);
+        return "restaurant"; 
     }
     
-    //restaurant reservation
+    //restaurant - reservation
     @PostMapping("/restaurant")
-    public String makeReservation(@RequestParam int restNo, @RequestParam int headCount, @RequestParam String reserveDate, HttpSession session, Model model) {
+    public String makeReservation(@RequestParam int restNo, @RequestParam int headCount, @RequestParam String reserveDate,
+            @RequestParam(value = "page", defaultValue = "1") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size,
+    		HttpSession session, Model model) {
         UserVo user = (UserVo) session.getAttribute("loggedInUser");
-        if (user == null) {
-            return "redirect:/"; 
-        }
+
+        if (user == null) return "redirect:/"; // 로그인 상태가 아닐 경우 리다이렉트
 
         try {
             reserveService.addReservation(restNo, headCount, reserveDate, user.getUserNo());
@@ -166,7 +161,7 @@ public class HomeController {
             model.addAttribute("errorMessage", "예약을 처리하는 중에 오류가 발생했습니다. 다시 시도해주세요.");
         }
 
-        restService.list(model);
+        restService.list(1,model);
         return "restaurant"; 
     }
     

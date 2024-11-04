@@ -8,11 +8,21 @@
 <title>레스토랑 예약 플랫폼</title>
 <%@ include file="template/head.jspf"%>
 <style>
-    .fixed-size-img {
-        width: 100%; /* 부모 요소에 맞게 가로 크기 조정 */
-        height: 200px; /* 원하는 고정 높이 설정 */
-        object-fit: cover; /* 비율을 유지하면서 이미지를 자름 */
-    }
+.fixed-size-img {
+    width: 100%; /* 부모 요소에 맞게 가로 크기 조정 */
+    height: 200px; /* 원하는 고정 높이 설정 */
+    object-fit: cover; /* 비율을 유지하면서 이미지를 자름 */
+}
+.thumbnail {
+	height : 370px;
+    position: relative;
+}
+.thumbnail .button-wrapper {
+    position: absolute;
+    bottom: 15px;
+    left: 15px;
+    right: 15px;
+}
 </style>
 </head>
 <body>
@@ -38,7 +48,10 @@
 					<li><a href="${root}/mypage/">마이페이지</a></li>
 				</c:if>
 			</ul>
-<%@ include file="template/menu.jspf" %>
+			<%@ include file="template/menu.jspf" %>
+		</div>
+	</div>
+</nav>
 
 				<div class="container">
 					<div class="jumbotron">
@@ -94,10 +107,9 @@
 												<h4>${item.restName}</h4>
 												<p>주소 : ${item.restAddress}</p>
 												<p>전화번호 :${item.restPhone}</p>
-												<p>
-													<a href="#" class="btn btn-primary" role="button">자세히
-														보기</a>
-												</p>
+											</div>
+	                                        <div class="button-wrapper">
+													<a href="${root }/restaurant" class="btn btn-info btn-block" role="button">예약하러 가기</a>
 											</div>
 										</div>
 									</div>
