@@ -24,8 +24,29 @@
     margin-top:0px;
     margin-bottom : 15px;
 }
+.jumbotron::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);  /* 투명도 조절 가능 */
+}
+
+.jumbotron h1, 
+.jumbotron p {
+    position: relative;
+    z-index: 1;  
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
 .jumbotron {
 	margin-bottom : 15px;
+    background-image: url('/reservation/resources/img/reservation.jpg');
+    background-size: 50%;
+    color: white;
+    position: relative;
+    padding: 4rem 2rem;  
 }
 </style>
 </head>

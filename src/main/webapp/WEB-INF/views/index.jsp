@@ -8,6 +8,31 @@
 <title>레스토랑 예약 플랫폼</title>
 <%@ include file="template/head.jspf"%>
 <style>
+.jumbotron {
+    background-image: url('/reservation/resources/img/restaurant.jpg');
+    background-size: 100%;
+    color: white;
+    position: relative;
+    padding: 4rem 2rem;  /* 여백 추가 */
+}
+
+.jumbotron::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);  /* 투명도 조절 가능 */
+}
+
+.jumbotron h1, 
+.jumbotron p {
+    position: relative;
+    z-index: 1;  
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
 .fixed-size-img {
     width: 100%; /* 부모 요소에 맞게 가로 크기 조정 */
     height: 200px; /* 원하는 고정 높이 설정 */
