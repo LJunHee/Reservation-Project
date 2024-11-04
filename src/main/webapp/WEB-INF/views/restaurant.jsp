@@ -108,7 +108,7 @@
    				<c:when test="${empty restaurants and not empty keyword}">
    					<div class="alert alert-info">
    						<h4>'${keyword}'에 대한 검색 결과가 없습니다.</h4>
-   						<p>다른 검색어로 다시 시도해보세요.</p>
+   						<p>존재 하지 않는 식당명일 수도 있으므로, 식당명을 확인하시고 다시 검색해보세요.</p>
    					</div>
    				</c:when>
    				<%-- 기본 목록 표시 (검색하지 않은 상태) --%>

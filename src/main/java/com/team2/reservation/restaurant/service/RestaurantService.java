@@ -39,8 +39,13 @@ public class RestaurantService {
         model.addAttribute("startPage", startPage); // 표시할 시작 페이지 번호
         model.addAttribute("endPage", endPage); // 표시할 마지막 페이지 번호
 	}
-    
+	// 검색
     public List<RestaurantVo> searchList(String restName) {
         return restaurantDao.search(restName);
+    }
+    
+    // 최근 등록된 레스토랑 목록
+    public List<RestaurantVo> recentRestaurants() {
+        return restaurantDao.getRecentRestaurants();
     }
 }
