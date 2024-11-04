@@ -40,7 +40,7 @@ public class RestaurantService {
         model.addAttribute("endPage", endPage); // 표시할 마지막 페이지 번호
 	}
     
-    public RestaurantVo detail(int restNo) {
-        return restaurantDao.getList(restNo);
+    public List<RestaurantVo> searchList(String restName) {
+        return restaurantDao.search(restName);
     }
 }

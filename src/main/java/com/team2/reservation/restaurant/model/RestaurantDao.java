@@ -13,8 +13,9 @@ public interface RestaurantDao {
     @Select("SELECT * FROM restaurant ORDER BY restNo LIMIT #{limit} OFFSET #{offset}")
     List<RestaurantVo> pullList(@Param("offset") int offset, @Param("limit") int limit);
     
-    @Select("SELECT * FROM restaurant WHERE restNo = #{restNo}")
-    RestaurantVo getList(int restNo);
+    // 검색
+    @Select("SELECT * FROM restaurant WHERE restName LIKE CONCAT('%', #{restName}, '%')")
+    List<RestaurantVo> search(String restName);
     
     // 전체 레스토랑 개수 가져오기
     @Select("SELECT COUNT(*) FROM restaurant")
