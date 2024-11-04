@@ -155,11 +155,13 @@ public class HomeController {
                                   @RequestParam String reserveDate, 
                                   @RequestParam String reserveTime, 
                                   HttpSession session, 
-                                  RedirectAttributes redirectAttributes) {
+                                  Model model) {
         UserVo user = (UserVo) session.getAttribute("loggedInUser");
-        if (user == null) return "redirect:/"; // 로그인되지 않은 경우 리다이렉트
+        if (user == null) return "redirect:/"; 
 
         RestaurantVo restaurant = restService.getRestaurantById(restNo);
+        model.addAttribute("restaurant", restaurant); // 레스토랑 정보를 다시 모델에 추가
+        
         LocalDate date = LocalDate.parse(reserveDate);
         LocalDate today = LocalDate.now();
         LocalTime time = LocalTime.parse(reserveTime);
@@ -170,22 +172,25 @@ public class HomeController {
         
         // 예약 날짜가 과거인지 확인
         if (date.isBefore(today)) {
-            redirectAttributes.addFlashAttribute("errorMessage", "예약 날짜는 오늘 날짜보다 미래여야 합니다.");
-            return "redirect:/restaurant"; // 매개변수 추가
+            model.addAttribute("errorMessage", "예약 날짜는 오늘 날짜보다 미래여야 합니다.");
+            restService.list(1, model); // 레스토랑 목록을 다시 불러옴
+            return "restaurant"; 
         }
         
         // 예약 시간이 운영 시간 내에 있는지 확인
         else if (time.isBefore(openTime) || time.isAfter(closeTime)) {
-            redirectAttributes.addFlashAttribute("errorMessage", "운영시간 내에만 예약이 가능합니다.");
-            return "redirect:/restaurant"; // 매개변수 추가
+            model.addAttribute("errorMessage", "운영시간 내에만 예약이 가능합니다.");
+            restService.list(1, model); // 레스토랑 목록을 다시 불러옴
+            return "restaurant";
         }
 
         try {
             reserveService.addReservation(restNo, headCount, reservationTime.toString(), user.getUserNo());
             return "redirect:/mypage"; 
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("errorMessage", "예약 처리 중 오류가 발생했습니다.");
-            return "redirect:/restaurant"; // 매개변수 추가
+            model.addAttribute("errorMessage", "예약 처리 중 오류가 발생했습니다.");
+            restService.list(1, model); // 레스토랑 목록을 다시 불러옴
+            return "restaurant";
         }
     }
 
