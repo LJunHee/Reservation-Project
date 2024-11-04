@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.team2.reservation.reserve.service.ReserveService;
+import com.team2.reservation.restaurant.model.RestaurantVo;
 import com.team2.reservation.restaurant.service.RestaurantService;
 import com.team2.reservation.review.model.ReviewVo;
 import com.team2.reservation.review.service.ReviewService;
@@ -47,7 +48,8 @@ public class HomeController {
     public String index(Model model, HttpSession session) {
         UserVo user = (UserVo) session.getAttribute("loggedInUser"); 
         model.addAttribute("user", user); 
-        restService.list(1, model);
+        List<RestaurantVo> recentRestaurants = restService.recentRestaurants();
+        model.addAttribute("list", recentRestaurants);
         return "index";
     }
 
@@ -140,6 +142,21 @@ public class HomeController {
     public String showRestaurants(@RequestParam(value = "page", defaultValue = "1") int page, Model model) {
     	restService.list(page, model);
         return "restaurant"; 
+    }
+    
+    @GetMapping("/restaurant/search")
+    public String searchRestaurants(
+        @RequestParam String restName,
+        Model model) {
+        
+        // 검색 결과를 서비스를 통해 가져오기
+        List<RestaurantVo> searchResults = restService.searchList(restName);
+        
+        // 모델에 데이터 추가
+        model.addAttribute("restaurants", searchResults);
+        model.addAttribute("keyword", restName);
+        
+        return "restaurant"; // 검색 결과를 보여줄 페이지 
     }
     
     //restaurant - reservation
