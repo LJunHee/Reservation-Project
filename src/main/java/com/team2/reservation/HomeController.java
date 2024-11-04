@@ -48,7 +48,8 @@ public class HomeController {
     public String index(Model model, HttpSession session) {
         UserVo user = (UserVo) session.getAttribute("loggedInUser"); 
         model.addAttribute("user", user); 
-        restService.list(1, model);
+        List<RestaurantVo> recentRestaurants = restService.recentRestaurants();
+        model.addAttribute("list", recentRestaurants);
         return "index";
     }
 
