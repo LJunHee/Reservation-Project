@@ -63,20 +63,15 @@ public class HomeController {
     // 인기 레스토랑
     @GetMapping("/api/popular")
     @ResponseBody
-    public ResponseEntity<?> getpopularRestaurants() {
-        try {
-            List<RestaurantVo> restaurants = restService.popularRestaurants();
-            // 디버깅을 위한 로그 추가
-            restaurants.forEach(r -> {
-                System.out.println("Restaurant: " + r.getRestName());
-                System.out.println("Image URL: " + r.getRestImage());
-            });
-            return ResponseEntity.ok(restaurants);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                               .body("Error: " + e.getMessage());
-        }
+    public List<RestaurantVo> getPopularRestaurants(){
+    	return restService.popularRestaurants();
+    }
+    
+    // 오늘의 추천 레스토랑
+    @GetMapping("/api/recommend")
+    @ResponseBody
+    public List<RestaurantVo> getRecommendRestaurants(){
+    	return restService.recommendRestaurants();
     }
     
     //check-email

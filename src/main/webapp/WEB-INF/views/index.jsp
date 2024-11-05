@@ -102,7 +102,7 @@
 				<h2>오늘의 추천</h2>
 				<p>오늘 방문하기 좋은 레스토랑을 추천해드립니다.</p>
 				<p>
-					<a class="btn btn-default" href="#" role="button">추천 보기 »</a>
+					<a class="btn btn-default" href="#" id="recommend" role="button">추천 보기 »</a>
 				</p>
 			</div>
 			<div class="col-md-4">
@@ -146,6 +146,8 @@
 	<%@ include file="template/footer.jspf"%>
 </body>
 <script>
+
+	// 인기 레스토랑 스크립트
     // 서버의 컨텍스트 경로를 JavaScript 변수로 저장
     var contextPath = '${root}';
     
@@ -155,6 +157,7 @@
         // 제목 변경
         document.querySelector('h3').textContent = '인기 레스토랑';
         
+        // 형식 변경
         fetch(contextPath + '/api/popular')
             .then(function(response) {
                 if (!response.ok) {
@@ -204,5 +207,59 @@
                 alert('데이터를 불러오는데 실패했습니다: ' + error.message);
             });
     });
+    
+    // 오늘의 추천 스크립트
+    document.getElementById('recommend').addEventListener('click', function(e) {
+	    e.preventDefault();
+	    
+	    // 제목 변경
+	    document.querySelector('h3').textContent = '오늘의 추천 레스토랑';
+	    
+	    fetch(contextPath + '/api/recommend')
+	        .then(function(response) {
+	            if (!response.ok) {
+	                throw new Error('Network response was not ok');
+	            }
+	            return response.json();
+	        })
+	        .then(function(restaurants) {
+	            var containerRow = document.querySelector('.col-md-12 .row');
+	            containerRow.innerHTML = '';
+	            
+	            restaurants.forEach(function(restaurant) {
+	                var imgSrc = restaurant.restImage || contextPath + '/resources/img/default.jpg';
+	                if(imgSrc && !imgSrc.startsWith('http') && !imgSrc.startsWith('/')) {
+	                    imgSrc = contextPath + '/' + imgSrc;
+	                }
+	
+	                var html = 
+	                    '<div class="col-md-3">' +
+	                        '<div class="thumbnail">' +
+	                            '<img src="' + imgSrc + '"' +
+	                                ' alt="사진 ' + restaurant.restName + '"' +
+	                                ' onerror="this.onerror=null; this.src=\'' + contextPath + '/resources/img/default.jpg\'"' +
+	                                ' class="img-responsive fixed-size-img">' +
+	                            '<div class="caption">' +
+	                                '<h4>' + restaurant.restName + '</h4>' +
+	                                '<p>주소 : ' + restaurant.restAddress + '</p>' +
+	                                '<p>전화번호 : ' + restaurant.restPhone + '</p>' +
+	                            '</div>' +
+	                            '<div class="button-wrapper">' +
+	                                '<a href="' + contextPath + '/restaurant"' +
+	                                ' class="btn btn-info btn-block" role="button">' +
+	                                '예약하러 가기</a>' +
+	                            '</div>' +
+	                        '</div>' +
+	                    '</div>';
+	                
+	                containerRow.insertAdjacentHTML('beforeend', html);
+	            });
+	        })
+	        .catch(function(error) {
+	            console.error('Error:', error);
+	            alert('데이터를 불러오는데 실패했습니다: ' + error.message);
+	        });
+	});
+    
 </script>
 </html>
