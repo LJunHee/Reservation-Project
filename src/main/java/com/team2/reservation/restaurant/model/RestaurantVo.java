@@ -18,6 +18,7 @@ public class RestaurantVo {
 	private int restNo;
 	private String restName, restAddress, restInfo, restMenu, restPhone, restReview, restImage;
 	private Time openTime, closeTime;
+	private double avgScore;
 
 	
     public String getFormattedPhone() {

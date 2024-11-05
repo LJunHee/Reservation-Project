@@ -65,7 +65,21 @@ public class HomeController {
         return "redirect:/";
     }
     
-    // check-email
+    // 인기 레스토랑
+    @GetMapping("/api/popular")
+    @ResponseBody
+    public List<RestaurantVo> getPopularRestaurants(){
+    	return restService.popularRestaurants();
+    }
+    
+    // 오늘의 추천 레스토랑
+    @GetMapping("/api/recommend")
+    @ResponseBody
+    public List<RestaurantVo> getRecommendRestaurants(){
+    	return restService.recommendRestaurants();
+    }
+    
+    //check-email
     @PostMapping("/check-email")
     public ResponseEntity<String> checkEmail(@RequestParam String userEmail) {
         boolean isAvailable = userService.isEmailAvailable(userEmail);

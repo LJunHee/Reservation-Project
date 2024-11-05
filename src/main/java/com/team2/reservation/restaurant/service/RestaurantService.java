@@ -54,6 +54,15 @@ public class RestaurantService {
     public RestaurantVo getRestaurantById(int restNo) {
         return restaurantDao.getRestaurantById(restNo);
     }
+
+    // 인기 레스토랑 목록
+    public List<RestaurantVo> popularRestaurants(){
+    	return restaurantDao.getPopularRestaurants();
+    }
     
-    
+    // 오늘의 추천 목록
+    public List<RestaurantVo> recommendRestaurants(){
+    	 return restaurantDao.getRecommendRestaurants();
+    }
+
 }

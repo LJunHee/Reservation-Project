@@ -25,6 +25,28 @@ public interface RestaurantDao {
     @Select("SELECT COUNT(*) FROM restaurant")
     int getTotalCount();
     
+
     @Select("SELECT * FROM restaurant WHERE restNo = #{restNo}")
     RestaurantVo getRestaurantById(@Param("restNo") int restNo);
+
+    // 인기 레스토랑
+    @Select("SELECT r.*, COALESCE(AVG(rv.reviewScore), 0) as avgScore " +
+            "FROM restaurant r " +
+            "LEFT JOIN review rv ON r.restNo = rv.restNo " +
+            "GROUP BY r.restNo " +
+            "ORDER BY avgScore DESC " +		// 평균이 높은 순서대로 정렬
+            "LIMIT 8")						// 상위 8개만 선정
+    List<RestaurantVo> getPopularRestaurants();
+    
+    // 오늘의 추천
+    @Select("SELECT DISTINCT r.*, rv.createDate " +
+            "FROM restaurant r " +
+            "INNER JOIN (SELECT restNo, MAX(createDate) as createDate " +
+            "           FROM review " +
+            "           GROUP BY restNo) rv " +  // 각 레스토랑의 가장 최근 리뷰 날짜
+            "ON r.restNo = rv.restNo " +
+            "ORDER BY rv.createDate DESC " +    // 최신 리뷰 날짜순 정렬
+            "LIMIT 8")
+    List<RestaurantVo> getRecommendRestaurants();
+
 }
