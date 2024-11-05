@@ -130,7 +130,8 @@ public class HomeController {
             reserveService.updateReservation(reserveNo, restNo, headCount, reserveDate, user.getUserNo());
             return new ResponseEntity<>("예약이 수정되었습니다.", headers, HttpStatus.OK);
         } catch (IllegalStateException e) {
-            return new ResponseEntity<>("당일에 이미 예약된 레스토랑입니다.", headers, HttpStatus.BAD_REQUEST);
+            // 예외 메시지에 따라 적절히 처리
+            return new ResponseEntity<>(e.getMessage(), headers, HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             return new ResponseEntity<>("예약을 수정하는 중에 오류가 발생했습니다. 다시 시도해주세요.", headers, HttpStatus.BAD_REQUEST);
         }

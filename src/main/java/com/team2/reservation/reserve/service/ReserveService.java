@@ -31,7 +31,7 @@ public class ReserveService {
         ReserveVo reserve = createReserveVo(restNo, headCount, userNo);
         LocalDateTime localDateTime = parseReserveDate(reserveDate);
         
-        chkDuplReservation(userNo, restNo, localDateTime.toLocalDate());
+//        chkDuplReservation(userNo, restNo, localDateTime.toLocalDate());
         reserve.setReserveTime(Timestamp.valueOf(localDateTime));
         reserveDao.addList(reserve);
     }

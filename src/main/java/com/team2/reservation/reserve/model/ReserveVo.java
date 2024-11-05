@@ -1,8 +1,7 @@
 package com.team2.reservation.reserve.model;
 
+import java.sql.Time;
 import java.sql.Timestamp;
-
-import com.team2.reservation.restaurant.model.RestaurantVo;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,7 +20,7 @@ public class ReserveVo {
     private String restName;   // �Ĵ� �̸�
     private String restReview; // ����
     private Timestamp reserveTime;  // ���� �ð�
-    private RestaurantVo restVo;
+    private Time openTime,closeTime;
     
     public String getReserveTimeStr() {
         return reserveTime != null ? reserveTime.toString().substring(0, 16) : null;
