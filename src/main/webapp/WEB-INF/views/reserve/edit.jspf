@@ -35,7 +35,7 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger" onclick="deleteReservation()">삭제</button>
                         <button type="submit" class="btn btn-primary">수정</button>
-                        <button type="button" class="btn btn-default" data-dismiss="modal">취소</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal" onclick="$('#editForm')[0].reset();">취소</button>
                     </div>
                 </form>
             </div>
@@ -78,9 +78,6 @@ function validateEdit(event) {
         reserveDate: $('#editReserveDate').val() + 'T' + $('#editReserveTime').val()  // 'T' 구분자 사용
     };
 
-    console.log('Form Data:', formData);
-    console.log('Sending data:', formData);
-
     $.ajax({
         type: 'POST',
         url: '${root}/mypage/edit',
@@ -104,7 +101,6 @@ function validateEdit(event) {
     return false;
 }
 
-
 function deleteReservation() {
     if(confirm('정말로 삭제하시겠습니까?')) {
         var reserveNo = $('#editReserveNo').val();
@@ -124,10 +120,23 @@ function deleteReservation() {
     }
 }
 
-// 페이지 로드 시 현재 날짜 이전 선택 못하게 설정
+// 페이지 로드 시 설정
 $(document).ready(function() {
     var today = new Date().toISOString().split('T')[0];
     $('#editReserveDate').attr('min', today);
+    
+    // 모달이 닫힐 때 폼 초기화
+    $('#EditModal').on('hidden.bs.modal', function () {
+        $('#editForm')[0].reset();  // 폼 리셋
+        $('#editErrorMessage').hide();  // 에러 메시지 숨기기
+        $('#editErrorMessage').text(''); // 에러 메시지 내용 삭제
+        
+        // 숨겨진 필드들 초기화
+        $('#editReserveNo').val('');
+        $('#editRestNo').val('');
+        $('#editOpenTime').val('');
+        $('#editCloseTime').val('');
+    });
     
     <c:if test="${not empty errorMessage}">
         $('#editErrorMessage').text('${errorMessage}');
