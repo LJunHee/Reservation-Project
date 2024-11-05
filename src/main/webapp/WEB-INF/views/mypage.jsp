@@ -97,13 +97,35 @@
 <%@ include file="reserve/edit.jspf" %>
 
 <script>
-	function setEditModal(reserveNo, restNo, reserveTime, headCount) {
-	    document.getElementById('editReserveNo').value = reserveNo;
-	    document.getElementById('editRestNo').value = restNo;
-	    document.getElementById('editReserveTime').value = reserveTime;
-	    document.getElementById('editHeadCount').value = headCount;
-	    document.getElementById('deleteReserveNo').value = reserveNo;
-	}
+function setEditModal(reserveNo, restNo, reserveTime, headCount,openTime,closeTime) {
+    console.log('Setting modal values:', {
+        reserveNo,
+        restNo,
+        reserveTime,
+        headCount,
+        openTime,
+        closeTime
+    });
+
+    // 기본 정보 설정
+    document.getElementById('editReserveNo').value = reserveNo;
+    document.getElementById('editRestNo').value = restNo;
+    document.getElementById('editHeadCount').value = headCount;
+    document.getElementById('editOpenTime').value = openTime;
+    document.getElementById('editCloseTime').value = closeTime;
+
+    // 날짜와 시간 분리
+    if (reserveTime) {
+        try {
+            const [datePart, timePart] = reserveTime.split(' ');
+            document.getElementById('editReserveDate').value = datePart;
+            document.getElementById('editReserveTime').value = timePart;
+        } catch (e) {
+            console.error('Error parsing reserveTime:', e, reserveTime);
+        }
+    }
+
+}
 </script>
 </body>
 </html>

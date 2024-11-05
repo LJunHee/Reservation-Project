@@ -2,6 +2,8 @@ package com.team2.reservation.reserve.model;
 
 import java.sql.Timestamp;
 
+import com.team2.reservation.restaurant.model.RestaurantVo;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,13 +14,14 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class ReserveVo {
-    private int reserveNo;     // ¿¹¾à ¹øÈ£
-    private int restNo;        // ½Ä´ç ¹øÈ£
-    private int userNo;        // »ç¿ëÀÚ ¹øÈ£
-    private int headCount; // ÀÎ¿ø ¼ö
-    private String restName;   // ½Ä´ç ÀÌ¸§
-    private String restReview; // ¸®ºä
-    private Timestamp reserveTime;  // ¿¹¾à ½Ã°£
+    private int reserveNo;     // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È£
+    private int restNo;        // ï¿½Ä´ï¿½ ï¿½ï¿½È£
+    private int userNo;        // ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È£
+    private int headCount; // ï¿½Î¿ï¿½ ï¿½ï¿½
+    private String restName;   // ï¿½Ä´ï¿½ ï¿½Ì¸ï¿½
+    private String restReview; // ï¿½ï¿½ï¿½ï¿½
+    private Timestamp reserveTime;  // ï¿½ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½
+    private RestaurantVo restVo;
     
     public String getReserveTimeStr() {
         return reserveTime != null ? reserveTime.toString().substring(0, 16) : null;

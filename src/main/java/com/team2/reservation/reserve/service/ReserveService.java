@@ -20,13 +20,13 @@ public class ReserveService {
     public ReserveService(ReserveDao restDao) {
         this.reserveDao = restDao;
     }
-    
-    // �궗�슜�옄 �삁�빟 紐⑸줉 議고쉶
+
+    // 사용자 예약 목록 조회
     public void listByUser(int userNo, Model model) {
         model.addAttribute("list", reserveDao.pullListByUser(userNo));
     }
     
-    // �궗�슜�옄 �삁�빟 湲곕뒫 (�삁�빟 以묐났 泥댄겕)
+    // 사용자 예약 기능 (예약 중복 체크)
     public void addReservation(int restNo, int headCount, String reserveDate, int userNo) {
         ReserveVo reserve = createReserveVo(restNo, headCount, userNo);
         LocalDateTime localDateTime = parseReserveDate(reserveDate);
@@ -36,7 +36,7 @@ public class ReserveService {
         reserveDao.addList(reserve);
     }
     
-    // �삁�빟 �닔�젙
+    // 예약 수정
     public void updateReservation(int reserveNo, int restNo, int headCount, String reserveDate, int userNo) {
         ReserveVo existingReservation = existingReservation(reserveNo);
         LocalDateTime localDateTime = parseReserveDate(reserveDate);
@@ -45,14 +45,14 @@ public class ReserveService {
         reserveDao.setList(existingReservation);
     }
     
-    // �삁�빟 �궘�젣
+    // 예약 삭제
     public void deleteReservation(int reserveNo) {
         reserveDao.rmList(reserveNo);
     }  
 
     
     
-    // �삁�빟 媛앹껜 �깮�꽦
+    // 예약 객체 생성
     private ReserveVo createReserveVo(int restNo, int headCount, int userNo) {
         ReserveVo reserve = new ReserveVo();
         reserve.setRestNo(restNo);
@@ -61,42 +61,40 @@ public class ReserveService {
         return reserve;
     }
 
-    // �궇吏� 臾몄옄�뿴 �뙆�떛
+    // 날짜 문자열 파싱
     private LocalDateTime parseReserveDate(String reserveDate) {
         try {
             return LocalDateTime.parse(reserveDate, DATETIME_FORMATTER).withSecond(0);
         } catch (Exception e) {
-            throw new IllegalStateException("�옒紐삳맂 �슂泥��엯�땲�떎.");
+            throw new IllegalStateException("잘못된 요청입니다.");
         }
     }
 
-    // 以묐났 �삁�빟 �솗�씤
+    // 중복 예약 확인
     private void chkDuplReservation(int userNo, int restNo, LocalDate reservationDate) {
         LocalDate today = LocalDate.now();
         if (reservationDate.isEqual(today)) {
             List<ReserveVo> existingReservations = reserveDao.findReservationsByUserAndRestaurant(userNo, restNo, today);
             if (!existingReservations.isEmpty()) {
-                throw new IllegalStateException("�떦�씪�뿉 �씠誘� �삁�빟�맂 �젅�뒪�넗�옉�엯�땲�떎.");
+                throw new IllegalStateException("당일에 이미 예약된 레스토랑입니다.");
             }
         }
     }
 
-    // 湲곗〈 �삁�빟 議고쉶
+    // 기존 예약 조회
     private ReserveVo existingReservation(int reserveNo) {
         ReserveVo existingReservation = reserveDao.getList(reserveNo);
         if (existingReservation == null) {
-            throw new IllegalStateException("議댁옱�븯吏� �븡�뒗 �삁�빟�엯�땲�떎.");
+            throw new IllegalStateException("존재하지 않는 예약입니다.");
         }
         return existingReservation;
     }
 
-    //�삁�빟 �젙蹂� �뾽�뜲�씠�듃
+    //예약 정보 업데이트
     private void updateReservation(ReserveVo reservation, int restNo, int headCount, int userNo, LocalDateTime localDateTime) {
         reservation.setRestNo(restNo);
         reservation.setHeadCount(headCount);
         reservation.setUserNo(userNo);
         reservation.setReserveTime(Timestamp.valueOf(localDateTime));
     }
-    
-    
 }
