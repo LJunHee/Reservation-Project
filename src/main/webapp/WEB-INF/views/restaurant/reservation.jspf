@@ -11,6 +11,8 @@
                 <div class="alert alert-danger" id="errorMessage" style="display: none;"></div>
                 <form id="restInfoForm" action="${root}/restaurant" method="post" onsubmit="return validateReservation(event)">
                     <input type="hidden" name="restNo" id="restNo" value="${restaurant.restNo}">
+                    <input type="hidden" name="openTime" id="openTime" value="">
+                    <input type="hidden" name="closeTime" id="closeTime" value="">
                     <div class="form-group">
                         <label for="headCount">인원 수</label>
                         <p class="text-danger">*인원이 10명 이상일 경우 전화로 예약 부탁드립니다.</p>
@@ -40,35 +42,49 @@
 
 <script>
 function validateReservation(event) {
-    // 현재 날짜 가져오기
-    var today = new Date();
-    today.setHours(0, 0, 0, 0); // 시간을 00:00:00으로 설정
+    event.preventDefault(); // 폼 제출을 막습니다
 
-    // 선택된 날짜 가져오기
-    var selectedDate = new Date($('#reserveDate').val());
-    selectedDate.setHours(0, 0, 0, 0);
-
-    // 과거 날짜 체크
-    if (selectedDate < today) {
-        event.preventDefault(); // 폼 제출 막기
-        $('#errorMessage').text('예약 날짜는 오늘 날짜보다 미래여야 합니다.');
-        $('#errorMessage').show();
-        return false;
-    }
-
-    // 영업 시간 체크 (예시: 10:00 ~ 22:00)
+    // 영업 시간 체크
     var selectedTime = $('#reserveTime').val();
-    var openTime = '10:00';  // 실제 레스토랑 오픈 시간으로 설정하세요
-    var closeTime = '22:00'; // 실제 레스토랑 마감 시간으로 설정하세요
-
+    var openTime = $('#openTime').val();
+    var closeTime = $('#closeTime').val();
     if (selectedTime < openTime || selectedTime > closeTime) {
-        event.preventDefault();
-        $('#errorMessage').text('운영시간 내에만 예약이 가능합니다.');
+        $('#errorMessage').text('운영시간 '+openTime+' - ' + closeTime +' 에만 예약이 가능합니다.');
         $('#errorMessage').show();
         return false;
     }
 
-    return true;
+    // 폼 데이터 수집
+    var formData = {
+        restNo: $('#restNo').val(),
+        headCount: $('#headCount').val(),
+        reserveDate: $('#reserveDate').val(),
+        reserveTime: $('#reserveTime').val()
+    };
+
+    // AJAX 요청
+    $.ajax({
+        type: 'POST',
+        url: '${root}/restaurant',
+        data: formData,
+        contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+        success: function(response) {
+            alert(selectedTime +'으로 예약 되었습니다!');
+            window.location.href = '${root}/mypage';
+        },
+        error: function(xhr) {
+            var errorMsg = xhr.responseText;
+            try {
+                var error = JSON.parse(errorMsg);
+                errorMsg = error.message || errorMsg;
+            } catch(e) {
+                // JSON 파싱 실패 시 원본 메시지 사용
+            }
+            $('#errorMessage').text(errorMsg || '예약 처리 중 오류가 발생했습니다.');
+            $('#errorMessage').show();
+        }
+    });
+    return false;
 }
 
 // 페이지 로드 시 현재 날짜 이전 선택 못하게 설정
@@ -82,4 +98,4 @@ $(document).ready(function() {
         $('#reservationModal').modal('show');
     </c:if>
 });
-</script>
+</script> 
