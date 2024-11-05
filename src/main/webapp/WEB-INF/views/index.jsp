@@ -115,7 +115,6 @@
 		</div>
 
 		<hr>
-
 		<div class="row">
 			<div class="col-md-12">
 				<h3>최근 등록된 레스토랑</h3>

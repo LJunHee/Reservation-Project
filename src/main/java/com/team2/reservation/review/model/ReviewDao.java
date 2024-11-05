@@ -26,7 +26,7 @@ public interface ReviewDao {
             + "WHERE r.userNo = #{userNo} ORDER BY r.createDate DESC")
     List<ReviewVo> getReviewsByUser(int userNo);
 
-    // 사용자와 식당 번호로 리뷰 존재 여부 확인 - @Param 추가
+    // 사용자가 해당 번호로 리뷰 존재 여부 확인 - @Param 추가
     @Select("SELECT COUNT(*) FROM review WHERE userNo = #{userNo} AND restNo = #{restNo}")
     int checkExistingReview(@Param("userNo") int userNo, @Param("restNo") int restNo);
     

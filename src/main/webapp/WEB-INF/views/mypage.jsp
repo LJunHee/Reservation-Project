@@ -65,23 +65,24 @@
                         </tr>
                     </c:if>
                     
-                    <c:forEach var="reservation" items="${list}">
-                        <tr>
-                            <td>${reservation.restName}</td>
-                            <td>
-			                    <a href="#" 
-			                       onclick="setEditModal('${reservation.reserveNo}', '${reservation.restNo}', '${reservation.reserveTime}', '${reservation.headCount}')"
-			                       data-toggle="modal" 
-			                       data-target="#EditModal">${reservation.getReserveTimeStr()}</a>
-			                </td>
-			                <td>
-			                    <a href="#" 
-			                       onclick="setEditModal('${reservation.reserveNo}', '${reservation.restNo}', '${reservation.reserveTime}', '${reservation.headCount}')"
-			                       data-toggle="modal" 
-			                       data-target="#EditModal">${reservation.headCount}</a>
-			                </td>
-                        </tr>
-                    </c:forEach>
+					<c:forEach var="reservation" items="${list}">
+					    <tr>
+					        <td>${reservation.restName}</td>
+					        <td>
+					            <a href="#" 
+					               onclick="setEditModal('${reservation.reserveNo}', '${reservation.restNo}', '${reservation.reserveTime}', '${reservation.headCount}', '${reservation.openTime}', '${reservation.closeTime}')"
+					               data-toggle="modal" 
+					               data-target="#EditModal">${reservation.getReserveTimeStr()}</a>
+					        </td>
+					        <td>
+					            <a href="#" 
+					               onclick="setEditModal('${reservation.reserveNo}', '${reservation.restNo}', '${reservation.reserveTime}', '${reservation.headCount}', '${reservation.openTime}', '${reservation.closeTime}')"
+					               data-toggle="modal" 
+					               data-target="#EditModal">${reservation.headCount}</a>
+					        </td>
+					    </tr>
+					</c:forEach>
+
                 </tbody>
             </table>
 
@@ -97,13 +98,31 @@
 <%@ include file="reserve/edit.jspf" %>
 
 <script>
-	function setEditModal(reserveNo, restNo, reserveTime, headCount) {
-	    document.getElementById('editReserveNo').value = reserveNo;
-	    document.getElementById('editRestNo').value = restNo;
-	    document.getElementById('editReserveTime').value = reserveTime;
-	    document.getElementById('editHeadCount').value = headCount;
-	    document.getElementById('deleteReserveNo').value = reserveNo;
-	}
+function setEditModal(reserveNo, restNo, reserveTime, headCount, openTime, closeTime) {
+
+    // 기본 정보 설정
+    document.getElementById('editReserveNo').value = reserveNo;
+    document.getElementById('editRestNo').value = restNo;
+    document.getElementById('editHeadCount').value = headCount;
+    document.getElementById('editOpenTime').value = openTime.substring(0, 5);
+    document.getElementById('editCloseTime').value = closeTime.substring(0, 5);
+
+    // 날짜와 시간 분리
+    if (reserveTime) {
+        try {
+            // 원본 예약시간에서 .0 부분 제거
+            const dateTime = reserveTime.split('.')[0];
+            const [datePart, timePart] = dateTime.split(' ');
+            
+            // 날짜와 시간을 각각 설정
+            document.getElementById('editReserveDate').value = datePart;
+            document.getElementById('editReserveTime').value = timePart.substring(0, 5);
+
+        } catch (e) {
+            console.error('Error parsing reserveTime:', e, reserveTime);
+        }
+    }
+}
 </script>
 </body>
 </html>

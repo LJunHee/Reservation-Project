@@ -1,5 +1,6 @@
 package com.team2.reservation.reserve.model;
 
+import java.sql.Time;
 import java.sql.Timestamp;
 
 import lombok.AllArgsConstructor;
@@ -12,13 +13,14 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class ReserveVo {
-    private int reserveNo;     // ¿¹¾à ¹øÈ£
-    private int restNo;        // ½Ä´ç ¹øÈ£
-    private int userNo;        // »ç¿ëÀÚ ¹øÈ£
-    private int headCount; // ÀÎ¿ø ¼ö
-    private String restName;   // ½Ä´ç ÀÌ¸§
-    private String restReview; // ¸®ºä
-    private Timestamp reserveTime;  // ¿¹¾à ½Ã°£
+	private int reserveNo;     // ì˜ˆì•½ ë²ˆí˜¸
+    private int restNo;        // ì‹ë‹¹ ë²ˆí˜¸
+    private int userNo;        // ì‚¬ìš©ì ë²ˆí˜¸
+    private int headCount;     // ì¸ì› ìˆ˜
+    private String restName;   // ì‹ë‹¹ ì´ë¦„
+    private String restReview; // ë¦¬ë·°
+    private Timestamp reserveTime;  // ì˜ˆì•½ ì‹œê°„
+    private Time openTime,closeTime;
     
     public String getReserveTimeStr() {
         return reserveTime != null ? reserveTime.toString().substring(0, 16) : null;

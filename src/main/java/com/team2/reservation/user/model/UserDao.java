@@ -8,19 +8,19 @@ import org.apache.ibatis.annotations.Param;
 @Mapper
 public interface UserDao {
     
-    // ·Î±×ÀÎ È®ÀÎ (ºñ¹Ğ¹øÈ£´Â Á¶È¸ÇÏÁö ¾ÊÀ½)
+    // ë¡œê·¸ì¸ í™•ì¸ (ë¹„ë°€ë²ˆí˜¸ëŠ” ì¡°íšŒí•˜ì§€ ì•ŠìŒ)
     @Select("SELECT userNo, userName, userEmail, userPhone FROM users WHERE userEmail = #{userEmail}")
     UserVo findByEmail(@Param("userEmail") String userEmail);
     
-    // ºñ¹Ğ¹øÈ£ È®ÀÎÀ» À§ÇÑ º°µµ ¸Ş¼Òµå
+    // ë¹„ë°€ë²ˆí˜¸ í™•ì¸ì„ ìœ„í•œ ë³„ë„ ë©”ì†Œë“œ
     @Select("SELECT userPw FROM users WHERE userEmail = #{userEmail}")
     String getPasswordByEmail(@Param("userEmail") String userEmail);
     
-    // Áßº¹ ÀÌ¸ŞÀÏ È®ÀÎ
+    // ì¤‘ë³µ ì´ë©”ì¼ í™•ì¸
     @Select("SELECT COUNT(*) FROM users WHERE userEmail = #{userEmail}")
     int countByEmail(@Param("userEmail") String userEmail);
     
-    // È¸¿ø°¡ÀÔ
+    // íšŒì›ê°€ì…
     @Insert("INSERT INTO users (userName, userEmail, userPw, userPhone) VALUES (#{userName}, #{userEmail}, #{userPw}, #{userPhone})")
     int addInfo(UserVo bean);
 }
