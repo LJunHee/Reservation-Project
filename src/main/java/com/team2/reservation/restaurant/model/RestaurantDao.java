@@ -24,4 +24,13 @@ public interface RestaurantDao {
     // 전체 레스토랑 개수 가져오기
     @Select("SELECT COUNT(*) FROM restaurant")
     int getTotalCount();
+    
+    // 인기 레스토랑
+    @Select("SELECT r.*, COALESCE(AVG(rv.reviewScore), 0) as avgScore " +
+            "FROM restaurant r " +
+            "LEFT JOIN review rv ON r.restNo = rv.restNo " +
+            "GROUP BY r.restNo " +
+            "ORDER BY avgScore DESC " +
+            "LIMIT 8")
+    List<RestaurantVo> getPopularRestaurants();
 }

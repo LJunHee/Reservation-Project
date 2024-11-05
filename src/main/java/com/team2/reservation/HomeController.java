@@ -60,6 +60,25 @@ public class HomeController {
         return "redirect:/";
     }
     
+    // 인기 레스토랑
+    @GetMapping("/api/popular")
+    @ResponseBody
+    public ResponseEntity<?> getpopularRestaurants() {
+        try {
+            List<RestaurantVo> restaurants = restService.popularRestaurants();
+            // 디버깅을 위한 로그 추가
+            restaurants.forEach(r -> {
+                System.out.println("Restaurant: " + r.getRestName());
+                System.out.println("Image URL: " + r.getRestImage());
+            });
+            return ResponseEntity.ok(restaurants);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                               .body("Error: " + e.getMessage());
+        }
+    }
+    
     //check-email
     @PostMapping("/check-email")
     public ResponseEntity<String> checkEmail(@RequestParam String userEmail) {

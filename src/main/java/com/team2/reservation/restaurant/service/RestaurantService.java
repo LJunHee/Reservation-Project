@@ -48,4 +48,9 @@ public class RestaurantService {
     public List<RestaurantVo> recentRestaurants() {
         return restaurantDao.getRecentRestaurants();
     }
+    
+    // 인기 레스토랑 목록
+    public List<RestaurantVo> popularRestaurants(){
+    	return restaurantDao.getPopularRestaurants();
+    }
 }
