@@ -39,7 +39,7 @@
 }
 
 .thumbnail {
-	height: 370px;
+	height: 420px;
 	position: relative;
 }
 
@@ -106,10 +106,10 @@
 				</p>
 			</div>
 			<div class="col-md-4">
-				<h2>특별 이벤트</h2>
-				<p>특별한 날을 위한 레스토랑 이벤트를 확인하세요.</p>
+				<h2>신규 등록 레스토랑</h2>
+				<p>최근 등록된 레스토랑을 소개합니다.</p>
 				<p>
-					<a class="btn btn-default" href="#" role="button">이벤트 보기 »</a>
+					<a class="btn btn-default" href="${root }/" role="button">이벤트 보기 »</a>
 				</p>
 			</div>
 		</div>
