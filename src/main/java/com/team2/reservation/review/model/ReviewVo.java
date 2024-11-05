@@ -11,11 +11,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class ReviewVo {
-    private int reviewNo;        	// ¸®ºä ¹øÈ£
-    private int userNo;          	// »ç¿ëÀÚ ¹øÈ£
-    private int restNo;          	// ½Ä´ç ¹øÈ£
-    private String userName;			// »ç¿ëÀÚ ÀÌ¸§
-    private String reviewContent; 	// ¸®ºä ³»¿ë
-    private int reviewScore;     	// Á¡¼ö
-    private Timestamp createDate; 	// ÀÛ¼ºÀÏ
+    private int reviewNo;        	// ë¦¬ë·° ë²ˆí˜¸
+    private int userNo;          	// ì‚¬ìš©ì ë²ˆí˜¸
+    private int restNo;          	// ì‹ë‹¹ ë²ˆí˜¸
+    private String userName;			// ì‚¬ìš©ì ì´ë¦„
+    private String reviewContent; 	// ë¦¬ë·° ë‚´ìš©
+    private int reviewScore;     	// ì ìˆ˜
+    private Timestamp createDate; 	// ì‘ì„±ì¼
 }
