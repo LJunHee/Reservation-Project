@@ -1,5 +1,6 @@
 package com.team2.reservation;
 
+import java.nio.charset.Charset;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -8,7 +9,9 @@ import java.util.List;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,7 +21,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.team2.reservation.reserve.service.ReserveService;
 import com.team2.reservation.restaurant.model.RestaurantVo;
@@ -110,21 +112,28 @@ public class HomeController {
     }
     
     @PostMapping("/mypage/edit")
-    public String editReservation(@RequestParam int reserveNo, @RequestParam int restNo, @RequestParam int headCount, @RequestParam String reserveDate,
-                                  HttpSession session, Model model) {
+    @ResponseBody
+    public ResponseEntity<String> editReservation(@RequestParam int reserveNo, 
+                                                @RequestParam int restNo, 
+                                                @RequestParam int headCount, 
+                                                @RequestParam String reserveDate,                                              
+                                                HttpSession session) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(new MediaType("text", "plain", Charset.forName("UTF-8")));
+        
         UserVo user = (UserVo) session.getAttribute("loggedInUser");
+        if (user == null) {
+            return new ResponseEntity<>("로그인이 필요합니다.", headers, HttpStatus.UNAUTHORIZED);
+        }
 
         try {
             reserveService.updateReservation(reserveNo, restNo, headCount, reserveDate, user.getUserNo());
-            return "redirect:/mypage"; 
+            return new ResponseEntity<>("예약이 수정되었습니다.", headers, HttpStatus.OK);
         } catch (IllegalStateException e) {
-            model.addAttribute("errorMessage", "당일에 이미 예약된 레스토랑입니다.");
+            return new ResponseEntity<>(e.getMessage(), headers, HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            model.addAttribute("errorMessage", "예약을 수정하는 중에 오류가 발생했습니다. 다시 시도해주세요.");
+            return new ResponseEntity<>("예약을 수정하는 중에 오류가 발생했습니다. 다시 시도해주세요.", headers, HttpStatus.BAD_REQUEST);
         }
-
-        restService.list(1, model);
-        return "mypage"; 
     }
     
     @PostMapping("/mypage/delete")
@@ -150,47 +159,32 @@ public class HomeController {
     
     // restaurant - reservation
     @PostMapping("/restaurant")
-    public String makeReservation(@RequestParam int restNo, 
+    @ResponseBody
+    public ResponseEntity<String> makeReservation(@RequestParam int restNo, 
                                   @RequestParam int headCount, 
                                   @RequestParam String reserveDate, 
                                   @RequestParam String reserveTime, 
-                                  HttpSession session, 
-                                  Model model) {
+                                  HttpSession session) {
+                                  
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(new MediaType("text", "plain", Charset.forName("UTF-8")));
+        
         UserVo user = (UserVo) session.getAttribute("loggedInUser");
-        if (user == null) return "redirect:/"; 
-
-        RestaurantVo restaurant = restService.getRestaurantById(restNo);
-        model.addAttribute("restaurant", restaurant); // 레스토랑 정보를 다시 모델에 추가
-        
-        LocalDate date = LocalDate.parse(reserveDate);
-        LocalDate today = LocalDate.now();
-        LocalTime time = LocalTime.parse(reserveTime);
-        LocalDateTime reservationTime = LocalDateTime.of(date, time);
-        
-        LocalTime openTime = restaurant.getOpenTime().toLocalTime();
-        LocalTime closeTime = restaurant.getCloseTime().toLocalTime();
-        
-        // 예약 날짜가 과거인지 확인
-        if (date.isBefore(today)) {
-            model.addAttribute("errorMessage", "예약 날짜는 오늘 날짜보다 미래여야 합니다.");
-            restService.list(1, model); // 레스토랑 목록을 다시 불러옴
-            return "restaurant"; 
+        if (user == null) {
+            return new ResponseEntity<>("로그인이 필요합니다.", headers, HttpStatus.UNAUTHORIZED);
         }
         
-        // 예약 시간이 운영 시간 내에 있는지 확인
-        else if (time.isBefore(openTime) || time.isAfter(closeTime)) {
-            model.addAttribute("errorMessage", "운영시간 내에만 예약이 가능합니다.");
-            restService.list(1, model); // 레스토랑 목록을 다시 불러옴
-            return "restaurant";
-        }
-
         try {
+            LocalDateTime reservationTime = LocalDateTime.of(
+                LocalDate.parse(reserveDate), 
+                LocalTime.parse(reserveTime));
+                
             reserveService.addReservation(restNo, headCount, reservationTime.toString(), user.getUserNo());
-            return "redirect:/mypage"; 
+            return new ResponseEntity<>("예약이 완료되었습니다.", headers, HttpStatus.OK);
+        } catch (IllegalStateException e) {
+            return new ResponseEntity<>("당일에 이미 예약된 레스토랑입니다.", headers, HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            model.addAttribute("errorMessage", "예약 처리 중 오류가 발생했습니다.");
-            restService.list(1, model); // 레스토랑 목록을 다시 불러옴
-            return "restaurant";
+            return new ResponseEntity<>("예약 처리 중 오류가 발생했습니다.", headers, HttpStatus.BAD_REQUEST);
         }
     }
 

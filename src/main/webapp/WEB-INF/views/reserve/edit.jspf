@@ -4,16 +4,16 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title" id="EditModalLabel">예약 수정</h4>
             </div>
             <div class="modal-body">
-                <!-- 예약 수정 폼 -->
-                <form id="editForm" action="${root}/mypage/edit" method="post">
+                <div class="alert alert-danger" id="editErrorMessage" style="display: none;"></div>
+                <form id="editForm" action="${root}/mypage/edit" method="post" onsubmit="return validateEdit(event)">
                     <input type="hidden" id="editReserveNo" name="reserveNo">
                     <input type="hidden" id="editRestNo" name="restNo">
+                    <input type="hidden" id="editOpenTime" name="openTime" value="">
+                    <input type="hidden" id="editCloseTime" name="closeTime" value="">
                     
                     <div class="form-group">
                         <label for="editHeadCount">인원 수</label>
@@ -24,19 +24,124 @@
                             </c:forEach>
                         </select>
                     </div>
-
+                    <div class="form-group">
+                        <label for="editReserveDate">예약 날짜</label>
+                        <input type="date" id="editReserveDate" name="reserveDate" class="form-control" required>
+                    </div>
                     <div class="form-group">
                         <label for="editReserveTime">예약 시간</label>
-                        <input type="datetime-local" id="editReserveTime" name="reserveDate" class="form-control" required>
+                        <input type="time" id="editReserveTime" name="reserveTime" class="form-control" required>
                     </div>
-					<div class="modal-footer">
-				        <button type="button" class="btn btn-danger" onclick="if(confirm('정말로 삭제하시겠습니까?')) { document.getElementById('editForm').action='${root}/mypage/delete'; document.getElementById('editForm').submit(); }">삭제</button>
-					    <button type="submit" class="btn btn-primary">수정</button>
-					    <button type="button" class="btn btn-default" data-dismiss="modal">취소</button>
-					</div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" onclick="deleteReservation()">삭제</button>
+                        <button type="submit" class="btn btn-primary">수정</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal" onclick="$('#editForm')[0].reset();">취소</button>
+                    </div>
                 </form>
             </div>
         </div>
     </div>
 </div>
 
+<script>
+function validateEdit(event) {
+    event.preventDefault();
+
+    // 영업 시간 체크
+    var selectedTime = $('#editReserveTime').val();
+    var openTime = $('#editOpenTime').val().substring(0, 5);
+    var closeTime = $('#editCloseTime').val().substring(0, 5);
+
+    console.log('Time validation:', {
+        selectedTime: selectedTime,
+        openTime: openTime,
+        closeTime: closeTime
+    });
+
+    if (!openTime || !closeTime) {
+        $('#editErrorMessage').text('영업 시간을 불러오는 데 문제가 발생했습니다.');
+        $('#editErrorMessage').show();
+        return false;
+    }
+
+    if (selectedTime < openTime || selectedTime > closeTime) {
+        $('#editErrorMessage').text('운영시간 ' + openTime + ' - ' + closeTime + '에만 예약이 가능합니다.');
+        $('#editErrorMessage').show();
+        return false;
+    }
+
+    // 날짜 형식을 'yyyy-MM-ddTHH:mm' 형식으로 변경
+    var formData = {
+        reserveNo: $('#editReserveNo').val(),
+        restNo: $('#editRestNo').val(),
+        headCount: $('#editHeadCount').val(),
+        reserveDate: $('#editReserveDate').val() + 'T' + $('#editReserveTime').val()  // 'T' 구분자 사용
+    };
+
+    $.ajax({
+        type: 'POST',
+        url: '${root}/mypage/edit',
+        data: formData,
+        success: function(response) {
+            alert(selectedTime + '으로 예약이 수정되었습니다!');
+            window.location.href = '${root}/mypage';
+        },
+        error: function(xhr) {
+            var errorMsg = xhr.responseText;
+            try {
+                var error = JSON.parse(errorMsg);
+                errorMsg = error.message || errorMsg;
+            } catch(e) {
+                // JSON 파싱 실패 시 원본 메시지 사용
+            }
+            $('#editErrorMessage').text(errorMsg || '예약 수정 중 오류가 발생했습니다.');
+            $('#editErrorMessage').show();
+        }
+    });
+    return false;
+}
+
+function deleteReservation() {
+    if(confirm('정말로 삭제하시겠습니까?')) {
+        var reserveNo = $('#editReserveNo').val();
+        $.ajax({
+            type: 'POST',
+            url: '${root}/mypage/delete',
+            data: { reserveNo: reserveNo },
+            success: function(response) {
+                alert('예약이 삭제되었습니다.');
+                window.location.href = '${root}/mypage';
+            },
+            error: function() {
+                $('#editErrorMessage').text('예약 삭제 중 오류가 발생했습니다.');
+                $('#editErrorMessage').show();
+            }
+        });
+    }
+}
+
+// 페이지 로드 시 설정
+$(document).ready(function() {
+    var today = new Date().toISOString().split('T')[0];
+    $('#editReserveDate').attr('min', today);
+    
+    // 모달이 닫힐 때 폼 초기화
+    $('#EditModal').on('hidden.bs.modal', function () {
+        $('#editForm')[0].reset();  // 폼 리셋
+        $('#editErrorMessage').hide();  // 에러 메시지 숨기기
+        $('#editErrorMessage').text(''); // 에러 메시지 내용 삭제
+        
+        // 숨겨진 필드들 초기화
+        $('#editReserveNo').val('');
+        $('#editRestNo').val('');
+        $('#editOpenTime').val('');
+        $('#editCloseTime').val('');
+    });
+    
+    <c:if test="${not empty errorMessage}">
+        $('#editErrorMessage').text('${errorMessage}');
+        $('#editErrorMessage').show();
+        $('#EditModal').modal('show');
+    </c:if>
+});
+</script>

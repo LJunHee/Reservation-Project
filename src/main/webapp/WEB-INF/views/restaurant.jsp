@@ -231,6 +231,11 @@
    		document.querySelector('#restInfoModal #restTime').textContent = openTime
    				+ " - " + closeTime;
 
+   		//reservation모달에 영업시간 전달
+   		document.querySelector('#reservationModal #openTime').value = openTime;
+    	document.querySelector('#reservationModal #closeTime').value = closeTime;
+
+    	
    		// 숨은 입력 필드에 restNo 설정
    		var restNoInput = document
    				.querySelector('#restInfoModal input[name="restNo"]');
@@ -239,6 +244,9 @@
    		restNoInput.value = restNo; // 값 설정
    		reservationRestNoInput.value = restNo; // 예약 모달의 restNo에 값 설정
    	}
+   	
+
+
    </script>
 
 </body>
