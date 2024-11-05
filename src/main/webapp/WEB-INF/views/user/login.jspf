@@ -1,7 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>	
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-
-<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel">
+<div class="modal fade" id="loginModal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -9,7 +8,7 @@
                 <h4 class="modal-title" id="loginModalLabel">로그인</h4>
             </div>
             <div class="modal-body">
-                <form id = "loginForm" action="${root }/login" method="post">
+                <form id="loginForm" action="${root}/login" method="post">
                     <div class="form-group">
                         <label for="email">이메일:</label>
                         <input type="email" class="form-control" id="email" name="userEmail" required>
@@ -18,13 +17,33 @@
                         <label for="password">비밀번호:</label>
                         <input type="password" class="form-control" id="password" name="userPw" required>
                     </div>
-					<div class="modal-footer">
-					    <button type="button" class="btn btn-default" data-dismiss="modal">취소</button>
-					    <button type="submit" class="btn btn-primary">로그인</button>
-					    <button type="button" id = "signupButton" class="btn btn-default" data-toggle="modal" data-target="#signupModal">회원가입</button>
-					</div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">취소</button>
+                        <button type="submit" class="btn btn-primary">로그인</button>
+                        <button type="button" id="signupButton" class="btn btn-default" data-toggle="modal" data-target="#signupModal">회원가입</button>
+                    </div>
                 </form>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+// 로그인 폼 초기화 함수
+function resetLoginForm() {
+    $('#email').val(''); // 이메일 입력 초기화
+    $('#password').val(''); // 비밀번호 입력 초기화
+}
+
+$(document).ready(function() {
+    // 취소 버튼 클릭 시 폼 초기화
+    $('#loginModal .btn-default[data-dismiss="modal"]').on('click', function() {
+        resetLoginForm();
+    });
+    
+    // 닫기(X) 버튼 클릭 시 폼 초기화
+    $('#loginModal .close').on('click', function() {
+        resetLoginForm();
+    });
+});
+</script>

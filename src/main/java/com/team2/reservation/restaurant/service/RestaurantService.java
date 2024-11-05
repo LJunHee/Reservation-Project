@@ -23,7 +23,7 @@ public class RestaurantService {
         this.restaurantDao = restaurantDao;
     }
     
-	public void list(int page, Model model) {
+   public void list(int page, Model model) {
         int offset = (page - 1) * PAGE_SIZE; // 시작 인덱스 계산
         List<RestaurantVo> restaurantList = restaurantDao.pullList(offset, PAGE_SIZE);
         int totalRestaurants = restaurantDao.getTotalCount(); // 총 레스토랑 개수
@@ -38,8 +38,10 @@ public class RestaurantService {
         model.addAttribute("totalPages", totalPages); // 전체 페이지 수
         model.addAttribute("startPage", startPage); // 표시할 시작 페이지 번호
         model.addAttribute("endPage", endPage); // 표시할 마지막 페이지 번호
-	}
-	// 검색
+   }
+   
+   
+   // 검색
     public List<RestaurantVo> searchList(String restName) {
         return restaurantDao.search(restName);
     }
@@ -48,4 +50,10 @@ public class RestaurantService {
     public List<RestaurantVo> recentRestaurants() {
         return restaurantDao.getRecentRestaurants();
     }
+    
+    public RestaurantVo getRestaurantById(int restNo) {
+        return restaurantDao.getRestaurantById(restNo);
+    }
+    
+    
 }

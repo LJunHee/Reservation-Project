@@ -1,11 +1,17 @@
 package com.team2.reservation;
 
+import java.nio.charset.Charset;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,8 +36,8 @@ public class HomeController {
     private final UserService userService;
     private final RestaurantService restService;
     private final ReserveService reserveService;
-	private final UserDao userDao;
-	private final ReviewService reviewService;
+    private final UserDao userDao;
+    private final ReviewService reviewService;
 
     @Autowired
     public HomeController(RestaurantService restService, ReserveService reserveService, UserService userService, UserDao userDao, ReviewService reviewService) {
@@ -39,11 +45,10 @@ public class HomeController {
         this.userService = userService; 
         this.reserveService = reserveService;  
         this.userDao = userDao;
-        this.reviewService = reviewService;
-        
+        this.reviewService = reviewService;        
     }
-    
-    //index page
+
+    // index page
     @GetMapping("/")
     public String index(Model model, HttpSession session) {
         UserVo user = (UserVo) session.getAttribute("loggedInUser"); 
@@ -53,27 +58,25 @@ public class HomeController {
         return "index";
     }
 
-    //register
+    // register
     @PostMapping("/")
     public String add(@ModelAttribute UserVo bean) {
         userService.add(bean);
         return "redirect:/";
     }
     
-    //check-email
+    // check-email
     @PostMapping("/check-email")
     public ResponseEntity<String> checkEmail(@RequestParam String userEmail) {
-        System.out.println("recieve msg : " + userEmail);  
         boolean isAvailable = userService.isEmailAvailable(userEmail);
         return isAvailable ? ResponseEntity.ok("available") : ResponseEntity.ok("exists");
     }
     
-    //login
+    // login
     @PostMapping("/login")
     public String login(@RequestParam String userEmail, @RequestParam String userPw, HttpSession session, Model model) {
         UserVo user = userService.login(userEmail, userPw);
         if (user != null) {
-            System.out.println("Login Success : " + user);
             session.setAttribute("loggedInUser", user);
             return "redirect:/"; 
         } else {
@@ -82,15 +85,13 @@ public class HomeController {
         }
     }
 
-    //logout
+    // logout
     @GetMapping("/logout")
     public String logout(HttpSession session) {
         session.invalidate(); 
         return "redirect:/";
     }
-   
-    
-    
+
     // mypage - CRUD
     @GetMapping("/mypage")
     public String myPage(Model model, HttpSession session) {
@@ -111,22 +112,28 @@ public class HomeController {
     }
     
     @PostMapping("/mypage/edit")
-    public String editReservation(@RequestParam int reserveNo, @RequestParam int restNo,@RequestParam int headCount,@RequestParam String reserveDate,
-            HttpSession session,Model model) {
+    @ResponseBody
+    public ResponseEntity<String> editReservation(@RequestParam int reserveNo, 
+                                                @RequestParam int restNo, 
+                                                @RequestParam int headCount, 
+                                                @RequestParam String reserveDate,                                              
+                                                HttpSession session) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(new MediaType("text", "plain", Charset.forName("UTF-8")));
+        
         UserVo user = (UserVo) session.getAttribute("loggedInUser");
+        if (user == null) {
+            return new ResponseEntity<>("로그인이 필요합니다.", headers, HttpStatus.UNAUTHORIZED);
+        }
 
         try {
-            // 예약 수정 로직에 reserveNo 전달
             reserveService.updateReservation(reserveNo, restNo, headCount, reserveDate, user.getUserNo());
-            return "redirect:/mypage"; 
-	        } catch (IllegalStateException e) {
-	            model.addAttribute("errorMessage", "당일에 이미 예약된 레스토랑입니다.");
-	        } catch (Exception e) {
-	            model.addAttribute("errorMessage", "예약을 수정하는 중에 오류가 발생했습니다. 다시 시도해주세요.");
-	        }
-	
-	        restService.list(1,model);
-	        return "mypage"; 
+            return new ResponseEntity<>("예약이 수정되었습니다.", headers, HttpStatus.OK);
+        } catch (IllegalStateException e) {
+            return new ResponseEntity<>(e.getMessage(), headers, HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<>("예약을 수정하는 중에 오류가 발생했습니다. 다시 시도해주세요.", headers, HttpStatus.BAD_REQUEST);
+        }
     }
     
     @PostMapping("/mypage/delete")
@@ -135,63 +142,59 @@ public class HomeController {
         return "redirect:/mypage";
     }
 
-    
-    
-    //restaurant
+    // restaurant
     @GetMapping("/restaurant")
     public String showRestaurants(@RequestParam(value = "page", defaultValue = "1") int page, Model model) {
-    	restService.list(page, model);
+        restService.list(page, model);
         return "restaurant"; 
     }
-    
+
     @GetMapping("/restaurant/search")
-    public String searchRestaurants(
-        @RequestParam String restName,
-        Model model) {
-        
-        // 검색 결과를 서비스를 통해 가져오기
+    public String searchRestaurants(@RequestParam String restName, Model model) {
         List<RestaurantVo> searchResults = restService.searchList(restName);
-        
-        // 모델에 데이터 추가
         model.addAttribute("restaurants", searchResults);
         model.addAttribute("keyword", restName);
-        
-        return "restaurant"; // 검색 결과를 보여줄 페이지 
-    }
-    
-    //restaurant - reservation
-    @PostMapping("/restaurant")
-    public String makeReservation(@RequestParam int restNo, @RequestParam int headCount, @RequestParam String reserveDate,
-            @RequestParam(value = "page", defaultValue = "1") int page,
-            @RequestParam(value = "size", defaultValue = "10") int size,
-    		HttpSession session, Model model) {
-        UserVo user = (UserVo) session.getAttribute("loggedInUser");
-
-        if (user == null) return "redirect:/"; // 로그인 상태가 아닐 경우 리다이렉트
-
-        try {
-            reserveService.addReservation(restNo, headCount, reserveDate, user.getUserNo());
-            return "redirect:/mypage"; 
-        }  catch (IllegalStateException e) {
-            model.addAttribute("errorMessage", "당일에 이미 예약된 레스토랑입니다.");
-        } catch (Exception e) {
-            model.addAttribute("errorMessage", "예약을 처리하는 중에 오류가 발생했습니다. 다시 시도해주세요.");
-        }
-
-        restService.list(1,model);
         return "restaurant"; 
     }
     
-    //review
+    // restaurant - reservation
+    @PostMapping("/restaurant")
+    @ResponseBody
+    public ResponseEntity<String> makeReservation(@RequestParam int restNo, 
+                                  @RequestParam int headCount, 
+                                  @RequestParam String reserveDate, 
+                                  @RequestParam String reserveTime, 
+                                  HttpSession session) {
+                                  
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(new MediaType("text", "plain", Charset.forName("UTF-8")));
+        
+        UserVo user = (UserVo) session.getAttribute("loggedInUser");
+        if (user == null) {
+            return new ResponseEntity<>("로그인이 필요합니다.", headers, HttpStatus.UNAUTHORIZED);
+        }
+        
+        try {
+            LocalDateTime reservationTime = LocalDateTime.of(
+                LocalDate.parse(reserveDate), 
+                LocalTime.parse(reserveTime));
+                
+            reserveService.addReservation(restNo, headCount, reservationTime.toString(), user.getUserNo());
+            return new ResponseEntity<>("예약이 완료되었습니다.", headers, HttpStatus.OK);
+        } catch (IllegalStateException e) {
+            return new ResponseEntity<>("당일에 이미 예약된 레스토랑입니다.", headers, HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<>("예약 처리 중 오류가 발생했습니다.", headers, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    // 리뷰 추가
     @PostMapping("/review/add")
     public String addReview(@ModelAttribute ReviewVo bean, HttpSession session) {
         UserVo user = (UserVo) session.getAttribute("loggedInUser");
         if (user != null) {
             try {
-                // 먼저 userNo 설정
                 bean.setUserNo(user.getUserNo());
-                
-                // 필수 필드 검증
                 if (bean.getRestNo() == 0) {
                     throw new IllegalArgumentException("식당 정보가 필요합니다.");
                 }
@@ -199,14 +202,8 @@ public class HomeController {
                     throw new IllegalArgumentException("리뷰 내용을 입력해주세요.");
                 }
                 if (bean.getReviewScore() <= 0) {
-                    bean.setReviewScore(1); // 기본값 설정
+                    bean.setReviewScore(1);
                 }
-                
-                System.out.println("리뷰 데이터 확인:");
-                System.out.println("UserNo: " + bean.getUserNo());
-                System.out.println("RestNo: " + bean.getRestNo());
-                System.out.println("Content: " + bean.getReviewContent());
-                System.out.println("Score: " + bean.getReviewScore());
                 
                 reviewService.add(bean);
                 session.setAttribute("alertType", "success");
@@ -216,7 +213,6 @@ public class HomeController {
                 session.setAttribute("alertType", "danger");
                 session.setAttribute("alertMessage", e.getMessage());
             } catch (Exception e) {
-                e.printStackTrace();
                 session.setAttribute("alertType", "danger");
                 session.setAttribute("alertMessage", "리뷰 작성 중 오류가 발생했습니다. 필수 정보를 모두 입력했는지 확인해주세요.");
             }
@@ -232,9 +228,14 @@ public class HomeController {
             List<ReviewVo> reviews = reviewService.getReviewsByRestaurant(restNo);
             return ResponseEntity.ok(reviews);
         } catch (Exception e) {
-            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
 
+    @GetMapping("/restaurant/{restNo}")
+    public String getRestaurantInfo(@PathVariable int restNo, Model model) {
+        RestaurantVo restaurant = restService.getRestaurantById(restNo);
+        model.addAttribute("restaurant", restaurant);
+        return "restaurantInfo"; // JSP 뷰 이름에 맞게 조정
+    }
 }

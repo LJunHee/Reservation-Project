@@ -29,28 +29,33 @@ public class ReserveService {
     // 사용자 예약 기능 (예약 중복 체크)
     public void addReservation(int restNo, int headCount, String reserveDate, int userNo) {
         ReserveVo reserve = createReserveVo(restNo, headCount, userNo);
-        LocalDateTime localDateTime = parseReserveDate(reserveDate);
+        LocalDateTime reservationDateTime = parseReserveDate(reserveDate);
         
-        chkDuplReservation(userNo, restNo, localDateTime.toLocalDate());
-        reserve.setReserveTime(Timestamp.valueOf(localDateTime));
+        // 같은 날짜, 같은 레스토랑 중복 체크
+        checkDuplicateReservation(userNo, restNo, reservationDateTime.toLocalDate());
+        
+        reserve.setReserveTime(Timestamp.valueOf(reservationDateTime));
         reserveDao.addList(reserve);
     }
     
     // 예약 수정
     public void updateReservation(int reserveNo, int restNo, int headCount, String reserveDate, int userNo) {
-        ReserveVo existingReservation = existingReservation(reserveNo);
-        LocalDateTime localDateTime = parseReserveDate(reserveDate);
+        ReserveVo existingReservation = getExistingReservation(reserveNo);
+        LocalDateTime newReservationDateTime = parseReserveDate(reserveDate);
         
-        updateReservation(existingReservation, restNo, headCount, userNo, localDateTime);
+        // 다른 레스토랑으로 변경할 때만 중복 체크
+        if (existingReservation.getRestNo() != restNo) {
+            checkDuplicateReservation(userNo, restNo, newReservationDateTime.toLocalDate());
+        }
+        
+        updateReservationDetails(existingReservation, restNo, headCount, userNo, newReservationDateTime);
         reserveDao.setList(existingReservation);
     }
     
     // 예약 삭제
     public void deleteReservation(int reserveNo) {
         reserveDao.rmList(reserveNo);
-    }  
-
-    
+    }
     
     // 예약 객체 생성
     private ReserveVo createReserveVo(int restNo, int headCount, int userNo) {
@@ -66,23 +71,21 @@ public class ReserveService {
         try {
             return LocalDateTime.parse(reserveDate, DATETIME_FORMATTER).withSecond(0);
         } catch (Exception e) {
-            throw new IllegalStateException("잘못된 요청입니다.");
+            throw new IllegalStateException("잘못된 날짜 형식입니다.");
         }
     }
 
-    // 중복 예약 확인
-    private void chkDuplReservation(int userNo, int restNo, LocalDate reservationDate) {
-        LocalDate today = LocalDate.now();
-        if (reservationDate.isEqual(today)) {
-            List<ReserveVo> existingReservations = reserveDao.findReservationsByUserAndRestaurant(userNo, restNo, today);
-            if (!existingReservations.isEmpty()) {
-                throw new IllegalStateException("당일에 이미 예약된 레스토랑입니다.");
-            }
+    // 중복 예약 확인 - 같은 날짜, 같은 레스토랑 체크
+    private void checkDuplicateReservation(int userNo, int restNo, LocalDate reservationDate) {
+        List<ReserveVo> existingReservations = reserveDao.findReservationsByUserAndRestaurant(userNo, restNo, reservationDate);
+        
+        if (!existingReservations.isEmpty()) {
+            throw new IllegalStateException("해당 날짜에 이미 같은 레스토랑 예약이 존재합니다.");
         }
     }
 
     // 기존 예약 조회
-    private ReserveVo existingReservation(int reserveNo) {
+    private ReserveVo getExistingReservation(int reserveNo) {
         ReserveVo existingReservation = reserveDao.getList(reserveNo);
         if (existingReservation == null) {
             throw new IllegalStateException("존재하지 않는 예약입니다.");
@@ -90,8 +93,8 @@ public class ReserveService {
         return existingReservation;
     }
 
-    //예약 정보 업데이트
-    private void updateReservation(ReserveVo reservation, int restNo, int headCount, int userNo, LocalDateTime localDateTime) {
+    // 예약 정보 업데이트
+    private void updateReservationDetails(ReserveVo reservation, int restNo, int headCount, int userNo, LocalDateTime localDateTime) {
         reservation.setRestNo(restNo);
         reservation.setHeadCount(headCount);
         reservation.setUserNo(userNo);
