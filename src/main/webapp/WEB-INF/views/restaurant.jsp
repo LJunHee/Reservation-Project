@@ -236,7 +236,7 @@
     	document.querySelector('#reservationModal #closeTime').value = closeTime;
 
     	
-   		// 숨은 입력 필드에 restNo 설정
+   		// hidden input에 restNo 설정
    		var restNoInput = document
    				.querySelector('#restInfoModal input[name="restNo"]');
    		var reservationRestNoInput = document
@@ -244,9 +244,6 @@
    		restNoInput.value = restNo; // 값 설정
    		reservationRestNoInput.value = restNo; // 예약 모달의 restNo에 값 설정
    	}
-   	
-
-
    </script>
 
 </body>
