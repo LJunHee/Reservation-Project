@@ -87,10 +87,28 @@ function validateReservation(event) {
     return false;
 }
 
-// 페이지 로드 시 현재 날짜 이전 선택 못하게 설정
+// 폼 초기화 함수
+function resetReservationForm() {
+    $('#headCount').val('1'); // 인원 수를 1명으로 초기화
+    $('#reserveDate').val(''); // 날짜 초기화
+    $('#reserveTime').val(''); // 시간 초기화
+    $('#errorMessage').hide(); // 에러 메시지 숨기기
+}
+
+// 페이지 로드 시 초기 설정
 $(document).ready(function() {
     var today = new Date().toISOString().split('T')[0];
     $('#reserveDate').attr('min', today);
+    
+    // 모달이 닫힐 때 폼 초기화
+    $('#reservationModal').on('hidden.bs.modal', function () {
+        resetReservationForm();
+    });
+    
+    // 취소 버튼 클릭 시 폼 초기화
+    $('.btn-default[data-dismiss="modal"]').on('click', function() {
+        resetReservationForm();
+    });
     
     <c:if test="${not empty errorMessage}">
         $('#errorMessage').text('${errorMessage}');
@@ -98,4 +116,4 @@ $(document).ready(function() {
         $('#reservationModal').modal('show');
     </c:if>
 });
-</script> 
+</script>
