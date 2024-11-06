@@ -213,6 +213,7 @@
 
    <!-- 모달의 JavaScript 함수 -->
    <script>
+   //버튼 클릭시 모달에 정보 전달
    	function setRestaurantDetails(button) {
    		var name = button.getAttribute('data-name');
    		var address = button.getAttribute('data-address');

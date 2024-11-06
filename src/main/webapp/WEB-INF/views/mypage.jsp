@@ -45,7 +45,8 @@
                 </div>
             </c:if>
         
-            <h2 class="text-center mb-4">나의 예약 목록</h2>
+            <h2 class="text-center mb-4" style = "margin-bottom:3%;">나의 예약 목록</h2>
+            <p class = "text-right" style = "color : red;">* 예약을 수정하시려면, 예약 시간 및 인원 수를 클릭해주세요!</p>
 
             <!-- 예약 목록 테이블 -->
             <table class="table table-striped table-bordered">
@@ -98,6 +99,7 @@
 <%@ include file="reserve/edit.jspf" %>
 
 <script>
+//버튼 클릭시 모달에 정보 전달
 function setEditModal(reserveNo, restNo, reserveTime, headCount, openTime, closeTime) {
 
     // 기본 정보 설정

@@ -44,6 +44,7 @@
 </div>
 
 <script>
+//예약 수정
 function validateEdit(event) {
     event.preventDefault();
 
@@ -96,6 +97,7 @@ function validateEdit(event) {
     return false;
 }
 
+//예약 삭제 요청
 function deleteReservation() {
     if(confirm('정말로 삭제하시겠습니까?')) {
         var reserveNo = $('#editReserveNo').val();
