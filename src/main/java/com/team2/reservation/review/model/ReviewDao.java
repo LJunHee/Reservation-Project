@@ -11,36 +11,36 @@ import org.apache.ibatis.annotations.Update;
 
 @Mapper
 public interface ReviewDao {
-    // ¸®ºä Ãß°¡
+    // ë¦¬ë·° ì¶”ê°€
     @Insert("INSERT INTO review (userNo, restNo, reviewContent, reviewScore, createDate) "
             + "VALUES (#{userNo}, #{restNo}, #{reviewContent}, #{reviewScore}, NOW())")
     int addReview(ReviewVo bean);
 
-    // Æ¯Á¤ ½Ä´çÀÇ ¸ğµç ¸®ºä Á¶È¸ (userName Æ÷ÇÔ)
+    // íŠ¹ì • ì‹ë‹¹ì˜ ëª¨ë“  ë¦¬ë·° ì¡°íšŒ (userName í¬í•¨)
     @Select("SELECT r.*, u.userName FROM review r JOIN users u ON r.userNo = u.userNo "
             + "WHERE r.restNo = #{restNo} ORDER BY r.createDate DESC")
     List<ReviewVo> getReviewsByRestaurant(int restNo);
 
-    // Æ¯Á¤ »ç¿ëÀÚÀÇ ¸ğµç ¸®ºä Á¶È¸ (userName Æ÷ÇÔ)
+    // íŠ¹ì • ì‚¬ìš©ìì˜ ëª¨ë“  ë¦¬ë·° ì¡°íšŒ (userName í¬í•¨)
     @Select("SELECT r.*, u.userName FROM review r JOIN users u ON r.userNo = u.userNo "
             + "WHERE r.userNo = #{userNo} ORDER BY r.createDate DESC")
     List<ReviewVo> getReviewsByUser(int userNo);
 
-    // »ç¿ëÀÚ°¡ ÇØ´ç ¹øÈ£·Î ¸®ºä Á¸Àç ¿©ºÎ È®ÀÎ - @Param Ãß°¡
+    // ì‚¬ìš©ìê°€ í•´ë‹¹ ë²ˆí˜¸ë¡œ ë¦¬ë·° ì¡´ì¬ ì—¬ë¶€ í™•ì¸ - @Param ì¶”ê°€
     @Select("SELECT COUNT(*) FROM review WHERE userNo = #{userNo} AND restNo = #{restNo}")
     int checkExistingReview(@Param("userNo") int userNo, @Param("restNo") int restNo);
     
-    // Æ¯Á¤ ¸®ºä Á¶È¸ (userName Æ÷ÇÔ)
+    // íŠ¹ì • ë¦¬ë·° ì¡°íšŒ (userName í¬í•¨)
     @Select("SELECT r.*, u.userName FROM review r JOIN users u ON r.userNo = u.userNo "
             + "WHERE r.reviewNo = #{reviewNo}")
     ReviewVo getReview(int reviewNo);
 
-    // ¸®ºä ¼öÁ¤
+    // ë¦¬ë·° ìˆ˜ì •
     @Update("UPDATE review SET reviewContent = #{reviewContent}, reviewScore = #{reviewScore} "
             + "WHERE reviewNo = #{reviewNo}")
     int updateReview(ReviewVo bean);
 
-    // ¸®ºä »èÁ¦
+    // ë¦¬ë·° ì‚­ì œ
     @Delete("DELETE FROM review WHERE reviewNo = #{reviewNo}")
     int deleteReview(int reviewNo);
 }

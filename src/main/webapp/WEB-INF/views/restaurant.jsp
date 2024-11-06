@@ -10,7 +10,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <style>
 .thumbnail {
-   height: 370px;
+   height: 400px;
    position: relative;
 }
 
