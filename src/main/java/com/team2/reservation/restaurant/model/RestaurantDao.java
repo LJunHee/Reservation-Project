@@ -13,10 +13,6 @@ public interface RestaurantDao {
     @Select("SELECT * FROM restaurant ORDER BY restNo LIMIT #{limit} OFFSET #{offset}")
     List<RestaurantVo> pullList(@Param("offset") int offset, @Param("limit") int limit);
     
-    // 최근 등록된 8개의 레스토랑 가져오기
-    @Select("SELECT * FROM restaurant ORDER BY restNo DESC LIMIT 8")
-    List<RestaurantVo> getRecentRestaurants();
-    
     // 검색
     @Select("SELECT * FROM restaurant WHERE restName LIKE CONCAT('%', #{restName}, '%')")
     List<RestaurantVo> search(String restName);
@@ -24,7 +20,6 @@ public interface RestaurantDao {
     // 전체 레스토랑 개수 가져오기
     @Select("SELECT COUNT(*) FROM restaurant")
     int getTotalCount();
-    
 
     @Select("SELECT * FROM restaurant WHERE restNo = #{restNo}")
     RestaurantVo getRestaurantById(@Param("restNo") int restNo);
@@ -48,5 +43,9 @@ public interface RestaurantDao {
             "ORDER BY rv.createDate DESC " +    // 최신 리뷰 날짜순 정렬
             "LIMIT 8")
     List<RestaurantVo> getRecommendRestaurants();
+    
+    // 최근 등록된 8개의 레스토랑 가져오기
+    @Select("SELECT * FROM restaurant ORDER BY restNo DESC LIMIT 8")
+    List<RestaurantVo> getRecentRestaurants();
 
 }

@@ -109,7 +109,7 @@
 				<h2>신규 등록 레스토랑</h2>
 				<p>최근 등록된 레스토랑을 소개합니다.</p>
 				<p>
-					<a class="btn btn-default" href="${root }/" role="button">이벤트 보기 »</a>
+					<a class="btn btn-default" href="${root }/" role="button">더보기 »</a>
 				</p>
 			</div>
 		</div>
