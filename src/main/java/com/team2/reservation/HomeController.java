@@ -97,7 +97,8 @@ public class HomeController {
     @GetMapping("/mypage")
     public String myPage(Model model, HttpSession session) {
         UserVo user = (UserVo) session.getAttribute("loggedInUser");
-        if (user != null) {
+        if(user == null) return "redirect:/";
+        else if (user != null) {
             reserveService.listByUser(user.getUserNo(), model);
             String alertMessage = (String) session.getAttribute("alertMessage");
             String alertType = (String) session.getAttribute("alertType");
