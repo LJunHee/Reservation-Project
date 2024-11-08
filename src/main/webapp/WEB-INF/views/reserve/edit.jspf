@@ -44,19 +44,15 @@
 </div>
 
 <script>
+//예약 수정
 function validateEdit(event) {
     event.preventDefault();
 
     // 영업 시간 체크
+    var selectedDate = $('#editReserveDate').val();
     var selectedTime = $('#editReserveTime').val();
     var openTime = $('#editOpenTime').val().substring(0, 5);
     var closeTime = $('#editCloseTime').val().substring(0, 5);
-
-    console.log('Time validation:', {
-        selectedTime: selectedTime,
-        openTime: openTime,
-        closeTime: closeTime
-    });
 
     if (!openTime || !closeTime) {
         $('#editErrorMessage').text('영업 시간을 불러오는 데 문제가 발생했습니다.');
@@ -83,7 +79,7 @@ function validateEdit(event) {
         url: '${root}/mypage/edit',
         data: formData,
         success: function(response) {
-            alert(selectedTime + '으로 예약이 수정되었습니다!');
+            alert(selectedDate +' / '+ selectedTime + ' 으로 예약이 수정되었습니다!');
             window.location.href = '${root}/mypage';
         },
         error: function(xhr) {
@@ -101,6 +97,7 @@ function validateEdit(event) {
     return false;
 }
 
+//예약 삭제 요청
 function deleteReservation() {
     if(confirm('정말로 삭제하시겠습니까?')) {
         var reserveNo = $('#editReserveNo').val();
