@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.team2.reservation.reserve.service.ReserveService;
 import com.team2.reservation.restaurant.model.RestaurantVo;
@@ -73,15 +74,15 @@ public class HomeController {
     
     // 로그인
     @PostMapping("/login")
-    public String login(@RequestParam String userEmail, @RequestParam String userPw, 
-    		HttpSession session, Model model) {
+    @ResponseBody
+    public ResponseEntity<String> login(@RequestParam String userEmail, @RequestParam String userPw, 
+            HttpSession session) {
         UserVo user = userService.login(userEmail, userPw);
         if (user != null) {
             session.setAttribute("loggedInUser", user);
-            return "redirect:/"; 
+            return ResponseEntity.ok().body("success");
         } else {
-            model.addAttribute("errorMessage", "잘못된 이메일 혹은 비밀번호 입니다.");
-            return "index"; 
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }
 
