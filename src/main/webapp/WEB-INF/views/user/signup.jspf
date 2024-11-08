@@ -148,7 +148,7 @@ $(document).ready(function() {
         }
         
         $.ajax({
-            url: '/reservation/check-email',
+            url: '/check-email',
             type: 'POST',
             contentType: 'application/x-www-form-urlencoded',
             data: { userEmail: emailValue },
