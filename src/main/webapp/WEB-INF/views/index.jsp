@@ -9,11 +9,11 @@
 <%@ include file="template/head.jspf"%>
 <style>
 .jumbotron {
-    background-image: url('${root}/resources/img/restaurant.jpg');
-    background-size: 100%;
-    color: white;
-    position: relative;
-    padding: 4rem 2rem;
+	background-image: url('/${root}/resources/img/restaurant.jpg');
+	background-size: 100%;
+	color: white;
+	position: relative;
+	padding: 4rem 2rem; /* 여백 추가 */
 }
 
 .jumbotron::before {
