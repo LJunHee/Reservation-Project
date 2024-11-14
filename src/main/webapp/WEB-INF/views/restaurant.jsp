@@ -41,8 +41,8 @@
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 .jumbotron {
-	margin-bottom : 15px;
-    background-image: url('/reservation/resources/img/reservation.jpg');
+    margin-bottom : 15px;
+    background-image: url('${root}/resources/img/reservation.jpg');
     background-size: 50%;
     color: white;
     position: relative;
