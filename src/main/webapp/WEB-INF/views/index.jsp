@@ -9,7 +9,7 @@
 <%@ include file="template/head.jspf"%>
 <style>
 .jumbotron {
-	background-image: url('/reservation/resources/img/restaurant.jpg');
+	background-image: url('/${root}/resources/img/restaurant.jpg');
 	background-size: 100%;
 	color: white;
 	position: relative;
