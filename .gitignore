@@ -177,5 +177,5 @@ buildNumber.properties
 # JDT-specific (Eclipse Java Development Tools)
 .classpath
 
-# End of https://www.toptal.com/developers/gitignore/api/eclipse,images,java,maven
-src/main/resources/db.properties
+# Ignore secret properties file
+src/main/resources/config/application-secrets.properties
